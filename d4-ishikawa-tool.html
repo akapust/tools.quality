@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ishikawa Tool (6M) – Ursachenanalyse</title>
 
-  <!-- html2canvas (wird für PNG-Export benötigt) -->
+  <!-- optional: html2canvas (falls du PNG doch behalten willst) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <title>Ishikawa Tool (6M) – Ursachenanalyse</title>
 
   <style>
     :root {
@@ -14,54 +15,112 @@
       --dark: #09387a;
       --light-bg: #f8fafc;
       --note: #fff9c4;
+
+      --border:#d1d9e6;
+      --text:#27304d;
+      --muted:#64748b;
+
+      --green:#16a34a;
+      --yellow:#f59e0b;
+      --red:#e53e3e;
+
+      --radius: 6px;
+      --shadow: 0 4px 12px rgba(0,0,0,0.10);
     }
 
-    body { margin: 0; background: #ffffff; }
+    body { margin:0; background:#fff; color: var(--text); }
 
-    .ishikawa-app { max-width: 1100px; margin: 20px auto; font-family: 'Segoe UI', Roboto, sans-serif; color: #27304d; padding: 0 12px; }
-    .ishikawa-card { background: #fff; border: 1px solid #d1d9e6; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow:hidden; }
+    .ishikawa-app {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 0 12px;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      color: #27304d;
+    }
+    .ishikawa-card { background: #fff; border: 1px solid var(--border); border-radius: 6px; box-shadow: var(--shadow); overflow:hidden; }
 
     /* Intro */
     .tool-intro { padding: 22px 25px; border-bottom: 3px solid var(--blue); background: var(--light-bg); }
     .tool-intro-top { display:flex; align-items:flex-start; justify-content:space-between; gap: 15px; flex-wrap: wrap; }
-    .tool-title { margin: 0; color: var(--dark); font-size: 20px; text-transform: uppercase; }
-    .tool-sub { margin: 6px 0 0; font-size: 13px; color: #64748b; }
+    .tool-title { margin: 0; color: var(--dark); font-size: 20px; text-transform: uppercase; font-weight: 900; letter-spacing:.4px; }
+    .tool-sub { margin: 6px 0 0; font-size: 13px; color: var(--muted); max-width: 75ch; }
     .tool-grid { margin-top: 16px; display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .tool-box { background:#fff; border: 1px solid #d1d9e6; border-radius: 4px; padding: 12px 14px; }
-    .tool-box h3 { margin: 0 0 6px 0; font-size: 13px; color: var(--dark); text-transform: uppercase; }
+    .tool-box { background:#fff; border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; }
+    .tool-box h3 { margin: 0 0 6px 0; font-size: 13px; color: var(--dark); text-transform: uppercase; font-weight: 900; letter-spacing:.25px; }
     .tool-box p, .tool-box ol { margin: 0; font-size: 13px; color:#334155; }
     .tool-box ol { padding-left: 18px; }
     .tool-privacy { border-left: 3px solid var(--blue); }
-    .tool-box a { color: var(--blue); text-decoration: none; }
+    .tool-box a { color: var(--blue); text-decoration: none; font-weight: 800; }
     .tool-box a:hover { text-decoration: underline; }
 
-    .ishikawa-body { padding: 25px; }
-    .ishikawa-drawing-area { padding: 50px 20px; background: white; border: 1px solid #edf2f7; position: relative; }
+    /* Buttons */
+    .ishikawa-actions {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 2px solid var(--blue);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:center;
+      justify-content: space-between;
+    }
+    .actions-left, .actions-right { display:flex; gap: 10px; flex-wrap: wrap; align-items:center; }
 
-    /* Struktur */
+    .i-btn {
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 900;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: #fff;
+      text-transform: uppercase;
+      letter-spacing:.3px;
+      text-decoration: none;
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      user-select:none;
+      color: var(--dark);
+    }
+    .i-btn:hover { background: #f1f5f9; border-color: rgba(17,85,178,.35); }
+    .i-btn.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .i-btn.primary:hover { background: var(--dark); border-color: var(--dark); }
+    .i-btn.danger { color: #e53e3e; border-color: rgba(229,62,62,.35); }
+    .i-btn.small { padding: 8px 10px; font-size: 11px; }
+
+    .lang-switch { display:flex; gap: 8px; align-items:center; }
+    .lang-switch .i-btn { padding: 8px 12px; font-size: 12px; }
+
+    /* Diagram */
+    .ishikawa-body { padding: 22px 25px; }
+    .ishikawa-drawing-area { padding: 50px 20px; background: white; border: 1px solid #edf2f7; position: relative; border-radius: 10px; }
+
     .ishikawa-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-right: 200px; }
     .graete { border-left: 3px solid var(--blue); padding-left: 15px; min-height: 120px; display: flex; flex-direction: column; }
     .bottom .graete { margin-top: 30px; }
 
-    .m-label { font-weight: 800; color: var(--dark); text-transform: uppercase; font-size: 13px; margin-bottom: 10px; border-bottom: 1px solid #eee; }
-    .notes-container { display: flex; flex-direction: column; gap: 6px; flex-grow: 1; }
+    .m-label { font-weight: 900; color: var(--dark); text-transform: uppercase; font-size: 13px; margin-bottom: 10px; border-bottom: 1px solid #eee; letter-spacing:.25px; }
+    .notes-container { display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
 
     .note-item {
       background: var(--note);
-      padding: 6px;
+      padding: 8px;
       font-size: 12px;
       border-left: 3px solid #fbc02d;
       box-shadow: 2px 2px 4px rgba(0,0,0,0.05);
       position: relative;
-      padding-right: 30px;
+      padding-right: 34px; /* Platz für Löschen-Button */
+      border-radius: 6px;
     }
-    .note-item textarea { width: 100%; border: none; background: transparent; resize: none; font-family: inherit; outline: none; }
+    .note-item textarea { width: 100%; border: none; background: transparent; resize: none; font-family: inherit; outline: none; color:#0f172a; }
+    .note-item textarea::placeholder{ color:#64748b; }
 
-    /* Ursache löschen */
+    /* delete */
     .note-delete {
       position: absolute;
-      top: 4px;
-      right: 6px;
+      top: 6px;
+      right: 8px;
       border: none;
       background: transparent;
       cursor: pointer;
@@ -71,73 +130,299 @@
     }
     .note-delete:hover { color: #e53e3e; }
 
-    .btn-add { background: none; border: 1px dashed #cbd5e1; color: #94a3b8; cursor: pointer; font-size: 11px; margin-top: 10px; padding: 4px; }
-    .btn-add:hover { background: #f1f5f9; color: var(--blue); }
+    /* rating dot (shows current triage) */
+    .rate-dot{
+      position:absolute;
+      top: 8px;
+      left: 8px;
+      width: 10px; height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.15);
+      background: rgba(100,116,139,.25);
+      box-shadow: 0 2px 6px rgba(0,0,0,.08);
+    }
+    .rate-dot.red{ background: var(--red); border-color: rgba(229,62,62,.45); }
+    .rate-dot.yellow{ background: var(--yellow); border-color: rgba(245,158,11,.55); }
+    .rate-dot.green{ background: var(--green); border-color: rgba(22,163,74,.55); }
 
-    /* Rückgrat & Kopf */
-    .ishikawa-spine { height: 4px; background: var(--blue); margin: 15px 0; position: relative; display: flex; align-items: center; justify-content: flex-end; }
+    .btn-add { background: none; border: 1px dashed #cbd5e1; color: #94a3b8; cursor: pointer; font-size: 11px; margin-top: 10px; padding: 6px; border-radius: 6px; font-weight: 900; text-transform: uppercase; letter-spacing:.25px; }
+    .btn-add:hover { background: #f1f5f9; color: var(--blue); border-color: rgba(17,85,178,.45); }
+
+    /* Spine & head */
+    .ishikawa-spine { height: 4px; background: var(--blue); margin: 15px 0; position: relative; display: flex; align-items: center; justify-content: flex-end; border-radius: 999px; }
     .fish-head {
       width: 220px; height: 120px; background: var(--blue);
       clip-path: polygon(0% 50%, 20% 0%, 100% 0%, 100% 100%, 20% 100%);
       display: flex; align-items: center; justify-content: center; padding: 15px; margin-right: -20px;
+      border-radius: 10px;
     }
     .fish-head textarea {
-      width: 85%; height: 75%; background: white; border: none; border-radius: 4px;
-      padding: 10px; font-weight: bold; font-size: 14px; text-align: center; color: var(--dark);
+      width: 85%; height: 75%; background: white; border: none; border-radius: 6px;
+      padding: 10px; font-weight: 900; font-size: 14px; text-align: center; color: var(--dark);
+      outline:none;
     }
 
-    /* Actions */
-    .ishikawa-actions { margin-top: 30px; padding-top: 20px; border-top: 2px solid var(--blue); display: flex; gap: 10px; flex-wrap: wrap; }
-    .i-btn { padding: 10px 18px; font-size: 13px; font-weight: bold; border-radius: 4px; cursor: pointer; border: 1px solid #d1d9e6; background: #fff; text-transform: uppercase; text-decoration: none; display:inline-flex; align-items:center; }
-    .i-btn.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
-    .i-btn.danger { color: #e53e3e; }
+    /* NEW: Bewertung & Maßnahmen sections */
+    .section{
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 2px solid var(--blue);
+    }
+    .section-title{
+      margin:0 0 6px;
+      font-size: 13px;
+      color: var(--dark);
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing:.25px;
+    }
+    .section-sub{
+      margin:0 0 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
 
-    /* Sprachumschalter */
-    .lang-switch { display:flex; gap: 8px; align-items:center; }
-    .lang-switch .i-btn { padding: 8px 12px; font-size: 12px; }
+    .triage-box{
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      overflow:hidden;
+    }
+    .triage-head{
+      padding: 10px 14px;
+      background: var(--light-bg);
+      border-bottom: 1px solid rgba(15,23,42,.08);
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .triage-meta{ font-size: 12px; color: var(--muted); font-weight: 800; }
 
-    /* Weiterführende Infos */
+    .triage-table{
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .triage-table th, .triage-table td{
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(15,23,42,.06);
+      vertical-align: top;
+      font-size: 13px;
+    }
+    .triage-table th{
+      text-align:left;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing:.2px;
+      color:#334155;
+      background: rgba(248,250,252,.8);
+    }
+
+    .chips{ display:flex; gap: 8px; flex-wrap: wrap; }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px solid rgba(15,23,42,.12);
+      background:#fff;
+      font-size: 12px;
+      font-weight: 900;
+      cursor:pointer;
+      user-select:none;
+      white-space: nowrap;
+    }
+    .chip.active{ border-color: rgba(17,85,178,.45); color: var(--blue); background: rgba(17,85,178,.06); }
+
+    .rate-chips{ display:flex; gap: 8px; flex-wrap: wrap; }
+    .rate{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px solid rgba(15,23,42,.12);
+      background:#fff;
+      font-size: 12px;
+      font-weight: 900;
+      cursor:pointer;
+      user-select:none;
+      white-space: nowrap;
+    }
+    .dot{ width: 10px; height: 10px; border-radius: 999px; display:inline-block; }
+    .rate.red .dot{ background: var(--red); }
+    .rate.yellow .dot{ background: var(--yellow); }
+    .rate.green .dot{ background: var(--green); }
+    .rate.selected{
+      box-shadow: 0 8px 18px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+      border-color: rgba(15,23,42,.18);
+    }
+    .rate.red.selected{ background: rgba(229,62,62,.08); border-color: rgba(229,62,62,.40); }
+    .rate.yellow.selected{ background: rgba(245,158,11,.10); border-color: rgba(245,158,11,.45); }
+    .rate.green.selected{ background: rgba(22,163,74,.08); border-color: rgba(22,163,74,.45); }
+
+    .mini-btn{
+      border: 1px solid rgba(15,23,42,.12);
+      background:#fff;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing:.2px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .mini-btn:hover{ border-color: rgba(17,85,178,.45); color: var(--blue); background: rgba(17,85,178,.06); }
+    .mini-btn.danger{ border-color: rgba(239,68,68,.30); color:#b91c1c; }
+    .mini-btn.danger:hover{ background: rgba(239,68,68,.08); border-color: rgba(239,68,68,.45); color:#b91c1c; }
+
+    /* Measures draft + list (same logic as Prozessanalyse) */
+    .measure-draft{
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background:#fff;
+      padding: 12px 14px;
+    }
+    .draft-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .6fr .6fr;
+      gap: 10px;
+      align-items:end;
+    }
+    @media(max-width: 900px){ .draft-grid{ grid-template-columns: 1fr; } }
+
+    .field label{
+      display:block;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color:#334155;
+      letter-spacing:.2px;
+      margin-bottom: 6px;
+    }
+    .field input, .field textarea{
+      width: 100%;
+      padding: 10px 12px;
+      border:1px solid rgba(15,23,42,.14);
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      outline:none;
+      background:#fff;
+    }
+    .field textarea{ min-height: 84px; resize: vertical; }
+
+    .draft-actions{
+      margin-top: 10px;
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content:flex-end;
+      border-top: 1px solid rgba(15,23,42,.08);
+      padding-top: 10px;
+    }
+    .hint-mini{ font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+    .measures-list{
+      margin-top: 12px;
+      border:1px solid var(--border);
+      border-radius: 10px;
+      background:#fff;
+      overflow:hidden;
+    }
+    .measures-head{
+      padding: 10px 14px;
+      background: var(--light-bg);
+      border-bottom: 1px solid rgba(15,23,42,.08);
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .measures-sub{ font-size: 12px; color: var(--muted); font-weight: 800; margin-top: 4px; }
+
+    .measures-table{
+      width:100%;
+      border-collapse: collapse;
+    }
+    .measures-table th, .measures-table td{
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(15,23,42,.06);
+      vertical-align: top;
+      font-size: 13px;
+    }
+    .measures-table th{
+      text-align:left;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing:.2px;
+      color:#334155;
+      background: rgba(248,250,252,.8);
+    }
+    .status-pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 5px 10px;
+      border: 1px solid rgba(15,23,42,.12);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+      background:#fff;
+    }
+    .status-open{ border-color: rgba(37,99,235,.30); background: rgba(37,99,235,.06); color: #1d4ed8; }
+    .status-done{ border-color: rgba(22,163,74,.30); background: rgba(22,163,74,.08); color: #15803d; }
+    .status-drop{ border-color: rgba(239,68,68,.28); background: rgba(239,68,68,.08); color: #b91c1c; }
+
+    .row-actions{ display:flex; gap: 8px; flex-wrap: wrap; justify-content:flex-end; }
+
+    .muted{ color: var(--muted); }
+
+    /* More info + footer */
     .tool-more { margin-top: 22px; padding-top: 18px; border-top: 2px solid var(--blue); }
-    .more-title { margin: 0 0 6px 0; font-size: 13px; color: var(--dark); text-transform: uppercase; }
-    .more-sub { margin: 0 0 10px 0; font-size: 13px; color: #64748b; }
+    .more-title { margin: 0 0 6px 0; font-size: 13px; color: var(--dark); text-transform: uppercase; font-weight: 900; }
+    .more-sub { margin: 0 0 10px 0; font-size: 13px; color: var(--muted); }
     .more-list { margin: 8px 0 0; padding-left: 18px; font-size: 13px; color:#334155; }
     .more-list li { margin: 4px 0; }
 
-    /* Footer */
     .ishikawa-footer {
       padding: 12px 25px;
       background: var(--light-bg);
-      border-top: 1px solid #d1d9e6;
+      border-top: 1px solid var(--border);
       font-size: 12px;
-      color: #64748b;
+      color: var(--muted);
       display: flex;
       justify-content: space-between;
       gap: 10px;
       flex-wrap: wrap;
     }
+    .ishikawa-footer a{ color: var(--dark); font-weight: 900; text-decoration:none; }
+    .ishikawa-footer a:hover{ text-decoration: underline; }
 
     @media (max-width: 900px) {
       .ishikawa-row { margin-right: 0; grid-template-columns: 1fr; }
-      .fish-head { width: 100%; margin: 20px 0; clip-path: none; border-radius: 4px; }
+      .fish-head { width: 100%; margin: 20px 0; clip-path: none; border-radius: 10px; }
       .ishikawa-spine { justify-content: center; }
       .tool-grid { grid-template-columns: 1fr; }
-      .tool-intro, .ishikawa-body, .ishikawa-footer { padding-left: 16px; padding-right: 16px; }
+      .triage-table{ display:block; overflow:auto; }
+      .measures-table{ display:block; overflow:auto; }
     }
 
     /* Print */
     @media print {
-      .ishikawa-actions,
-      .lang-switch,
-      .tool-more a {
-        display: none !important;
-      }
-      .ishikawa-card {
-        box-shadow: none !important;
-        border: none !important;
-      }
-      .ishikawa-app { margin: 0 !important; padding: 0 !important; }
-      .ishikawa-body { padding: 0 !important; }
-      .ishikawa-drawing-area { border: none !important; }
+      .lang-switch, .tool-intro-top .i-btn, .ishikawa-actions, .tool-more a, .note-delete,
+      .btn-add, .rate-chips, .row-actions, .chips, .mini-btn { display:none !important; }
+      .ishikawa-card{ box-shadow:none; border:none; }
+      .ishikawa-drawing-area{ border:none; }
+      .tool-intro{ border-bottom:none; }
+      .tool-more{ border-top:none; }
+      .ishikawa-footer{ background:#fff; }
     }
   </style>
 </head>
@@ -151,7 +436,9 @@
         <div class="tool-intro-top">
           <div>
             <h2 class="tool-title" data-i18n="title">Ishikawa Tool (6M) – Ursachenanalyse</h2>
-            <p class="tool-sub" data-i18n="subtitle">Systematische Ursachenanalyse im Fischgräten-Diagramm.</p>
+            <p class="tool-sub" data-i18n="subtitle">
+              Systematische Ursachenanalyse im Fischgräten-Diagramm – inkl. Ursachen-Bewertung (Rot/Gelb/Grün) und Ableitung von Maßnahmen mit Bezug zur Fehlerursache.
+            </p>
           </div>
 
           <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
@@ -168,45 +455,52 @@
             <h3 data-i18n="boxToolNameTitle">Name Tool</h3>
             <p data-i18n="boxToolNameText">Ishikawa-Diagramm (Fischgräte) – 6M</p>
           </div>
+
           <div class="tool-box">
             <h3 data-i18n="boxGoalTitle">Ziel</h3>
-            <p data-i18n="boxGoalText">Ursachen strukturiert sammeln, clustern und visualisieren, um den wichtigsten Einflussfaktoren auf den Effekt näherzukommen.</p>
+            <p data-i18n="boxGoalText">
+              Ursachen strukturiert sammeln, bewerten (Rot/Gelb/Grün) und aus den relevanten Ursachen (Rot/Gelb) Maßnahmen ableiten.
+            </p>
           </div>
+
           <div class="tool-box">
             <h3 data-i18n="boxHowTitle">So benutzt du das Tool</h3>
             <ol>
               <li data-i18n="step1">Effekt / Problem rechts im Kopf eintragen.</li>
               <li data-i18n="step2">Pro 6M-Kategorie Ursachen hinzufügen.</li>
-              <li data-i18n="step3">Bei Bedarf Ursachen einzeln löschen (X).</li>
-              <li data-i18n="step4">Export als PNG oder als JSON speichern.</li>
+              <li data-i18n="step3">Ursachen unten bewerten: <strong>Rot</strong>=wahrscheinliche Ursache, <strong>Gelb</strong>=schnell prüfbar, <strong>Grün</strong>=aktuell ausgeschlossen.</li>
+              <li data-i18n="step4">Aus Rot/Gelb Maßnahmen ableiten (mit Termin) → Maßnahmenliste.</li>
+              <li data-i18n="step5">Print oder JSON speichern/laden.</li>
             </ol>
           </div>
+
           <div class="tool-box tool-privacy">
             <h3 data-i18n="boxPrivacyTitle">Datenschutz</h3>
-            <p data-i18n="boxPrivacyText">Dieses Tool arbeitet vollständig im Browser. Es werden keine Daten auf einem Server gespeichert. Zugriff hat nur die Person, die die Datei lokal speichert bzw. lädt.</p>
+            <p data-i18n="boxPrivacyText">
+              Dieses Tool arbeitet vollständig im Browser. Es werden keine Daten auf einem Server gespeichert. Der Stand wird lokal im Browser gespeichert (Autosave) und kann zusätzlich als JSON exportiert/importiert werden.
+            </p>
           </div>
         </div>
       </section>
 
       <div class="ishikawa-body">
         <div id="capture-area" class="ishikawa-drawing-area">
-
           <div class="ishikawa-skeleton">
             <div class="ishikawa-row top">
               <div class="graete" data-m="Mensch">
                 <div class="m-label" data-i18n="catMensch">Mensch</div>
                 <div class="notes-container" id="notes-Mensch"></div>
-                <button class="btn-add" type="button" onclick="addNote('Mensch')" data-i18n="addCause">+ Ursache</button>
+                <button class="btn-add" type="button" data-cat="Mensch" data-i18n="addCause">+ Ursache</button>
               </div>
               <div class="graete" data-m="Maschine">
                 <div class="m-label" data-i18n="catMaschine">Maschine</div>
                 <div class="notes-container" id="notes-Maschine"></div>
-                <button class="btn-add" type="button" onclick="addNote('Maschine')" data-i18n="addCause">+ Ursache</button>
+                <button class="btn-add" type="button" data-cat="Maschine" data-i18n="addCause">+ Ursache</button>
               </div>
               <div class="graete" data-m="Material">
                 <div class="m-label" data-i18n="catMaterial">Material</div>
                 <div class="notes-container" id="notes-Material"></div>
-                <button class="btn-add" type="button" onclick="addNote('Material')" data-i18n="addCause">+ Ursache</button>
+                <button class="btn-add" type="button" data-cat="Material" data-i18n="addCause">+ Ursache</button>
               </div>
             </div>
 
@@ -220,36 +514,145 @@
               <div class="graete" data-m="Methode">
                 <div class="m-label" data-i18n="catMethode">Methode</div>
                 <div class="notes-container" id="notes-Methode"></div>
-                <button class="btn-add" type="button" onclick="addNote('Methode')" data-i18n="addCause">+ Ursache</button>
+                <button class="btn-add" type="button" data-cat="Methode" data-i18n="addCause">+ Ursache</button>
               </div>
               <div class="graete" data-m="Mitwelt">
                 <div class="m-label" data-i18n="catMitwelt">Mitwelt</div>
                 <div class="notes-container" id="notes-Mitwelt"></div>
-                <button class="btn-add" type="button" onclick="addNote('Mitwelt')" data-i18n="addCause">+ Ursache</button>
+                <button class="btn-add" type="button" data-cat="Mitwelt" data-i18n="addCause">+ Ursache</button>
               </div>
               <div class="graete" data-m="Messung">
                 <div class="m-label" data-i18n="catMessung">Messung</div>
                 <div class="notes-container" id="notes-Messung"></div>
-                <button class="btn-add" type="button" onclick="addNote('Messung')" data-i18n="addCause">+ Ursache</button>
+                <button class="btn-add" type="button" data-cat="Messung" data-i18n="addCause">+ Ursache</button>
               </div>
             </div>
           </div>
-
         </div>
 
+        <!-- NEW: Ursachen-Bewertung -->
+        <section class="section" aria-label="Ursachen bewerten">
+          <h3 class="section-title" data-i18n="triageTitle">Ursachen bewerten (Rot / Gelb / Grün)</h3>
+          <p class="section-sub" data-i18n="triageSub">
+            Bewerte jede Ursache: <strong>Rot</strong> = sehr wahrscheinlich, <strong>Gelb</strong> = schnell prüfbar, <strong>Grün</strong> = momentan ausgeschlossen. Bewertungen können sich ändern.
+          </p>
+
+          <div class="triage-box">
+            <div class="triage-head">
+              <div>
+                <div class="section-title" style="margin:0" data-i18n="triageListTitle">Ursachenliste</div>
+                <div class="triage-meta" id="triageMeta">—</div>
+              </div>
+              <div class="chips" aria-label="Filter">
+                <span class="chip active" data-filter="all" data-i18n="filterAll">Alle</span>
+                <span class="chip" data-filter="red" data-i18n="filterRed">Rot</span>
+                <span class="chip" data-filter="yellow" data-i18n="filterYellow">Gelb</span>
+                <span class="chip" data-filter="green" data-i18n="filterGreen">Grün</span>
+                <span class="chip" data-filter="ry" data-i18n="filterRY">Rot+Gelb</span>
+              </div>
+            </div>
+
+            <table class="triage-table" aria-label="Ursachen Tabelle">
+              <thead>
+                <tr>
+                  <th style="width:160px" data-i18n="thCategory">Kategorie</th>
+                  <th data-i18n="thCause">Ursache</th>
+                  <th style="width:340px" data-i18n="thTriage">Bewertung</th>
+                  <th style="width:240px; text-align:right" data-i18n="thActions">Aktion</th>
+                </tr>
+              </thead>
+              <tbody id="triageTbody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- NEW: Ableitung von Maßnahmen (mit Bezug zur Ursache) -->
+        <section class="section" aria-label="Ableitung von Maßnahmen">
+          <h3 class="section-title" data-i18n="measuresTitle">Ableitung von Maßnahmen</h3>
+          <p class="section-sub" data-i18n="measuresSub">
+            Aus <strong>roten</strong> und <strong>gelben</strong> Ursachen werden Maßnahmen abgeleitet. Jede Maßnahme bleibt mit der Ursache verknüpft.
+          </p>
+
+          <div class="measure-draft">
+            <div class="draft-grid">
+              <div class="field">
+                <label data-i18n="draftCauseRefLabel">Bezug (Ursache)</label>
+                <input id="draftCauseRef" type="text" readonly value="—" />
+                <div class="hint-mini" data-i18n="draftCauseHint">Wähle eine Ursache in der Ursachenliste (Aktion: „Als Maßnahme übernehmen“).</div>
+              </div>
+
+              <div class="field">
+                <label for="draftOwner" data-i18n="draftOwnerLabel">Owner</label>
+                <input id="draftOwner" type="text" data-i18n-placeholder="draftOwnerPh" placeholder="z.B. Qualität / Produktion" />
+              </div>
+
+              <div class="field">
+                <label for="draftDue" data-i18n="draftDueLabel">Termin</label>
+                <input id="draftDue" type="date" />
+              </div>
+            </div>
+
+            <div class="field" style="margin-top:10px;">
+              <label for="draftMeasure" data-i18n="draftMeasureLabel">Maßnahme</label>
+              <textarea id="draftMeasure" data-i18n-placeholder="draftMeasurePh" placeholder="Welche Maßnahme reduziert/prüft diese Ursache?"></textarea>
+            </div>
+
+            <div class="draft-actions">
+              <button type="button" class="i-btn primary" id="btnSaveDraft" data-i18n="btnSaveDraft">In Maßnahmenliste speichern</button>
+              <button type="button" class="i-btn" id="btnClearDraft" data-i18n="btnClearDraft">Eingabe leeren</button>
+              <button type="button" class="i-btn" id="btnSeedFromRY" data-i18n="btnSeedFromRY">Rote/Gelbe als Vorschläge anlegen</button>
+            </div>
+            <div class="hint-mini" data-i18n="draftHint">
+              Tipp: „Rote/Gelbe als Vorschläge“ erstellt pro Rot/Gelb-Ursache (falls noch nicht vorhanden) einen Maßnahmen-Entwurf in der Liste (Status: Offen).
+            </div>
+          </div>
+
+          <div class="measures-list" aria-label="Maßnahmenliste">
+            <div class="measures-head">
+              <div>
+                <div class="section-title" style="margin:0" data-i18n="listTitle">Maßnahmenliste</div>
+                <div class="measures-sub" id="measuresMeta">—</div>
+              </div>
+              <div class="chips" aria-label="Filter">
+                <span class="chip active" data-mfilter="all" data-i18n="filterAll">Alle</span>
+                <span class="chip" data-mfilter="open" data-i18n="mFilterOpen">Offen</span>
+                <span class="chip" data-mfilter="done" data-i18n="mFilterDone">Abgeschlossen</span>
+                <span class="chip" data-mfilter="drop" data-i18n="mFilterDrop">Verworfen</span>
+              </div>
+            </div>
+
+            <table class="measures-table" aria-label="Maßnahmen Tabelle">
+              <thead>
+                <tr>
+                  <th style="width:220px" data-i18n="thRef">Bezug (Ursache)</th>
+                  <th data-i18n="thMeasure">Maßnahme</th>
+                  <th style="width:120px" data-i18n="thDue">Termin</th>
+                  <th style="width:160px" data-i18n="thStatus">Status</th>
+                  <th style="width:260px; text-align:right" data-i18n="thActions">Aktionen</th>
+                </tr>
+              </thead>
+              <tbody id="measuresTbody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Actions -->
         <div class="ishikawa-actions">
-          <a class="i-btn" href="https://tools.quality.de/" data-i18n="backHome">Zurück zur Startseite</a>
-          <button type="button" class="i-btn primary" id="btnExport" data-i18n="btnExport">Bild exportieren (PNG)</button>
-          <button type="button" class="i-btn" id="btnPrint" data-i18n="btnPrint">Drucken</button>
-          <button type="button" class="i-btn" id="btnSave" data-i18n="btnSave">JSON Speichern</button>
-          <label class="i-btn" style="cursor:pointer">
-            <span data-i18n="btnUpload">Upload</span>
-            <input type="file" id="btnLoad" hidden>
-          </label>
-          <button type="button" class="i-btn danger" id="btnReset" data-i18n="btnReset">Reset</button>
+          <div class="actions-left">
+            <a class="i-btn" href="https://tools.quality.de/" data-i18n="backHome">Zurück zur Startseite</a>
+            <button type="button" class="i-btn primary" id="btnPrint" data-i18n="btnPrint">Drucken</button>
+            <button type="button" class="i-btn" id="btnExportPng" data-i18n="btnExportPng">PNG Export</button>
+          </div>
+
+          <div class="actions-right">
+            <button type="button" class="i-btn" id="btnSaveJson" data-i18n="btnSaveJson">JSON Speichern</button>
+            <button type="button" class="i-btn" id="btnLoadJson" data-i18n="btnLoadJson">JSON Laden</button>
+            <input type="file" id="jsonFile" accept="application/json" style="display:none" />
+            <button type="button" class="i-btn danger" id="btnReset" data-i18n="btnReset">Reset</button>
+          </div>
         </div>
 
-        <!-- Weiterführende Infos -->
+        <!-- More -->
         <section class="tool-more">
           <h3 class="more-title" data-i18n="moreTitle">Weiterführende Infos</h3>
           <p class="more-sub" data-i18n="moreSub">Lexikonartikel & passende Weiterbildungen (öffnet in neuem Tab).</p>
@@ -259,9 +662,7 @@
               <h3 data-i18n="lexTitle">Lexikon</h3>
               <p data-i18n="lexText">Hintergrund, Nutzen & Anwendung des Ishikawa-Diagramms.</p>
               <p style="margin-top:8px;">
-                <a href="https://www.quality.de/lexikon/ishikawa/" target="_blank" rel="noopener" data-i18n="lexLink">
-                  Zum Lexikonartikel: Ishikawa
-                </a>
+                <a href="https://www.quality.de/lexikon/ishikawa/" target="_blank" rel="noopener" data-i18n="lexLink">Zum Lexikonartikel: Ishikawa</a>
               </p>
             </div>
 
@@ -269,322 +670,956 @@
               <h3 data-i18n="trainTitle">Ausbildungen &amp; Seminare</h3>
               <p data-i18n="trainText">Vertiefe deine Methodenkompetenz im Qualitätsmanagement:</p>
               <ul class="more-list">
-                <li>
-                  <a href="https://www.quality.de/weiterbildung/fmea-schulung/" target="_blank" rel="noopener" data-i18n="trainFmea">
-                    FMEA Schulungen
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.quality.de/weiterbildung/8d-seminare-8d-schulungen/" target="_blank" rel="noopener" data-i18n="train8d">
-                    8D Schulungen
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.quality.de/weiterbildung/kvp/" target="_blank" rel="noopener" data-i18n="trainKvp">
-                    KVP Schulungen
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.quality.de/weiterbildung/qualitaetsmanagement/" target="_blank" rel="noopener" data-i18n="trainQm">
-                    Qualitätsmanagement
-                  </a>
-                </li>
+                <li><a href="https://www.quality.de/weiterbildung/kvp/" target="_blank" rel="noopener" data-i18n="trainKvp">KVP Seminare</a></li>
+                <li><a href="https://www.quality.de/weiterbildung/8d-seminare-8d-schulungen/" target="_blank" rel="noopener" data-i18n="train8d">8D Schulungen</a></li>
+                <li><a href="https://www.quality.de/weiterbildung/qualitaetsmanagement/" target="_blank" rel="noopener" data-i18n="trainQm">Qualitätsmanagement</a></li>
               </ul>
             </div>
           </div>
         </section>
-
       </div>
 
-      <!-- Footer -->
       <footer class="ishikawa-footer">
         <div>© <span id="copyrightYear"></span></div>
-        <div><span data-i18n="poweredBy">Powered by</span> Quality Services &amp; Wissen GmbH</div>
+        <div><a href="https://www.quality.de/" target="_blank" rel="noopener">Quality Services &amp; Wissen GmbH</a></div>
       </footer>
-
     </section>
   </div>
 
   <script>
-    /* ========= i18n (DE/EN) ========= */
+  (function(){
+    const ROOT = document.getElementById("qm-ishikawa-app");
+    if(!ROOT) return;
+
+    const CATS = ["Mensch","Maschine","Material","Methode","Mitwelt","Messung"];
+    const STORAGE_KEY = "qm_ishikawa_triage_measures_v1";
+    const LANG_KEY = "qmLang";
+    const $ = (sel) => ROOT.querySelector(sel);
+    const $$ = (sel) => Array.from(ROOT.querySelectorAll(sel));
+
+    // ---------- i18n ----------
     const I18N = {
       de: {
         title: "Ishikawa Tool (6M) – Ursachenanalyse",
-        subtitle: "Systematische Ursachenanalyse im Fischgräten-Diagramm.",
+        subtitle: "Systematische Ursachenanalyse im Fischgräten-Diagramm – inkl. Ursachen-Bewertung (Rot/Gelb/Grün) und Ableitung von Maßnahmen mit Bezug zur Fehlerursache.",
         backHome: "Zurück zur Startseite",
 
         boxToolNameTitle: "Name Tool",
         boxToolNameText: "Ishikawa-Diagramm (Fischgräte) – 6M",
         boxGoalTitle: "Ziel",
-        boxGoalText: "Ursachen strukturiert sammeln, clustern und visualisieren, um den wichtigsten Einflussfaktoren auf den Effekt näherzukommen.",
+        boxGoalText: "Ursachen strukturiert sammeln, bewerten (Rot/Gelb/Grün) und aus den relevanten Ursachen (Rot/Gelb) Maßnahmen ableiten.",
         boxHowTitle: "So benutzt du das Tool",
         step1: "Effekt / Problem rechts im Kopf eintragen.",
         step2: "Pro 6M-Kategorie Ursachen hinzufügen.",
-        step3: "Bei Bedarf Ursachen einzeln löschen (X).",
-        step4: "Export als PNG oder als JSON speichern.",
+        step3: "Ursachen unten bewerten: Rot=wahrscheinliche Ursache, Gelb=schnell prüfbar, Grün=aktuell ausgeschlossen.",
+        step4: "Aus Rot/Gelb Maßnahmen ableiten (mit Termin) → Maßnahmenliste.",
+        step5: "Print oder JSON speichern/laden.",
         boxPrivacyTitle: "Datenschutz",
-        boxPrivacyText: "Dieses Tool arbeitet vollständig im Browser. Es werden keine Daten auf einem Server gespeichert. Zugriff hat nur die Person, die die Datei lokal speichert bzw. lädt.",
+        boxPrivacyText: "Dieses Tool arbeitet vollständig im Browser. Es werden keine Daten auf einem Server gespeichert. Der Stand wird lokal im Browser gespeichert (Autosave) und kann zusätzlich als JSON exportiert/importiert werden.",
 
-        catMensch: "Mensch",
-        catMaschine: "Maschine",
-        catMaterial: "Material",
-        catMethode: "Methode",
-        catMitwelt: "Mitwelt",
-        catMessung: "Messung",
+        catMensch:"Mensch", catMaschine:"Maschine", catMaterial:"Material", catMethode:"Methode", catMitwelt:"Mitwelt", catMessung:"Messung",
+        addCause:"+ Ursache",
+        problemPlaceholder:"HAUPTPROBLEM / EFFEKT HIER EINTRAGEN...",
+        causePlaceholder:"Ursache eingeben...",
+        deleteCause:"Ursache löschen",
 
-        addCause: "+ Ursache",
-        problemPlaceholder: "HAUPTPROBLEM / EFFEKT HIER EINTRAGEN...",
-        causePlaceholder: "Ursache eingeben...",
-        deleteCause: "Ursache löschen",
+        triageTitle:"Ursachen bewerten (Rot / Gelb / Grün)",
+        triageSub:"Bewerte jede Ursache: Rot = sehr wahrscheinlich, Gelb = schnell prüfbar, Grün = momentan ausgeschlossen. Bewertungen können sich ändern.",
+        triageListTitle:"Ursachenliste",
+        filterAll:"Alle",
+        filterRed:"Rot",
+        filterYellow:"Gelb",
+        filterGreen:"Grün",
+        filterRY:"Rot+Gelb",
+        thCategory:"Kategorie",
+        thCause:"Ursache",
+        thTriage:"Bewertung",
+        thActions:"Aktion",
+        rateRed:"Rot",
+        rateYellow:"Gelb",
+        rateGreen:"Grün",
+        takeAsMeasure:"Als Maßnahme übernehmen",
 
-        btnExport: "Bild exportieren (PNG)",
-        btnPrint: "Drucken",
-        btnSave: "JSON Speichern",
-        btnUpload: "Upload",
-        btnReset: "Reset",
-        confirmReset: "Alles löschen?",
+        measuresTitle:"Ableitung von Maßnahmen",
+        measuresSub:"Aus roten und gelben Ursachen werden Maßnahmen abgeleitet. Jede Maßnahme bleibt mit der Ursache verknüpft.",
+        draftCauseRefLabel:"Bezug (Ursache)",
+        draftCauseHint:"Wähle eine Ursache in der Ursachenliste (Aktion: „Als Maßnahme übernehmen“).",
+        draftOwnerLabel:"Owner",
+        draftOwnerPh:"z.B. Qualität / Produktion",
+        draftDueLabel:"Termin",
+        draftMeasureLabel:"Maßnahme",
+        draftMeasurePh:"Welche Maßnahme reduziert/prüft diese Ursache?",
+        btnSaveDraft:"In Maßnahmenliste speichern",
+        btnClearDraft:"Eingabe leeren",
+        btnSeedFromRY:"Rote/Gelbe als Vorschläge anlegen",
+        draftHint:"Tipp: „Rote/Gelbe als Vorschläge“ erstellt pro Rot/Gelb-Ursache (falls noch nicht vorhanden) einen Maßnahmen-Entwurf in der Liste (Status: Offen).",
 
-        moreTitle: "Weiterführende Infos",
-        moreSub: "Lexikonartikel & passende Weiterbildungen (öffnet in neuem Tab).",
-        lexTitle: "Lexikon",
-        lexText: "Hintergrund, Nutzen & Anwendung des Ishikawa-Diagramms.",
-        lexLink: "Zum Lexikonartikel: Ishikawa",
-        trainTitle: "Ausbildungen & Seminare",
-        trainText: "Vertiefe deine Methodenkompetenz im Qualitätsmanagement:",
-        trainFmea: "FMEA Schulungen",
-        train8d: "8D Schulungen",
-        trainKvp: "KVP Schulungen",
-        trainQm: "Qualitätsmanagement",
+        listTitle:"Maßnahmenliste",
+        mFilterOpen:"Offen",
+        mFilterDone:"Abgeschlossen",
+        mFilterDrop:"Verworfen",
+        thRef:"Bezug (Ursache)",
+        thMeasure:"Maßnahme",
+        thDue:"Termin",
+        thStatus:"Status",
+        statusOpen:"Offen",
+        statusDone:"Abgeschlossen",
+        statusDrop:"Verworfen",
+        btnOpen:"Offen",
+        btnDone:"Abschließen",
+        btnDrop:"Verwerfen",
+        btnEdit:"Bearbeiten",
+        btnSaveRow:"Speichern",
+        btnDelete:"Löschen",
+        cancel:"Abbrechen",
 
-        poweredBy: "Powered by",
+        btnPrint:"Drucken",
+        btnExportPng:"PNG Export",
+        btnSaveJson:"JSON Speichern",
+        btnLoadJson:"JSON Laden",
+        btnReset:"Reset",
+        confirmReset:"Alles löschen (inkl. Autosave)?",
+        pngName:"Quality_Ishikawa.png",
+        jsonName:"Ishikawa_Export.json",
+        loadError:"Fehler beim Laden der Datei.",
 
-        pngName: "Quality_Ishikawa.png",
-        jsonName: "Ishikawa_Export.json",
-        loadError: "Fehler beim Laden der Datei."
+        moreTitle:"Weiterführende Infos",
+        moreSub:"Lexikonartikel & passende Weiterbildungen (öffnet in neuem Tab).",
+        lexTitle:"Lexikon",
+        lexText:"Hintergrund, Nutzen & Anwendung des Ishikawa-Diagramms.",
+        lexLink:"Zum Lexikonartikel: Ishikawa",
+        trainTitle:"Ausbildungen & Seminare",
+        trainText:"Vertiefe deine Methodenkompetenz im Qualitätsmanagement:",
+        trainKvp:"KVP Seminare",
+        train8d:"8D Schulungen",
+        trainQm:"Qualitätsmanagement",
       },
+
       en: {
         title: "Ishikawa Tool (6M) – Root Cause Analysis",
-        subtitle: "Systematic root cause analysis using a fishbone diagram.",
+        subtitle: "Systematic fishbone analysis – including cause triage (Red/Yellow/Green) and action derivation with a clear link to each cause.",
         backHome: "Back to home",
 
         boxToolNameTitle: "Tool name",
         boxToolNameText: "Ishikawa (Fishbone) Diagram – 6M",
         boxGoalTitle: "Goal",
-        boxGoalText: "Collect, cluster, and visualize causes in a structured way to get closer to the most important drivers behind the effect.",
+        boxGoalText: "Collect causes, triage them (Red/Yellow/Green), and derive actions from the relevant causes (Red/Yellow).",
         boxHowTitle: "How to use this tool",
         step1: "Enter the effect / problem in the head on the right.",
         step2: "Add causes for each 6M category.",
-        step3: "Delete individual causes if needed (X).",
-        step4: "Export as PNG or save as JSON.",
+        step3: "Triage causes below: Red=very likely, Yellow=quick to check, Green=excluded for now.",
+        step4: "Derive actions from Red/Yellow (with due date) → action list.",
+        step5: "Print or save/load JSON.",
         boxPrivacyTitle: "Privacy",
-        boxPrivacyText: "This tool runs entirely in your browser. No data is stored on any server. Only the person who saves/loads files locally has access.",
+        boxPrivacyText: "This tool runs entirely in your browser. No data is stored on any server. The state is saved locally (autosave) and can also be exported/imported as JSON.",
 
-        catMensch: "People",
-        catMaschine: "Machine",
-        catMaterial: "Material",
-        catMethode: "Method",
-        catMitwelt: "Environment",
-        catMessung: "Measurement",
+        catMensch:"People", catMaschine:"Machine", catMaterial:"Material", catMethode:"Method", catMitwelt:"Environment", catMessung:"Measurement",
+        addCause:"+ Cause",
+        problemPlaceholder:"ENTER MAIN PROBLEM / EFFECT HERE...",
+        causePlaceholder:"Enter cause...",
+        deleteCause:"Delete cause",
 
-        addCause: "+ Cause",
-        problemPlaceholder: "ENTER MAIN PROBLEM / EFFECT HERE...",
-        causePlaceholder: "Enter cause...",
-        deleteCause: "Delete cause",
+        triageTitle:"Triage causes (Red / Yellow / Green)",
+        triageSub:"Triage every cause: Red = very likely, Yellow = quick to check, Green = excluded for now. Ratings can change.",
+        triageListTitle:"Cause list",
+        filterAll:"All",
+        filterRed:"Red",
+        filterYellow:"Yellow",
+        filterGreen:"Green",
+        filterRY:"Red+Yellow",
+        thCategory:"Category",
+        thCause:"Cause",
+        thTriage:"Triage",
+        thActions:"Action",
+        rateRed:"Red",
+        rateYellow:"Yellow",
+        rateGreen:"Green",
+        takeAsMeasure:"Use as action",
 
-        btnExport: "Export image (PNG)",
-        btnPrint: "Print",
-        btnSave: "Save JSON",
-        btnUpload: "Upload",
-        btnReset: "Reset",
-        confirmReset: "Delete everything?",
+        measuresTitle:"Action derivation",
+        measuresSub:"Actions are derived from red and yellow causes. Each action stays linked to its cause.",
+        draftCauseRefLabel:"Reference (cause)",
+        draftCauseHint:"Select a cause in the cause list (Action: “Use as action”).",
+        draftOwnerLabel:"Owner",
+        draftOwnerPh:"e.g., Quality / Production",
+        draftDueLabel:"Due date",
+        draftMeasureLabel:"Action",
+        draftMeasurePh:"Which action reduces/checks this cause?",
+        btnSaveDraft:"Save to action list",
+        btnClearDraft:"Clear draft",
+        btnSeedFromRY:"Create suggestions from Red/Yellow",
+        draftHint:"Tip: “Create suggestions” creates one open action per Red/Yellow cause (if none exists yet).",
 
-        moreTitle: "More information",
-        moreSub: "Glossary article & relevant training (opens in a new tab).",
-        lexTitle: "Glossary",
-        lexText: "Background, benefits & how to use the Ishikawa diagram.",
-        lexLink: "Open glossary article: Ishikawa",
-        trainTitle: "Training & courses",
-        trainText: "Deepen your method skills in quality management:",
-        trainFmea: "FMEA training",
-        train8d: "8D training",
-        trainKvp: "Continuous improvement (CIP) training",
-        trainQm: "Quality management",
+        listTitle:"Action list",
+        mFilterOpen:"Open",
+        mFilterDone:"Done",
+        mFilterDrop:"Discarded",
+        thRef:"Reference (cause)",
+        thMeasure:"Action",
+        thDue:"Due",
+        thStatus:"Status",
+        statusOpen:"Open",
+        statusDone:"Done",
+        statusDrop:"Discarded",
+        btnOpen:"Open",
+        btnDone:"Mark done",
+        btnDrop:"Discard",
+        btnEdit:"Edit",
+        btnSaveRow:"Save",
+        btnDelete:"Delete",
+        cancel:"Cancel",
 
-        poweredBy: "Powered by",
+        btnPrint:"Print",
+        btnExportPng:"PNG export",
+        btnSaveJson:"Save JSON",
+        btnLoadJson:"Load JSON",
+        btnReset:"Reset",
+        confirmReset:"Delete everything (including autosave)?",
+        pngName:"Quality_Ishikawa.png",
+        jsonName:"Ishikawa_Export.json",
+        loadError:"Error loading the file.",
 
-        pngName: "Quality_Ishikawa.png",
-        jsonName: "Ishikawa_Export.json",
-        loadError: "Error loading the file."
+        moreTitle:"More information",
+        moreSub:"Glossary article & relevant training (opens in a new tab).",
+        lexTitle:"Glossary",
+        lexText:"Background, benefits & how to use the Ishikawa diagram.",
+        lexLink:"Open glossary article: Ishikawa",
+        trainTitle:"Training & courses",
+        trainText:"Deepen your method skills in quality management:",
+        trainKvp:"CIP / KVP training",
+        train8d:"8D training",
+        trainQm:"Quality management",
       }
     };
 
-    let currentLang = (localStorage.getItem("qmLang")
-      || (navigator.language && navigator.language.toLowerCase().startsWith("de") ? "de" : "en"));
+    let currentLang = (localStorage.getItem(LANG_KEY)
+      || ((navigator.language||"").toLowerCase().startsWith("de") ? "de" : "en"));
 
-    function t(key) {
-      return (I18N[currentLang] && I18N[currentLang][key]) ? I18N[currentLang][key] : key;
+    function t(key){
+      const d = I18N[currentLang] || I18N.de;
+      return (key in d) ? d[key] : key;
     }
 
-    function applyI18n() {
+    function applyI18n(){
       document.documentElement.lang = currentLang;
 
-      // Text nodes
-      document.querySelectorAll("[data-i18n]").forEach(el => {
-        const key = el.dataset.i18n;
-        el.textContent = t(key);
+      $$("[data-i18n]").forEach(el => el.textContent = t(el.dataset.i18n));
+      $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPlaceholder));
+
+      // lang buttons active
+      const deBtn = $("#btnLangDE"), enBtn = $("#btnLangEN");
+      if(deBtn && enBtn){
+        deBtn.classList.toggle("primary", currentLang==="de");
+        enBtn.classList.toggle("primary", currentLang==="en");
+      }
+
+      // placeholders for existing notes
+      $$(".note-item textarea").forEach(ta => {
+        if(ta.dataset.i18nPlaceholder) ta.placeholder = t(ta.dataset.i18nPlaceholder);
+      });
+      $$(".note-delete").forEach(btn => {
+        if(btn.dataset.i18nTitle) btn.title = t(btn.dataset.i18nTitle);
+        if(btn.dataset.i18nAria) btn.setAttribute("aria-label", t(btn.dataset.i18nAria));
       });
 
-      // Placeholders
-      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-        const key = el.dataset.i18nPlaceholder;
-        el.placeholder = t(key);
-      });
+      updateTriageMeta();
+      updateMeasuresMeta();
+      renderTriageTable();
+      renderMeasures();
+    }
 
-      // Titles
-      document.querySelectorAll("[data-i18n-title]").forEach(el => {
-        const key = el.dataset.i18nTitle;
-        el.title = t(key);
-      });
+    function setLanguage(lang){
+      currentLang = (lang==="de"||lang==="en") ? lang : "de";
+      localStorage.setItem(LANG_KEY, currentLang);
+      applyI18n();
+      persist();
+    }
 
-      // Aria labels
-      document.querySelectorAll("[data-i18n-aria]").forEach(el => {
-        const key = el.dataset.i18nAria;
-        el.setAttribute("aria-label", t(key));
-      });
+    // ---------- state ----------
+    function uid(){
+      try{ return crypto.randomUUID(); }catch{ return "id_" + Math.random().toString(16).slice(2); }
+    }
 
-      // Existing notes: placeholder + delete tooltip
-      document.querySelectorAll(".note-item textarea").forEach(ta => {
-        if (ta.dataset.i18nPlaceholder) ta.placeholder = t(ta.dataset.i18nPlaceholder);
-      });
-      document.querySelectorAll(".note-delete").forEach(btn => {
-        if (btn.dataset.i18nTitle) btn.title = t(btn.dataset.i18nTitle);
-        if (btn.dataset.i18nAria) btn.setAttribute("aria-label", t(btn.dataset.i18nAria));
-      });
+    const EMPTY = () => ({
+      lang: currentLang,
+      problem: "",
+      matrix: Object.fromEntries(CATS.map(c => [c, []])),
+      // measures: {id, causeId, causeSnapshot, cat, triageAtCreate, text, owner, due, status, ts}
+      measures: [],
+      draft: { causeId: null, causeSnapshot:"", cat:"", triage:"", text:"", owner:"", due:"" },
+      ts: new Date().toISOString()
+    });
 
-      // Active button style
-      const deBtn = document.getElementById("btnLangDE");
-      const enBtn = document.getElementById("btnLangEN");
-      if (deBtn && enBtn) {
-        deBtn.classList.toggle("primary", currentLang === "de");
-        enBtn.classList.toggle("primary", currentLang === "en");
+    let state = EMPTY();
+    let triageFilter = "all";     // all | red | yellow | green | ry
+    let measuresFilter = "all";   // all | open | done | drop
+    let editMeasureId = null;
+
+    // ---------- persist ----------
+    function persist(){
+      state.lang = currentLang;
+      state.problem = $("#problemInput").value || "";
+      state.ts = new Date().toISOString();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function restore(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return false;
+      try{
+        const p = JSON.parse(raw);
+        if(!p || typeof p !== "object") return false;
+
+        state = EMPTY();
+        state.lang = (p.lang==="de"||p.lang==="en") ? p.lang : currentLang;
+        state.problem = String(p.problem ?? "");
+        $("#problemInput").value = state.problem;
+
+        const m = p.matrix || {};
+        CATS.forEach(cat=>{
+          const arr = Array.isArray(m[cat]) ? m[cat] : [];
+          state.matrix[cat] = arr.map(x=>({
+            id: String(x.id || uid()),
+            text: String(x.text || ""),
+            triage: (x.triage==="red"||x.triage==="yellow"||x.triage==="green") ? x.triage : "yellow"
+          }));
+        });
+
+        const meas = Array.isArray(p.measures) ? p.measures : [];
+        state.measures = meas.map(x=>({
+          id: String(x.id || uid()),
+          causeId: x.causeId ? String(x.causeId) : null,
+          causeSnapshot: String(x.causeSnapshot || ""),
+          cat: String(x.cat || ""),
+          triageAtCreate: (x.triageAtCreate==="red"||x.triageAtCreate==="yellow"||x.triageAtCreate==="green") ? x.triageAtCreate : "",
+          text: String(x.text || ""),
+          owner: String(x.owner || ""),
+          due: String(x.due || ""),
+          status: (x.status==="open"||x.status==="done"||x.status==="drop") ? x.status : "open",
+          ts: String(x.ts || new Date().toISOString())
+        }));
+
+        const d = p.draft || {};
+        state.draft = {
+          causeId: d.causeId ? String(d.causeId) : null,
+          causeSnapshot: String(d.causeSnapshot || ""),
+          cat: String(d.cat || ""),
+          triage: String(d.triage || ""),
+          text: String(d.text || ""),
+          owner: String(d.owner || ""),
+          due: String(d.due || "")
+        };
+
+        state.ts = String(p.ts || new Date().toISOString());
+        return true;
+      }catch(e){
+        return false;
       }
     }
 
-    function setLanguage(lang) {
-      currentLang = (lang === "de" || lang === "en") ? lang : "de";
-      localStorage.setItem("qmLang", currentLang);
+    // ---------- helpers ----------
+    function esc(s){
+      return String(s ?? "")
+        .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+    }
+
+    function catLabel(cat){
+      const map = {
+        Mensch: t("catMensch"),
+        Maschine: t("catMaschine"),
+        Material: t("catMaterial"),
+        Methode: t("catMethode"),
+        Mitwelt: t("catMitwelt"),
+        Messung: t("catMessung"),
+      };
+      return map[cat] || cat;
+    }
+
+    function triageLabel(k){
+      if(k==="red") return t("rateRed");
+      if(k==="yellow") return t("rateYellow");
+      if(k==="green") return t("rateGreen");
+      return "—";
+    }
+
+    function triageDotClass(k){
+      if(k==="red") return "red";
+      if(k==="yellow") return "yellow";
+      if(k==="green") return "green";
+      return "";
+    }
+
+    function statusPill(status){
+      if(status==="done") return `<span class="status-pill status-done">${esc(t("statusDone"))}</span>`;
+      if(status==="drop") return `<span class="status-pill status-drop">${esc(t("statusDrop"))}</span>`;
+      return `<span class="status-pill status-open">${esc(t("statusOpen"))}</span>`;
+    }
+
+    function findCauseById(id){
+      if(!id) return null;
+      for(const cat of CATS){
+        const c = state.matrix[cat].find(x=>x.id===id);
+        if(c) return {cat, ...c};
+      }
+      return null;
+    }
+
+    function refTextFor(measure){
+      const c = measure.causeId ? findCauseById(measure.causeId) : null;
+      const cat = c ? c.cat : (measure.cat || "");
+      const text = c ? c.text : (measure.causeSnapshot || "");
+      const label = cat ? catLabel(cat) : "—";
+      return `${label}: ${text || "—"}`;
+    }
+
+    function allCausesFlat(){
+      const out = [];
+      CATS.forEach(cat=>{
+        state.matrix[cat].forEach(c=>{
+          out.push({cat, ...c});
+        });
+      });
+      return out;
+    }
+
+    // ---------- notes UI ----------
+    function addNote(cat, val = "", triage = "yellow"){
+      const item = { id: uid(), text: String(val || ""), triage: triage };
+      state.matrix[cat].push(item);
+      renderCat(cat);
+      persist();
+    }
+
+    function renderCat(cat){
+      const container = document.getElementById(`notes-${cat}`);
+      if(!container) return;
+      container.innerHTML = "";
+
+      state.matrix[cat].forEach(item=>{
+        const div = document.createElement("div");
+        div.className = "note-item";
+        div.innerHTML = `
+          <span class="rate-dot ${triageDotClass(item.triage)}" aria-hidden="true"></span>
+          <button type="button" class="note-delete" data-i18nTitle="deleteCause" data-i18nAria="deleteCause" title="${esc(t("deleteCause"))}" aria-label="${esc(t("deleteCause"))}">&times;</button>
+          <textarea rows="2" data-i18n-placeholder="causePlaceholder" placeholder="${esc(t("causePlaceholder"))}"></textarea>
+        `;
+
+        const ta = div.querySelector("textarea");
+        const del = div.querySelector(".note-delete");
+
+        ta.value = item.text || "";
+        ta.addEventListener("input", ()=>{
+          item.text = ta.value;
+          persist();
+          renderTriageTable();
+          renderMeasures();
+        });
+
+        del.addEventListener("click", ()=>{
+          // remove linked measures? keep measures with snapshot, but detach id if cause deleted
+          state.measures.forEach(m=>{
+            if(m.causeId === item.id){
+              m.causeId = null;
+              m.causeSnapshot = item.text || m.causeSnapshot;
+              m.cat = cat;
+              m.triageAtCreate = item.triage || m.triageAtCreate;
+            }
+          });
+
+          state.matrix[cat] = state.matrix[cat].filter(x=>x.id !== item.id);
+          renderCat(cat);
+          persist();
+          renderTriageTable();
+          renderMeasures();
+        });
+
+        container.appendChild(div);
+      });
+
+      applyI18n();
+      updateTriageMeta();
+    }
+
+    // ---------- triage ----------
+    function updateTriageMeta(){
+      const causes = allCausesFlat();
+      const n = causes.length;
+      const r = causes.filter(c=>c.triage==="red").length;
+      const y = causes.filter(c=>c.triage==="yellow").length;
+      const g = causes.filter(c=>c.triage==="green").length;
+
+      const el = $("#triageMeta");
+      if(!el) return;
+      el.textContent = (currentLang==="de")
+        ? `Gesamt: ${n} · Rot: ${r} · Gelb: ${y} · Grün: ${g}`
+        : `Total: ${n} · Red: ${r} · Yellow: ${y} · Green: ${g}`;
+    }
+
+    function triageFilterFn(c){
+      if(triageFilter==="all") return true;
+      if(triageFilter==="ry") return (c.triage==="red" || c.triage==="yellow");
+      return c.triage === triageFilter;
+    }
+
+    function renderTriageTable(){
+      const tbody = $("#triageTbody");
+      if(!tbody) return;
+      tbody.innerHTML = "";
+
+      const causes = allCausesFlat().filter(triageFilterFn);
+
+      if(causes.length === 0){
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td colspan="4" class="muted">${currentLang==="de" ? "Keine Ursachen im aktuellen Filter." : "No causes in the current filter."}</td>`;
+        tbody.appendChild(tr);
+        return;
+      }
+
+      causes.forEach(c=>{
+        const tr = document.createElement("tr");
+
+        const canAction = (c.triage==="red" || c.triage==="yellow");
+
+        tr.innerHTML = `
+          <td><strong>${esc(catLabel(c.cat))}</strong></td>
+          <td>${esc(c.text || "—")}</td>
+          <td>
+            <div class="rate-chips" role="group" aria-label="Triage">
+              <span class="rate red ${c.triage==="red" ? "selected":""}" data-rate="red" data-id="${esc(c.id)}"><span class="dot"></span>${esc(t("rateRed"))}</span>
+              <span class="rate yellow ${c.triage==="yellow" ? "selected":""}" data-rate="yellow" data-id="${esc(c.id)}"><span class="dot"></span>${esc(t("rateYellow"))}</span>
+              <span class="rate green ${c.triage==="green" ? "selected":""}" data-rate="green" data-id="${esc(c.id)}"><span class="dot"></span>${esc(t("rateGreen"))}</span>
+            </div>
+          </td>
+          <td style="text-align:right;">
+            <button type="button" class="mini-btn" data-act="take" data-id="${esc(c.id)}" ${canAction ? "" : "disabled"}>${esc(t("takeAsMeasure"))}</button>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+
+      // wire triage buttons
+      tbody.querySelectorAll("[data-rate]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const id = btn.getAttribute("data-id");
+          const rate = btn.getAttribute("data-rate");
+          const c = findCauseById(id);
+          if(!c) return;
+
+          // update triage
+          const item = state.matrix[c.cat].find(x=>x.id===id);
+          if(item){
+            item.triage = rate;
+            // update dot in diagram by rerendering the category
+            renderCat(c.cat);
+          }
+          persist();
+          updateTriageMeta();
+          renderTriageTable();
+        });
+      });
+
+      // wire "take as measure"
+      tbody.querySelectorAll('[data-act="take"]').forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const id = btn.getAttribute("data-id");
+          const c = findCauseById(id);
+          if(!c) return;
+
+          if(!(c.triage==="red" || c.triage==="yellow")){
+            return;
+          }
+
+          // fill draft with cause reference
+          state.draft.causeId = c.id;
+          state.draft.causeSnapshot = c.text || "";
+          state.draft.cat = c.cat;
+          state.draft.triage = c.triage;
+          state.draft.text = state.draft.text || (currentLang==="de"
+            ? `Maßnahme zu: ${c.text}`
+            : `Action for: ${c.text}`);
+          syncDraftInputs();
+          persist();
+          $("#draftMeasure").focus();
+        });
+      });
+
       applyI18n();
     }
 
-    /* Notizen hinzufügen (inkl. Löschfunktion) */
-    function addNote(cat, val = '') {
-      const container = document.getElementById(`notes-${cat}`);
-      const div = document.createElement('div');
-      div.className = 'note-item';
+    // ---------- measures ----------
+    function updateMeasuresMeta(){
+      const total = state.measures.length;
+      const open = state.measures.filter(m=>m.status==="open").length;
+      const done = state.measures.filter(m=>m.status==="done").length;
+      const drop = state.measures.filter(m=>m.status==="drop").length;
 
-      const del = document.createElement('button');
-      del.type = 'button';
-      del.className = 'note-delete';
-      del.dataset.i18nTitle = 'deleteCause';
-      del.dataset.i18nAria  = 'deleteCause';
-      del.title = t('deleteCause');
-      del.setAttribute('aria-label', t('deleteCause'));
-      del.innerHTML = '&times;';
-      del.onclick = () => div.remove();
-
-      const ta = document.createElement('textarea');
-      ta.rows = 2;
-      ta.dataset.i18nPlaceholder = 'causePlaceholder';
-      ta.placeholder = t('causePlaceholder');
-      ta.value = val;
-
-      div.appendChild(del);
-      div.appendChild(ta);
-      container.appendChild(div);
+      const el = $("#measuresMeta");
+      if(!el) return;
+      el.textContent = (currentLang==="de")
+        ? `Gesamt: ${total} · Offen: ${open} · Abgeschlossen: ${done} · Verworfen: ${drop}`
+        : `Total: ${total} · Open: ${open} · Done: ${done} · Discarded: ${drop}`;
     }
 
-    /* Export als Bild */
-    document.getElementById('btnExport').onclick = () => {
-      const area = document.getElementById('capture-area');
-      html2canvas(area, { scale: 2 }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = t('pngName');
-        link.href = canvas.toDataURL();
-        link.click();
+    function measuresFilterFn(m){
+      if(measuresFilter==="all") return true;
+      return m.status === measuresFilter;
+    }
+
+    function syncDraftInputs(){
+      const ref = $("#draftCauseRef");
+      const cause = state.draft.causeId ? findCauseById(state.draft.causeId) : null;
+      if(cause){
+        ref.value = `${catLabel(cause.cat)}: ${cause.text || "—"} (${triageLabel(cause.triage)})`;
+      }else if(state.draft.causeSnapshot){
+        ref.value = `${catLabel(state.draft.cat || "")}: ${state.draft.causeSnapshot || "—"} (${triageLabel(state.draft.triage)})`;
+      }else{
+        ref.value = "—";
+      }
+
+      $("#draftMeasure").value = state.draft.text || "";
+      $("#draftOwner").value = state.draft.owner || "";
+      $("#draftDue").value = state.draft.due || "";
+    }
+
+    function saveDraftToMeasures(){
+      const text = ($("#draftMeasure").value || "").trim();
+      const owner = ($("#draftOwner").value || "").trim();
+      const due = ($("#draftDue").value || "").trim();
+
+      if(!state.draft.causeId && !state.draft.causeSnapshot){
+        alert(currentLang==="de"
+          ? "Bitte zuerst eine Ursache auswählen (Als Maßnahme übernehmen)."
+          : "Please select a cause first (Use as action).");
+        return;
+      }
+      if(!text){
+        alert(currentLang==="de" ? "Bitte eine Maßnahme formulieren." : "Please enter an action.");
+        $("#draftMeasure").focus();
+        return;
+      }
+
+      const cause = state.draft.causeId ? findCauseById(state.draft.causeId) : null;
+
+      state.measures.push({
+        id: uid(),
+        causeId: cause ? cause.id : null,
+        causeSnapshot: cause ? (cause.text||"") : (state.draft.causeSnapshot||""),
+        cat: cause ? cause.cat : (state.draft.cat||""),
+        triageAtCreate: cause ? cause.triage : (state.draft.triage||""),
+        text,
+        owner,
+        due,
+        status: "open",
+        ts: new Date().toISOString()
       });
-    };
 
-    /* Print */
-    document.getElementById('btnPrint').onclick = () => {
-      window.print();
-    };
+      // clear draft for next action
+      state.draft = { causeId:null, causeSnapshot:"", cat:"", triage:"", text:"", owner:"", due:"" };
+      syncDraftInputs();
+      persist();
+      renderMeasures();
+      $("#draftMeasure").focus();
+    }
 
-    /* Speichern als JSON */
-    document.getElementById('btnSave').onclick = () => {
-      const data = {
-        lang: currentLang,
-        problem: document.getElementById('problemInput').value,
-        matrix: {}
-      };
-      ['Mensch','Maschine','Material','Methode','Mitwelt','Messung'].forEach(m => {
-        data.matrix[m] = Array.from(document.querySelectorAll(`#notes-${m} textarea`)).map(t => t.value);
+    function clearDraft(){
+      state.draft = { causeId:null, causeSnapshot:"", cat:"", triage:"", text:"", owner:"", due:"" };
+      syncDraftInputs();
+      persist();
+    }
+
+    function seedFromRedYellow(){
+      // For each red/yellow cause: create an "open" measure if none exists yet for that causeId
+      const causes = allCausesFlat().filter(c => c.triage==="red" || c.triage==="yellow");
+      let created = 0;
+
+      causes.forEach(c=>{
+        const exists = state.measures.some(m => m.causeId === c.id);
+        if(exists) return;
+        state.measures.push({
+          id: uid(),
+          causeId: c.id,
+          causeSnapshot: c.text || "",
+          cat: c.cat,
+          triageAtCreate: c.triage,
+          text: (currentLang==="de" ? `Maßnahme zu: ${c.text}` : `Action for: ${c.text}`),
+          owner: "",
+          due: "",
+          status: "open",
+          ts: new Date().toISOString()
+        });
+        created++;
       });
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = t('jsonName');
-      a.click();
-    };
 
-    /* Laden von JSON */
-    document.getElementById('btnLoad').onchange = (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
+      persist();
+      renderMeasures();
 
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        try {
-          const data = JSON.parse(ev.target.result);
+      if(created === 0){
+        alert(currentLang==="de"
+          ? "Keine neuen Vorschläge: Für alle Rot/Gelb-Ursachen existiert bereits mindestens eine Maßnahme."
+          : "No new suggestions: each Red/Yellow cause already has at least one action.");
+      }
+    }
 
-          // optional: Sprache aus Datei übernehmen
-          if (data.lang === "de" || data.lang === "en") setLanguage(data.lang);
+    function renderMeasures(){
+      updateMeasuresMeta();
 
-          document.getElementById('problemInput').value = data.problem || '';
-          Object.keys(data.matrix || {}).forEach(m => {
-            const container = document.getElementById(`notes-${m}`);
-            if (!container) return;
-            container.innerHTML = '';
-            (data.matrix[m] || []).forEach(txt => addNote(m, txt));
+      const tbody = $("#measuresTbody");
+      tbody.innerHTML = "";
+
+      const list = state.measures
+        .filter(measuresFilterFn)
+        .slice()
+        .sort((a,b)=>{
+          const da = a.due || "9999-12-31";
+          const db = b.due || "9999-12-31";
+          if(da < db) return -1;
+          if(da > db) return 1;
+          return String(a.ts).localeCompare(String(b.ts));
+        });
+
+      if(list.length === 0){
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td colspan="5" class="muted">${currentLang==="de" ? "Keine Maßnahmen im aktuellen Filter." : "No actions in the current filter."}</td>`;
+        tbody.appendChild(tr);
+        return;
+      }
+
+      list.forEach(m=>{
+        const isEdit = (editMeasureId === m.id);
+
+        const ref = refTextFor(m);
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${esc(ref)}</td>
+          <td>
+            ${isEdit
+              ? `<div class="field" style="margin:0;">
+                   <textarea data-edit="text" style="min-height:74px;">${esc(m.text)}</textarea>
+                 </div>
+                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:8px;">
+                   <div class="field" style="margin:0;">
+                     <label style="margin:0 0 6px;">${esc(t("draftOwnerLabel"))}</label>
+                     <input data-edit="owner" type="text" value="${esc(m.owner)}" />
+                   </div>
+                   <div class="field" style="margin:0;">
+                     <label style="margin:0 0 6px;">${esc(t("draftDueLabel"))}</label>
+                     <input data-edit="due" type="date" value="${esc(m.due)}" />
+                   </div>
+                 </div>`
+              : `<div style="font-weight:900; color:#0f172a;">${esc(m.text || "—")}</div>
+                 <div class="muted" style="font-size:12px; margin-top:4px;">${esc(m.owner || "—")}</div>`
+            }
+          </td>
+          <td>${isEdit ? "" : esc(m.due || "—")}</td>
+          <td>${statusPill(m.status)}</td>
+          <td style="text-align:right;">
+            <div class="row-actions">
+              ${isEdit
+                ? `<button type="button" class="mini-btn" data-act="save" data-id="${esc(m.id)}">${esc(t("btnSaveRow"))}</button>
+                   <button type="button" class="mini-btn" data-act="cancel" data-id="${esc(m.id)}">${esc(t("cancel"))}</button>`
+                : `<button type="button" class="mini-btn" data-act="edit" data-id="${esc(m.id)}">${esc(t("btnEdit"))}</button>
+                   <button type="button" class="mini-btn" data-act="open" data-id="${esc(m.id)}">${esc(t("btnOpen"))}</button>
+                   <button type="button" class="mini-btn" data-act="done" data-id="${esc(m.id)}">${esc(t("btnDone"))}</button>
+                   <button type="button" class="mini-btn" data-act="drop" data-id="${esc(m.id)}">${esc(t("btnDrop"))}</button>
+                   <button type="button" class="mini-btn danger" data-act="del" data-id="${esc(m.id)}">${esc(t("btnDelete"))}</button>`
+              }
+            </div>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+
+        tr.querySelectorAll("[data-act]").forEach(btn=>{
+          btn.addEventListener("click", ()=>{
+            onMeasureAction(btn.getAttribute("data-act"), btn.getAttribute("data-id"), tr);
           });
+        });
+      });
 
-          applyI18n(); // damit Placeholders/Labels sauber sind
-        } catch (err) {
-          alert(t('loadError'));
+      applyI18n();
+    }
+
+    function onMeasureAction(act, id, rowEl){
+      const m = state.measures.find(x=>x.id===id);
+      if(!m) return;
+
+      if(act==="edit"){ editMeasureId = id; renderMeasures(); return; }
+      if(act==="cancel"){ editMeasureId = null; renderMeasures(); return; }
+
+      if(act==="save"){
+        const text = rowEl.querySelector('[data-edit="text"]')?.value ?? m.text;
+        const owner = rowEl.querySelector('[data-edit="owner"]')?.value ?? m.owner;
+        const due = rowEl.querySelector('[data-edit="due"]')?.value ?? m.due;
+
+        m.text = String(text).trim();
+        m.owner = String(owner).trim();
+        m.due = String(due).trim();
+
+        editMeasureId = null;
+        persist();
+        renderMeasures();
+        return;
+      }
+
+      if(act==="open") m.status = "open";
+      if(act==="done") m.status = "done";
+      if(act==="drop") m.status = "drop";
+      if(act==="del"){
+        const ok = confirm(currentLang==="de" ? "Maßnahme löschen?" : "Delete this action?");
+        if(!ok) return;
+        state.measures = state.measures.filter(x=>x.id !== id);
+      }
+
+      persist();
+      renderMeasures();
+    }
+
+    // ---------- JSON ----------
+    function downloadJson(){
+      state.lang = currentLang;
+      state.problem = $("#problemInput").value || "";
+      state.ts = new Date().toISOString();
+
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type:"application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = t("jsonName");
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function loadJsonFile(file){
+      file.text().then(txt=>{
+        const parsed = JSON.parse(txt);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+        if(!restore()){
+          alert(t("loadError"));
+          return;
         }
-      };
-      reader.readAsText(file);
+        if(state.lang==="de"||state.lang==="en") currentLang = state.lang;
+        localStorage.setItem(LANG_KEY, currentLang);
 
-      // Damit man dieselbe Datei direkt nochmal laden kann
-      e.target.value = '';
-    };
+        buildAll();
+      }).catch(()=> alert(t("loadError")));
+    }
 
-    /* Reset */
-    document.getElementById('btnReset').onclick = () => {
-      if (confirm(t('confirmReset'))) location.reload();
-    };
+    // ---------- Export PNG (optional) ----------
+    function exportPng(){
+      const area = document.getElementById("capture-area");
+      html2canvas(area, { scale: 2, backgroundColor:"#ffffff" }).then(canvas=>{
+        const link = document.createElement("a");
+        link.download = t("pngName");
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      }).catch(()=>{
+        alert(currentLang==="de" ? "PNG Export fehlgeschlagen." : "PNG export failed.");
+      });
+    }
 
-    /* Copyright-Jahr automatisch setzen */
-    (function setCopyrightYear(){
-      const el = document.getElementById('copyrightYear');
-      if (el) el.textContent = new Date().getFullYear();
-    })();
+    // ---------- init/build ----------
+    function buildAll(){
+      // render categories
+      CATS.forEach(renderCat);
 
-    /* Language buttons */
-    document.getElementById("btnLangDE").onclick = () => setLanguage("de");
-    document.getElementById("btnLangEN").onclick = () => setLanguage("en");
+      // draft
+      syncDraftInputs();
 
-    /* init */
-    setLanguage(currentLang);
+      // tables
+      renderTriageTable();
+      renderMeasures();
+
+      // i18n
+      applyI18n();
+
+      // year
+      const y = new Date().getFullYear();
+      const yEl = document.getElementById("copyrightYear");
+      if(yEl) yEl.textContent = String(y);
+
+      persist();
+    }
+
+    // ---------- wire events ----------
+    document.getElementById("btnLangDE").addEventListener("click", ()=> setLanguage("de"));
+    document.getElementById("btnLangEN").addEventListener("click", ()=> setLanguage("en"));
+
+    // add cause buttons
+    $$(".btn-add").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const cat = btn.getAttribute("data-cat");
+        addNote(cat, "", "yellow"); // default gelb = "prüfbar / unklar"
+        updateTriageMeta();
+        renderTriageTable();
+      });
+    });
+
+    // problem autosave
+    $("#problemInput").addEventListener("input", ()=> persist());
+
+    // triage filter chips
+    $$('.chip[data-filter]').forEach(ch=>{
+      ch.addEventListener("click", ()=>{
+        triageFilter = ch.getAttribute("data-filter");
+        $$('.chip[data-filter]').forEach(x=>x.classList.toggle("active", x.getAttribute("data-filter")===triageFilter));
+        renderTriageTable();
+      });
+    });
+
+    // measures filter chips
+    $$('.chip[data-mfilter]').forEach(ch=>{
+      ch.addEventListener("click", ()=>{
+        measuresFilter = ch.getAttribute("data-mfilter");
+        $$('.chip[data-mfilter]').forEach(x=>x.classList.toggle("active", x.getAttribute("data-mfilter")===measuresFilter));
+        renderMeasures();
+      });
+    });
+
+    // draft inputs
+    $("#draftMeasure").addEventListener("input", (e)=>{ state.draft.text = e.target.value; persist(); });
+    $("#draftOwner").addEventListener("input", (e)=>{ state.draft.owner = e.target.value; persist(); });
+    $("#draftDue").addEventListener("input", (e)=>{ state.draft.due = e.target.value; persist(); });
+
+    $("#btnSaveDraft").addEventListener("click", saveDraftToMeasures);
+    $("#btnClearDraft").addEventListener("click", clearDraft);
+    $("#btnSeedFromRY").addEventListener("click", seedFromRedYellow);
+
+    // print / png / json / reset
+    $("#btnPrint").addEventListener("click", ()=> window.print());
+    $("#btnExportPng").addEventListener("click", exportPng);
+
+    $("#btnSaveJson").addEventListener("click", downloadJson);
+    $("#btnLoadJson").addEventListener("click", ()=> $("#jsonFile").click());
+    $("#jsonFile").addEventListener("change", (ev)=>{
+      const f = ev.target.files && ev.target.files[0];
+      if(!f) return;
+      loadJsonFile(f);
+      ev.target.value = "";
+    });
+
+    $("#btnReset").addEventListener("click", ()=>{
+      if(!confirm(t("confirmReset"))) return;
+      localStorage.removeItem(STORAGE_KEY);
+      state = EMPTY();
+      $("#problemInput").value = "";
+      triageFilter = "all";
+      measuresFilter = "all";
+      editMeasureId = null;
+      buildAll();
+    });
+
+    // ---------- start ----------
+    const ok = restore();
+    if(ok){
+      if(state.lang==="de"||state.lang==="en") currentLang = state.lang;
+      localStorage.setItem(LANG_KEY, currentLang);
+    }
+    buildAll();
+
+  })();
   </script>
 </body>
 </html>
