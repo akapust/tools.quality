@@ -1,22 +1,13 @@
-<!-- =========================
-     MINMAP TOOL (DE/EN)
-     jsMind + Zoom/Pan + Undo/Redo + Reset
-     Maßnahmen: Draft -> Speichern -> Maßnahmenliste (Status, Termin, Owner)
-     JSON Import/Export + Print
-     Intro Grid: Ziel, Schritte, Datenschutz
-     Links: Lexikon Mindmap + Seminare (KVP, QM, OPEX, FMEA)
-========================= -->
-
 <!doctype html>
 <html lang="de">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mindmap Tool – Ideen → Bewertung → Maßnahmen</title>
+  <title>Mindmap Tool – Ideen → Maßnahmen</title>
 
-  <!-- jsMind (CDN) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsmind@0.8.5/style/jsmind.css">
-  <script src="https://cdn.jsdelivr.net/npm/jsmind@0.8.5/es6/jsmind.js"></script>
+  <!-- jsMind (SVG/Canvas Mindmap Library) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsmind@0.9.1/style/jsmind.css">
+  <script src="https://cdn.jsdelivr.net/npm/jsmind@0.9.1/es6/jsmind.js"></script>
 
   <style>
     :root{
@@ -26,348 +17,214 @@
       --border:#d1d9e6;
       --text:#27304d;
       --muted:#64748b;
-
       --note:#fff9c4;
-
+      --radius:4px;
+      --shadow: 0 4px 12px rgba(0,0,0,0.10);
       --green:#16a34a;
       --yellow:#f59e0b;
       --red:#e53e3e;
-
-      --radius:4px;
-      --shadow:0 4px 12px rgba(0,0,0,0.10);
     }
 
-    body{ margin:0; background:#fff; color:var(--text); font-family:'Segoe UI', Roboto, sans-serif; }
+    body{ margin:0; background:#ffffff; color:var(--text); font-family:'Segoe UI', Roboto, sans-serif; }
+    #qm-mindmap-app{ max-width:1100px; margin:20px auto; padding:0 12px; }
 
-    .app{ max-width:1100px; margin:20px auto; padding:0 12px; }
-    .card{
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
+    #qm-mindmap-app .card{
+      background:#fff; border:1px solid var(--border); border-radius:var(--radius);
+      box-shadow:var(--shadow); overflow:hidden;
     }
 
-    /* Intro (wie eure Tools) */
-    .tool-intro{ padding:22px 25px; border-bottom:3px solid var(--blue); background:var(--light-bg); }
-    .tool-intro-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:15px; flex-wrap:wrap; }
-    .tool-title{ margin:0; color:var(--dark); font-size:20px; text-transform:uppercase; }
-    .tool-sub{ margin:6px 0 0; font-size:13px; color:var(--muted); }
+    /* Intro / Header */
+    #qm-mindmap-app .tool-intro{ padding:22px 25px; border-bottom:3px solid var(--blue); background:var(--light-bg); }
+    #qm-mindmap-app .intro-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+    #qm-mindmap-app .tool-title{ margin:0; color:var(--dark); font-size:20px; text-transform:uppercase; }
+    #qm-mindmap-app .tool-sub{ margin:6px 0 0; font-size:13px; color:var(--muted); }
 
-    .tool-grid{ margin-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .tool-box{ background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:12px 14px; }
-    .tool-box h3{ margin:0 0 6px; font-size:13px; color:var(--dark); text-transform:uppercase; }
-    .tool-box p, .tool-box ol{ margin:0; font-size:13px; color:#334155; }
-    .tool-box ol{ padding-left:18px; }
-    .tool-privacy{ border-left:3px solid var(--blue); }
+    #qm-mindmap-app .tool-grid{ margin-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    #qm-mindmap-app .tool-box{ background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:12px 14px; }
+    #qm-mindmap-app .tool-box h3{ margin:0 0 6px 0; font-size:13px; color:var(--dark); text-transform:uppercase; }
+    #qm-mindmap-app .tool-box p, #qm-mindmap-app .tool-box ol{ margin:0; font-size:13px; color:#334155; }
+    #qm-mindmap-app .tool-box ol{ padding-left:18px; }
+    #qm-mindmap-app .tool-privacy{ border-left:3px solid var(--blue); }
 
-    .tool-box a{ color:var(--blue); text-decoration:none; }
-    .tool-box a:hover{ text-decoration:underline; }
+    #qm-mindmap-app a{ color:var(--blue); text-decoration:none; }
+    #qm-mindmap-app a:hover{ text-decoration:underline; }
 
     /* Buttons */
-    .btn{
-      padding:10px 18px;
-      font-size:13px;
-      font-weight:800;
-      border-radius:var(--radius);
-      cursor:pointer;
-      border:1px solid var(--border);
-      background:#fff;
-      text-transform:uppercase;
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      color:#334155;
-      user-select:none;
+    #qm-mindmap-app .btn-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    #qm-mindmap-app .btn{
+      padding:10px 18px; font-size:13px; font-weight:800; border-radius:var(--radius);
+      cursor:pointer; border:1px solid var(--border); background:#fff; text-transform:uppercase;
+      display:inline-flex; align-items:center; gap:8px;
     }
-    .btn.primary{ background:var(--blue); border-color:var(--blue); color:#fff; }
-    .btn.primary:hover{ background:var(--dark); border-color:var(--dark); }
-    .btn.danger{ color:var(--red); }
-    .btn:disabled{ opacity:.55; cursor:not-allowed; }
+    #qm-mindmap-app .btn.primary{ background:var(--blue); color:#fff; border-color:var(--blue); }
+    #qm-mindmap-app .btn.primary:hover{ background:var(--dark); border-color:var(--dark); }
+    #qm-mindmap-app .btn.danger{ color:var(--red); border-color:rgba(229,62,62,.35); }
+    #qm-mindmap-app .btn.small{ padding:8px 12px; font-size:12px; }
+    #qm-mindmap-app .btn:disabled{ opacity:.55; cursor:not-allowed; }
 
-    .lang-switch{ display:flex; gap:8px; align-items:center; }
-    .lang-switch .btn{ padding:8px 12px; font-size:12px; }
+    /* Language switch */
+    #qm-mindmap-app .lang-switch{ display:flex; gap:8px; align-items:center; }
+    #qm-mindmap-app .lang-switch .btn{ padding:8px 12px; font-size:12px; }
 
-    .body{ padding:25px; }
-
-    /* Meta */
-    .meta-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-bottom:14px;
-    }
-    .meta-full{ grid-column:1 / -1; }
-    .field{ display:flex; flex-direction:column; gap:6px; }
-    .label{ font-size:12px; color:var(--muted); font-weight:900; text-transform:uppercase; }
-    .input, .textarea{
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:10px;
-      font-size:13px;
-      font-family:inherit;
-      outline:none;
-      background:#fff;
-    }
-    .textarea{ min-height:70px; resize:vertical; }
-
-    .savebar{
-      display:flex; flex-wrap:wrap; gap:10px; align-items:center;
-      padding:10px 12px;
-      border:1px solid #edf2f7;
-      background:#fff;
-      border-radius:var(--radius);
+    /* Body sections */
+    #qm-mindmap-app .body{ padding:25px; }
+    #qm-mindmap-app .section{
+      border:1px solid #edf2f7; border-radius:var(--radius); padding:16px; background:#fff;
       margin-bottom:16px;
     }
-    .savebadge{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px; border-radius:999px;
-      border:1px solid rgba(17,85,178,.25);
-      background:#fff;
-      font-size:12px;
-      font-weight:900;
-      color:var(--dark);
-    }
-    .dot{ width:8px; height:8px; border-radius:50%; background:var(--green); display:inline-block; }
-    .dot.saving{ background:var(--yellow); }
-    .dot.idle{ background:#94a3b8; }
-
-    /* Map area */
-    .map-wrap{
-      border:1px solid #edf2f7;
-      border-radius:var(--radius);
-      background:#fff;
-      overflow:hidden;
-    }
-    .map-head{
+    #qm-mindmap-app .section-head{
       display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;
-      padding:12px;
-      background:var(--light-bg);
-      border-bottom:1px solid #eef2f7;
+      padding-bottom:10px; margin-bottom:12px; border-bottom:1px solid #eef2f7;
     }
-    .map-title{ margin:0; font-size:13px; font-weight:900; color:var(--dark); text-transform:uppercase; }
-    .map-sub{ margin:4px 0 0; font-size:12px; color:var(--muted); }
-    .map-actions{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:flex-end; }
-
-    .btn.small{ padding:8px 10px; font-size:11px; }
-    .btn.ghost{ background:#fff; }
-
-    .jm-container{
-      position:relative;
-      height:480px;
-      background:radial-gradient(circle at center, rgba(17,85,178,.06) 0%, transparent 65%);
+    #qm-mindmap-app .sec-title{
+      margin:0; font-size:14px; font-weight:900; color:var(--dark); text-transform:uppercase;
+      letter-spacing:.3px;
     }
+    #qm-mindmap-app .sec-sub{ margin:4px 0 0; font-size:13px; color:var(--muted); }
 
-    /* Overlay for pan/zoom instructions */
-    .hint{
-      margin-top:10px;
-      font-size:12px;
-      color:var(--muted);
+    /* Form */
+    #qm-mindmap-app .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    #qm-mindmap-app .full{ grid-column:1 / -1; }
+    #qm-mindmap-app label{ display:block; font-size:12px; color:var(--muted); margin-bottom:6px; text-transform:uppercase; font-weight:900; }
+    #qm-mindmap-app input, #qm-mindmap-app textarea, #qm-mindmap-app select{
+      width:100%; border:1px solid var(--border); border-radius:var(--radius);
+      padding:10px; font-family:inherit; font-size:13px; outline:none; background:#fff;
+    }
+    #qm-mindmap-app textarea{ min-height:72px; resize:vertical; }
+    #qm-mindmap-app input:focus, #qm-mindmap-app textarea:focus, #qm-mindmap-app select:focus{
+      border-color:rgba(17,85,178,.65); box-shadow:0 0 0 3px rgba(17,85,178,.12);
     }
 
-    /* Selected node info */
-    .selbar{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-      margin:12px 0 16px;
-    }
-    .chip{
+    /* Status pill */
+    #qm-mindmap-app .pill{
       display:inline-flex; align-items:center; gap:8px;
-      border:1px solid rgba(17,85,178,.25);
-      border-radius:999px;
-      padding:6px 10px;
-      background:#fff;
-      font-size:12px;
-      font-weight:900;
-      color:#0f172a;
+      border:1px solid var(--border); border-radius:999px; padding:6px 10px;
+      font-size:12px; font-weight:900; background:#fff; color:#0f172a;
     }
-    .chip code{ font-weight:800; color:#475569; }
+    #qm-mindmap-app .pill.ok{ border-color:rgba(22,163,74,.35); background:rgba(22,163,74,.08); }
+    #qm-mindmap-app .pill.warn{ border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.10); }
+    #qm-mindmap-app .pill.bad{ border-color:rgba(229,62,62,.35); background:rgba(229,62,62,.08); }
 
-    /* Bewertung (R/Y/G) */
-    .rating-row{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-      margin-top:6px;
-    }
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      border-radius:999px;
-      padding:6px 10px;
-      border:1px solid rgba(100,116,139,.22);
-      background:#fff;
-      cursor:pointer;
-      user-select:none;
-      font-weight:900;
-      font-size:12px;
-    }
-    .pill .p-dot{ width:10px; height:10px; border-radius:50%; background:#cbd5e1; }
-    .pill.red .p-dot{ background:var(--red); }
-    .pill.yellow .p-dot{ background:var(--yellow); }
-    .pill.green .p-dot{ background:var(--green); }
-    .pill.selected{
-      box-shadow:0 6px 14px rgba(0,0,0,.08);
-      transform:translateY(-1px);
-      border-color:rgba(15,23,42,.28);
-    }
-
-    /* Maßnahmen */
-    .divider{ height:1px; background:#edf2f7; margin:16px 0; }
-
-    .section-title{ margin:0 0 6px; font-size:13px; color:var(--dark); text-transform:uppercase; font-weight:900; }
-    .section-sub{ margin:0 0 10px; font-size:13px; color:var(--muted); }
-
-    .draft{
-      border:1px solid var(--border);
+    /* Mindmap area */
+    #qm-mindmap-app .map-wrap{
+      border:1px solid rgba(17,85,178,.15);
       border-radius:var(--radius);
-      padding:12px 14px;
-      background:#fff;
+      background: radial-gradient(circle at center, rgba(17,85,178,.06) 0%, transparent 70%);
+      padding:10px;
     }
-    .draft-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-top:10px;
-    }
-    .draft-grid .meta-full{ grid-column:1 / -1; }
-
-    .mini-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-
-    .actions-table{
+    #qm-mindmap-app #jsmind_container{
       width:100%;
-      border-collapse:collapse;
-      border:1px solid #e2e8f0;
+      height:520px;
+      background:#ffffff;
+      border:1px solid rgba(17,85,178,.15);
       border-radius:var(--radius);
       overflow:hidden;
-      background:#fff;
     }
-    .actions-table th, .actions-table td{
-      border-bottom:1px solid #eef2f7;
-      padding:10px;
-      font-size:13px;
-      vertical-align:top;
+    #qm-mindmap-app .map-tools{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      margin:10px 0 0;
+      padding-top:10px; border-top:1px solid rgba(17,85,178,.12);
     }
-    .actions-table th{
-      background:var(--light-bg);
-      text-transform:uppercase;
-      font-size:12px;
-      color:var(--dark);
-      font-weight:900;
-    }
-    .status{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      border-radius:999px;
-      padding:5px 9px;
-      border:1px solid rgba(100,116,139,.22);
-      font-weight:900;
-      font-size:12px;
-      background:#fff;
-      white-space:nowrap;
-    }
-    .status.open{ border-color:rgba(245,158,11,.35); }
-    .status.done{ border-color:rgba(22,163,74,.35); }
-    .status.drop{ border-color:rgba(229,62,62,.35); }
+    #qm-mindmap-app .hint{ margin:10px 0 0; font-size:12px; color:var(--muted); }
 
-    .row-actions{ display:flex; gap:8px; flex-wrap:wrap; }
-    .icon-btn{
-      padding:7px 10px;
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      background:#fff;
-      cursor:pointer;
-      font-weight:900;
-      font-size:12px;
-      text-transform:uppercase;
+    /* Measures */
+    #qm-mindmap-app .measure-list{ display:flex; flex-direction:column; gap:10px; margin-top:10px; }
+    #qm-mindmap-app .measure-item{
+      border:1px solid #e2e8f0; border-radius:var(--radius); padding:10px; background:#fff;
+      position:relative;
     }
-    .icon-btn:hover{ border-color:var(--blue); color:var(--blue); background:#f8fafc; }
-    .icon-btn.danger{ color:var(--red); }
+    #qm-mindmap-app .measure-top{
+      display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap;
+      margin-bottom:8px;
+    }
+    #qm-mindmap-app .measure-title{
+      font-weight:900; color:#0f172a; font-size:13px; margin:0;
+    }
+    #qm-mindmap-app .measure-meta{ font-size:12px; color:var(--muted); margin:4px 0 0; }
+    #qm-mindmap-app .measure-actions{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    #qm-mindmap-app .mini{
+      padding:7px 10px; font-size:11px; font-weight:900; border-radius:var(--radius);
+      cursor:pointer; border:1px solid var(--border); background:#fff; text-transform:uppercase;
+    }
+    #qm-mindmap-app .mini:hover{ border-color:var(--blue); color:var(--blue); background:#f8fafc; }
 
-    /* Export area bottom */
-    .exports{
-      margin-top:18px;
-      padding-top:16px;
-      border-top:2px solid var(--blue);
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
+    #qm-mindmap-app .status{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid var(--border); border-radius:999px; padding:6px 10px;
+      font-size:11px; font-weight:900; text-transform:uppercase;
+    }
+    #qm-mindmap-app .st-open{ border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.10); color:#7c2d12; }
+    #qm-mindmap-app .st-done{ border-color:rgba(22,163,74,.35); background:rgba(22,163,74,.08); color:#14532d; }
+    #qm-mindmap-app .st-drop{ border-color:rgba(229,62,62,.35); background:rgba(229,62,62,.08); color:#7f1d1d; }
+
+    /* Bottom actions + More info + Footer */
+    #qm-mindmap-app .actions-bottom{
+      margin-top:18px; padding-top:16px; border-top:2px solid var(--blue);
+      display:flex; gap:10px; flex-wrap:wrap;
     }
 
-    /* More info */
-    .tool-more{ margin-top:22px; padding-top:18px; border-top:2px solid var(--blue); }
-    .more-title{ margin:0 0 6px; font-size:13px; color:var(--dark); text-transform:uppercase; }
-    .more-sub{ margin:0 0 10px; font-size:13px; color:var(--muted); }
-    .more-list{ margin:8px 0 0; padding-left:18px; font-size:13px; color:#334155; }
-    .more-list li{ margin:4px 0; }
+    #qm-mindmap-app .tool-more{ margin-top:22px; padding-top:18px; border-top:2px solid var(--blue); }
+    #qm-mindmap-app .more-title{ margin:0 0 6px 0; font-size:13px; color:var(--dark); text-transform:uppercase; }
+    #qm-mindmap-app .more-sub{ margin:0 0 10px 0; font-size:13px; color:var(--muted); }
+    #qm-mindmap-app .more-list{ margin:8px 0 0; padding-left:18px; font-size:13px; color:#334155; }
+    #qm-mindmap-app .more-list li{ margin:4px 0; }
 
-    /* Footer */
-    .footer{
-      padding:12px 25px;
-      background:var(--light-bg);
-      border-top:1px solid var(--border);
-      font-size:12px;
-      color:var(--muted);
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
+    #qm-mindmap-app .footer{
+      padding:12px 25px; background:var(--light-bg); border-top:1px solid var(--border);
+      font-size:12px; color:var(--muted);
+      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
     }
-    .footer a{ color:var(--dark); font-weight:800; text-decoration:none; }
-    .footer a:hover{ text-decoration:underline; }
 
     /* Toast */
-    .toast{
-      position:fixed;
-      bottom:18px;
-      left:50%;
-      transform:translateX(-50%);
-      background:#0f172a;
-      color:#fff;
-      padding:12px 18px;
-      border-radius:999px;
-      font-size:14px;
-      z-index:9999;
-      opacity:0;
-      pointer-events:none;
-      transition:opacity .25s;
+    #qm-mindmap-app .toast{
+      position:fixed; bottom:18px; left:50%; transform:translateX(-50%);
+      background:#0f172a; color:#fff; padding:12px 18px; border-radius:999px;
+      font-size:14px; z-index:9999; opacity:0; pointer-events:none; transition:opacity .25s;
       box-shadow:0 10px 22px rgba(0,0,0,.18);
     }
-    .toast.show{ opacity:1; }
+    #qm-mindmap-app .toast.show{ opacity:1; }
+
+    /* Responsive */
+    @media (max-width: 900px){
+      #qm-mindmap-app .tool-grid{ grid-template-columns:1fr; }
+      #qm-mindmap-app .body{ padding:16px; }
+      #qm-mindmap-app .tool-intro{ padding-left:16px; padding-right:16px; }
+      #qm-mindmap-app .form-grid{ grid-template-columns:1fr; }
+      #qm-mindmap-app #jsmind_container{ height:460px; }
+    }
 
     /* Print */
     @media print{
-      .lang-switch, .btn, .map-actions, .exports, .tool-more a{ display:none !important; }
-      .card{ box-shadow:none !important; border:none !important; }
-      .app{ margin:0 !important; }
-      .body{ padding:0 !important; }
-      .jm-container{ height:520px; }
-    }
-
-    @media(max-width:900px){
-      .tool-grid{ grid-template-columns:1fr; }
-      .meta-grid{ grid-template-columns:1fr; }
-      .draft-grid{ grid-template-columns:1fr; }
-      .tool-intro, .body, .footer{ padding-left:16px; padding-right:16px; }
+      body{ background:#fff; }
+      #qm-mindmap-app{ margin:0; padding:0; }
+      #qm-mindmap-app .tool-intro{ border-bottom:2px solid #000; }
+      #qm-mindmap-app .btn, #qm-mindmap-app .mini, #qm-mindmap-app .lang-switch, #qm-mindmap-app .toast{ display:none !important; }
+      #qm-mindmap-app .card{ box-shadow:none; border:0; }
+      #qm-mindmap-app #jsmind_container{ height:640px; }
+      #qm-mindmap-app .footer{ border-top:1px solid #000; }
+      a{ color:#000; text-decoration:none; }
     }
   </style>
 </head>
 
 <body>
-  <div id="mm-app" class="app">
+  <div id="qm-mindmap-app">
     <section class="card">
 
-      <!-- Intro -->
+      <!-- INTRO -->
       <section class="tool-intro">
-        <div class="tool-intro-top">
+        <div class="intro-top">
           <div>
-            <h2 class="tool-title" data-i18n="title">Mindmap Tool – Ideen → Bewertung → Maßnahmen</h2>
-            <p class="tool-sub" data-i18n="subtitle">Mindmap erstellen, bewerten (Rot/Gelb/Grün) und daraus Maßnahmen ableiten.</p>
+            <h2 class="tool-title" data-i18n="title">Mindmap Tool – Ideen → Maßnahmen</h2>
+            <p class="tool-sub" data-i18n="subtitle">
+              Ideen strukturieren, verknüpfen und in konkrete Maßnahmen überführen – inklusive Maßnahmenliste und Druckansicht.
+            </p>
           </div>
 
-          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+          <div class="btn-row" style="justify-content:flex-end;">
             <div class="lang-switch" aria-label="Language switch">
-              <button type="button" class="btn" id="btnLangDE">DE</button>
-              <button type="button" class="btn" id="btnLangEN">EN</button>
+              <button type="button" class="btn small" id="btnLangDE">DE</button>
+              <button type="button" class="btn small" id="btnLangEN">EN</button>
             </div>
             <a class="btn" href="https://tools.quality.de/" data-i18n="backHome">Zurück zur Startseite</a>
           </div>
@@ -376,175 +233,171 @@
         <div class="tool-grid">
           <div class="tool-box">
             <h3 data-i18n="boxToolNameTitle">Name Tool</h3>
-            <p data-i18n="boxToolNameText">Mindmap – Ideenstruktur & Maßnahmenableitung</p>
+            <p data-i18n="boxToolNameText">Mindmap – Struktur & Maßnahmen</p>
           </div>
-
           <div class="tool-box">
             <h3 data-i18n="boxGoalTitle">Ziel</h3>
-            <p data-i18n="boxGoalText">Ideen sammeln, clustern, bewerten und die relevanten Punkte in konkrete Maßnahmen mit Termin/Owner überführen.</p>
+            <p data-i18n="boxGoalText">Ideen sichtbar machen, Beziehungen klären und relevante Punkte in umsetzbare Maßnahmen überführen.</p>
           </div>
-
           <div class="tool-box">
             <h3 data-i18n="boxHowTitle">So benutzt du das Tool</h3>
             <ol>
-              <li data-i18n="step1">Thema/Ziel/Scope ausfüllen (Autosave).</li>
-              <li data-i18n="step2">Mindmap aufbauen: Unterknoten/Nachbarknoten hinzufügen, verschieben, löschen.</li>
-              <li data-i18n="step3">Knoten bewerten: Rot/Gelb/Grün.</li>
-              <li data-i18n="step4">Aus Rot/Gelb Maßnahmen ableiten → in Maßnahmenliste speichern.</li>
-              <li data-i18n="step5">Ganz unten: JSON speichern/laden & Drucken.</li>
+              <li data-i18n="step1">Meta speichern: Thema / Ziel / Scope / Notizen → setzt die Wurzel (Root) der Mindmap.</li>
+              <li data-i18n="step2">Mindmap bauen: Unterknoten / Nachbarknoten anlegen, verschieben (Drag) und zoomen (Scroll).</li>
+              <li data-i18n="step3">Aus Knoten Maßnahmen ableiten: Knoten auswählen → Maßnahme + Termin speichern.</li>
+              <li data-i18n="step4">Maßnahmen steuern: offen / abgeschlossen / verworfen, löschen, drucken, JSON exportieren/importieren.</li>
             </ol>
           </div>
-
           <div class="tool-box tool-privacy">
             <h3 data-i18n="boxPrivacyTitle">Datenschutz</h3>
-            <p data-i18n="boxPrivacyText">Dieses Tool arbeitet vollständig im Browser. Es werden keine Daten auf einem Server gespeichert. Zugriff hat nur die Person, die lokal speichert oder lädt.</p>
+            <p data-i18n="boxPrivacyText">Dieses Tool arbeitet vollständig im Browser. Daten werden lokal (Browser-Speicher) gehalten und optional als JSON exportiert/importiert. Es werden keine Daten an Server übertragen.</p>
           </div>
         </div>
       </section>
 
       <div class="body">
-        <!-- Meta -->
-        <div class="meta-grid">
-          <div class="field">
-            <label class="label" for="scopeTopic" data-i18n="lblTopic">Thema / Titel</label>
-            <input class="input" id="scopeTopic" type="text" placeholder="z.B. Prozess X verbessern / Brainstorming Workshop" data-i18n-placeholder="phTopic" />
-          </div>
-          <div class="field">
-            <label class="label" for="scopeGoal" data-i18n="lblGoal">Ziel</label>
-            <input class="input" id="scopeGoal" type="text" placeholder="z.B. 10 umsetzbare Verbesserungen bis Ende Q2" data-i18n-placeholder="phGoal" />
-          </div>
-          <div class="field meta-full">
-            <label class="label" for="scopeScope" data-i18n="lblScope">Scope / Abgrenzung</label>
-            <input class="input" id="scopeScope" type="text" placeholder="z.B. Linie A / Standort Berlin / nur Inbound" data-i18n-placeholder="phScope" />
-          </div>
-          <div class="field meta-full">
-            <label class="label" for="scopeNotes" data-i18n="lblNotes">Notizen</label>
-            <textarea class="textarea" id="scopeNotes" placeholder="Rahmen, Teilnehmer, Annahmen, Links..." data-i18n-placeholder="phNotes"></textarea>
-          </div>
-        </div>
 
-        <div class="savebar" aria-live="polite">
-          <span class="savebadge"><span id="saveDot" class="dot saving"></span><span id="saveText" data-i18n="saving">Speichern…</span></span>
-          <span style="font-size:12px;color:var(--muted);" id="saveWhen"></span>
-        </div>
-
-        <!-- Mindmap -->
-        <div class="map-wrap">
-          <div class="map-head">
+        <!-- SECTION 1 (WAS MISSING BEFORE): LABEL + META SAVE THAT UPDATES ROOT -->
+        <section class="section" aria-labelledby="sec1">
+          <div class="section-head">
             <div>
-              <p class="map-title" data-i18n="mapTitle">Mindmap</p>
-              <p class="map-sub" data-i18n="mapSub">Scroll = Zoom · Drag = Pan · Recenter = Zentrieren · Unterknoten/Nachbarknoten hinzufügen</p>
+              <h3 class="sec-title" id="sec1" data-i18n="sec1Title">1. Meta (Thema / Ziel / Scope)</h3>
+              <p class="sec-sub" data-i18n="sec1Sub">Wichtig: „Speichern“ aktualisiert die Wurzel (Root) der Mindmap und wird lokal gesichert.</p>
             </div>
-            <div class="map-actions">
-              <button type="button" class="btn small" id="btnRecenter" data-i18n="btnRecenter">Zentrieren</button>
-              <button type="button" class="btn small" id="btnUndo" data-i18n="btnUndo">Rückgängig</button>
-              <button type="button" class="btn small" id="btnRedo" data-i18n="btnRedo">Wiederholen</button>
-              <button type="button" class="btn small" id="btnDelete" data-i18n="btnDelete">Löschen</button>
-              <button type="button" class="btn small danger" id="btnResetMap" data-i18n="btnResetMap">Reset</button>
+            <div class="btn-row">
+              <span class="pill warn" id="metaStatePill" title="Status">● <span data-i18n="metaNotSaved">Nicht gespeichert</span></span>
             </div>
           </div>
 
-          <div class="jm-container" id="jmWrap">
-            <div id="jsmind_container" style="width:100%;height:100%;"></div>
-          </div>
-        </div>
-
-        <div class="selbar">
-          <span class="chip" id="selChip"><span data-i18n="selected">Ausgewählt</span>: <code id="selNode">root</code></span>
-          <span class="chip" id="pathChip"><span data-i18n="path">Pfad</span>: <code id="selPath">—</code></span>
-        </div>
-
-        <div class="draft">
-          <h3 class="section-title" data-i18n="rateTitle">2) Bewerten</h3>
-          <p class="section-sub" data-i18n="rateSub">Bewerte den ausgewählten Knoten. Rot/Gelb können in Maßnahmen überführt werden (Bewertung ist jederzeit änderbar).</p>
-
-          <div class="rating-row" id="ratingRow" aria-label="Bewertung">
-            <div class="pill red" data-rate="red"><span class="p-dot"></span><span data-i18n="rateRed">Rot</span></div>
-            <div class="pill yellow" data-rate="yellow"><span class="p-dot"></span><span data-i18n="rateYellow">Gelb</span></div>
-            <div class="pill green" data-rate="green"><span class="p-dot"></span><span data-i18n="rateGreen">Grün</span></div>
-            <span style="color:var(--muted);font-size:12px;" id="rateInfo"></span>
-          </div>
-
-          <div class="divider"></div>
-
-          <h3 class="section-title" data-i18n="actionsDraftTitle">3) Ableitung von Maßnahmen</h3>
-          <p class="section-sub" data-i18n="actionsDraftSub">Erstelle aus dem ausgewählten (Rot/Gelb) Knoten eine Maßnahme. Speichern legt sie in der Maßnahmenliste ab und leert das Formular.</p>
-
-          <div class="draft-grid">
-            <div class="field meta-full">
-              <label class="label" data-i18n="lblFromNode">Bezug (Knoten)</label>
-              <input class="input" id="actFrom" type="text" readonly />
+          <div class="form-grid">
+            <div class="full">
+              <label for="metaTopic" data-i18n="metaTopicLabel">Thema (wird Root-Knoten)</label>
+              <input id="metaTopic" type="text" placeholder="z.B. Prozess X – Probleme & Verbesserungen">
             </div>
-
-            <div class="field meta-full">
-              <label class="label" for="actText" data-i18n="lblAction">Maßnahme</label>
-              <textarea class="textarea" id="actText" placeholder="Was wird getan? (klar, überprüfbar)" data-i18n-placeholder="phAction"></textarea>
+            <div>
+              <label for="metaGoal" data-i18n="metaGoalLabel">Ziel / Outcome</label>
+              <input id="metaGoal" type="text" placeholder="z.B. Fehlerquote senken, Durchlaufzeit reduzieren ...">
             </div>
-
-            <div class="field">
-              <label class="label" for="actOwner" data-i18n="lblOwner">Owner</label>
-              <input class="input" id="actOwner" type="text" placeholder="z.B. Max Mustermann" data-i18n-placeholder="phOwner" />
+            <div>
+              <label for="metaScope" data-i18n="metaScopeLabel">Scope</label>
+              <input id="metaScope" type="text" placeholder="z.B. Linie A, Schicht 2, Q1/2026">
             </div>
-            <div class="field">
-              <label class="label" for="actDue" data-i18n="lblDue">Termin</label>
-              <input class="input" id="actDue" type="date" />
-            </div>
-
-            <div class="field">
-              <label class="label" for="actStatus" data-i18n="lblStatus">Status</label>
-              <select class="input" id="actStatus">
-                <option value="open" data-i18n="stOpen">Offen</option>
-                <option value="done" data-i18n="stDone">Abgeschlossen</option>
-                <option value="drop" data-i18n="stDrop">Verworfen</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label class="label" for="actNote" data-i18n="lblActionNote">Notiz (optional)</label>
-              <input class="input" id="actNote" type="text" placeholder="z.B. Nachweis / Link / Messkriterium" data-i18n-placeholder="phActionNote" />
+            <div class="full">
+              <label for="metaNotes" data-i18n="metaNotesLabel">Notizen</label>
+              <textarea id="metaNotes" placeholder="Kontext, Annahmen, Randbedingungen ..."></textarea>
             </div>
           </div>
 
-          <div class="mini-actions">
-            <button type="button" class="btn primary" id="btnSaveAction" data-i18n="btnSaveAction">In Maßnahmenliste speichern</button>
-            <button type="button" class="btn" id="btnClearDraft" data-i18n="btnClearDraft">Entwurf leeren</button>
+          <div class="btn-row" style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(17,85,178,.12);">
+            <button class="btn primary" type="button" id="btnSaveMeta" data-i18n="btnSaveMeta">Speichern</button>
+            <button class="btn" type="button" id="btnRecenterRoot" data-i18n="btnRecenter">Recenter</button>
+            <span class="hint" id="metaHint" style="margin:0;" data-i18n="metaHint">
+              Tipp: Root entspricht dem Thema. Leere Themen werden neutral dargestellt.
+            </span>
+          </div>
+        </section>
+
+        <!-- SECTION 2: MINDMAP -->
+        <section class="section" aria-labelledby="sec2">
+          <div class="section-head">
+            <div>
+              <h3 class="sec-title" id="sec2" data-i18n="sec2Title">2. Mindmap (bauen & strukturieren)</h3>
+              <p class="sec-sub" data-i18n="sec2Sub">Scroll = Zoom · Drag = Pan · Doppelklick = Text bearbeiten · Knoten auswählen für Aktionen.</p>
+            </div>
+            <div class="btn-row">
+              <span class="pill" id="selPill">● <span id="selText" data-i18n="selNone">Kein Knoten ausgewählt</span></span>
+            </div>
           </div>
 
-          <div class="hint" id="draftHint"></div>
-        </div>
+          <div class="map-wrap">
+            <div id="jsmind_container" aria-label="Mindmap canvas"></div>
 
-        <div class="divider"></div>
+            <div class="map-tools">
+              <button class="btn small primary" type="button" id="btnAddChild" data-i18n="btnChild">Unterknoten</button>
+              <button class="btn small" type="button" id="btnAddSibling" data-i18n="btnSibling">Nachbarknoten</button>
+              <button class="btn small" type="button" id="btnEditNode" data-i18n="btnEdit">Bearbeiten</button>
+              <button class="btn small danger" type="button" id="btnDeleteNode" data-i18n="btnDelete">Löschen</button>
 
-        <h3 class="section-title" data-i18n="actionsListTitle">Maßnahmenliste</h3>
-        <p class="section-sub" data-i18n="actionsListSub">Hier sind alle gespeicherten Maßnahmen. Status ändern, bearbeiten oder löschen.</p>
+              <span style="flex:1 1 auto;"></span>
 
-        <div style="overflow:auto;">
-          <table class="actions-table" aria-label="Maßnahmenliste">
-            <thead>
-              <tr>
-                <th data-i18n="thAction">Maßnahme</th>
-                <th data-i18n="thFrom">Bezug</th>
-                <th data-i18n="thOwner">Owner</th>
-                <th data-i18n="thDue">Termin</th>
-                <th data-i18n="thStatus">Status</th>
-                <th data-i18n="thOps">Aktion</th>
-              </tr>
-            </thead>
-            <tbody id="actionsBody"></tbody>
-          </table>
-        </div>
+              <button class="btn small" type="button" id="btnUndo" data-i18n="btnUndo">Rückgängig</button>
+              <button class="btn small" type="button" id="btnRedo" data-i18n="btnRedo">Wiederholen</button>
+              <button class="btn small" type="button" id="btnZoomIn" data-i18n="btnZoomIn">Zoom +</button>
+              <button class="btn small" type="button" id="btnZoomOut" data-i18n="btnZoomOut">Zoom −</button>
+              <button class="btn small" type="button" id="btnResetMap" data-i18n="btnResetMap">Reset Mindmap</button>
+            </div>
 
-        <!-- Export/Print (muss vor "Weitere Infos" sein) -->
-        <div class="exports">
-          <button type="button" class="btn primary" id="btnPrint" data-i18n="btnPrint">Drucken</button>
-          <button type="button" class="btn" id="btnExportJson" data-i18n="btnExportJson">JSON speichern</button>
+            <p class="hint" data-i18n="mapHint">
+              Hinweis: „Unterknoten“ legt ein Kind unter dem ausgewählten Knoten an. „Nachbarknoten“ erzeugt ein Geschwister-Element (Root hat keine Geschwister).
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 3: DERIVE MEASURES -->
+        <section class="section" aria-labelledby="sec3">
+          <div class="section-head">
+            <div>
+              <h3 class="sec-title" id="sec3" data-i18n="sec3Title">3. Ableitung von Maßnahmen</h3>
+              <p class="sec-sub" data-i18n="sec3Sub">Knoten auswählen → Maßnahme formulieren → Termin setzen → Speichern (wandert in die Maßnahmenliste).</p>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="full">
+              <label data-i18n="srcNodeLabel">Bezug (aus Mindmap)</label>
+              <input id="srcNode" type="text" readonly value="—">
+              <div class="hint" data-i18n="srcNodeHint">Tipp: Knoten anklicken. Der Bezug wird automatisch gesetzt.</div>
+            </div>
+            <div class="full">
+              <label for="actionText" data-i18n="actionLabel">Maßnahme</label>
+              <textarea id="actionText" placeholder="Was? Wer? Bis wann? Wirkung? ..."></textarea>
+            </div>
+            <div>
+              <label for="actionDue" data-i18n="dueLabel">Termin / Datum</label>
+              <input id="actionDue" type="date">
+            </div>
+            <div>
+              <label for="actionOwner" data-i18n="ownerLabel">Owner (optional)</label>
+              <input id="actionOwner" type="text" placeholder="z.B. Einkauf / QS / Produktion">
+            </div>
+          </div>
+
+          <div class="btn-row" style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(17,85,178,.12);">
+            <button class="btn primary" type="button" id="btnSaveAction" data-i18n="btnSaveAction">Maßnahme speichern</button>
+            <button class="btn" type="button" id="btnClearAction" data-i18n="btnClearAction">Eingabe leeren</button>
+            <span class="hint" data-i18n="actionHint">Nach dem Speichern kannst du direkt die nächste Maßnahme anlegen.</span>
+          </div>
+        </section>
+
+        <!-- SECTION 4: MEASURE LIST -->
+        <section class="section" aria-labelledby="sec4">
+          <div class="section-head">
+            <div>
+              <h3 class="sec-title" id="sec4" data-i18n="sec4Title">4. Maßnahmenliste</h3>
+              <p class="sec-sub" data-i18n="sec4Sub">Status steuern: offen / abgeschlossen / verworfen. Maßnahmen können gelöscht werden.</p>
+            </div>
+            <div class="btn-row">
+              <span class="pill ok" id="countPill">● <span id="countText">0</span> <span data-i18n="items">Einträge</span></span>
+            </div>
+          </div>
+
+          <div class="measure-list" id="measureList"></div>
+
+          <div class="hint" data-i18n="listHint">
+            Profi-Tipp: Nutze „Verworfen“ statt Löschen, wenn du Transparenz für Entscheidungen behalten willst.
+          </div>
+        </section>
+
+        <!-- BOTTOM ACTIONS (JSON + PRINT MUST BE HERE BEFORE MORE INFOS) -->
+        <div class="actions-bottom">
+          <button type="button" class="btn primary" id="btnExportJson" data-i18n="btnExportJson">JSON speichern</button>
           <button type="button" class="btn" id="btnImportJson" data-i18n="btnImportJson">JSON laden</button>
           <input type="file" id="jsonFile" accept="application/json" style="display:none;" />
-          <span style="flex:1 1 auto;"></span>
-          <a class="btn" href="https://tools.quality.de/" data-i18n="backHome">Zurück zur Startseite</a>
+          <button type="button" class="btn" id="btnPrint" data-i18n="btnPrint">Drucken</button>
+          <button type="button" class="btn danger" id="btnResetAll" data-i18n="btnResetAll">Alles löschen</button>
         </div>
 
-        <!-- More info -->
+        <!-- MORE INFO -->
         <section class="tool-more">
           <h3 class="more-title" data-i18n="moreTitle">Weiterführende Infos</h3>
           <p class="more-sub" data-i18n="moreSub">Lexikonartikel & passende Weiterbildungen (öffnet in neuem Tab).</p>
@@ -552,9 +405,11 @@
           <div class="tool-grid">
             <div class="tool-box">
               <h3 data-i18n="lexTitle">Lexikon</h3>
-              <p data-i18n="lexText">Definition, Einsatzbereiche & Tipps zum Mindmapping.</p>
+              <p data-i18n="lexText">Definition, Einsatzbereiche & Tipps für Mindmaps.</p>
               <p style="margin-top:8px;">
-                <a href="https://www.quality.de/lexikon/mindmap/" target="_blank" rel="noopener" data-i18n="lexLink">Zum Lexikonartikel: Mindmap</a>
+                <a href="https://www.quality.de/lexikon/mindmap/" target="_blank" rel="noopener" data-i18n="lexLink">
+                  Zum Lexikonartikel: Mindmap
+                </a>
               </p>
             </div>
 
@@ -575,872 +430,925 @@
 
       <footer class="footer">
         <div>© <span id="copyrightYear"></span></div>
-        <div><a href="https://www.quality.de/" target="_blank" rel="noopener"><span data-i18n="poweredBy">Quality Services &amp; Wissen GmbH</span></a></div>
+        <div><span data-i18n="poweredBy">Powered by</span> <a href="https://www.quality.de/" target="_blank" rel="noopener">Quality Services &amp; Wissen GmbH</a></div>
       </footer>
-
     </section>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
   </div>
 
-  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
-
   <script>
-  (function(){
-    /* ================= i18n ================= */
-    const I18N = {
-      de:{
-        title:"Mindmap Tool – Ideen → Bewertung → Maßnahmen",
-        subtitle:"Mindmap erstellen, bewerten (Rot/Gelb/Grün) und daraus Maßnahmen ableiten.",
-        backHome:"Zurück zur Startseite",
+    (function(){
+      const ROOT = document.getElementById("qm-mindmap-app");
+      const $ = (sel) => ROOT.querySelector(sel);
 
-        boxToolNameTitle:"Name Tool",
-        boxToolNameText:"Mindmap – Ideenstruktur & Maßnahmenableitung",
-        boxGoalTitle:"Ziel",
-        boxGoalText:"Ideen sammeln, clustern, bewerten und die relevanten Punkte in konkrete Maßnahmen mit Termin/Owner überführen.",
-        boxHowTitle:"So benutzt du das Tool",
-        step1:"Thema/Ziel/Scope ausfüllen (Autosave).",
-        step2:"Mindmap aufbauen: Unterknoten/Nachbarknoten hinzufügen, verschieben, löschen.",
-        step3:"Knoten bewerten: Rot/Gelb/Grün.",
-        step4:"Aus Rot/Gelb Maßnahmen ableiten → in Maßnahmenliste speichern.",
-        step5:"Ganz unten: JSON speichern/laden & Drucken.",
-        boxPrivacyTitle:"Datenschutz",
-        boxPrivacyText:"Dieses Tool arbeitet vollständig im Browser. Es werden keine Daten auf einem Server gespeichert. Zugriff hat nur die Person, die lokal speichert oder lädt.",
+      const STORAGE_KEY = "qm_mindmap_v1_state";
+      const LANG_KEY = "qmLang";
 
-        lblTopic:"Thema / Titel",
-        lblGoal:"Ziel",
-        lblScope:"Scope / Abgrenzung",
-        lblNotes:"Notizen",
-        phTopic:"z.B. Prozess X verbessern / Brainstorming Workshop",
-        phGoal:"z.B. 10 umsetzbare Verbesserungen bis Ende Q2",
-        phScope:"z.B. Linie A / Standort Berlin / nur Inbound",
-        phNotes:"Rahmen, Teilnehmer, Annahmen, Links...",
+      /* ========== i18n ========== */
+      const I18N = {
+        de: {
+          title: "Mindmap Tool – Ideen → Maßnahmen",
+          subtitle: "Ideen strukturieren, verknüpfen und in konkrete Maßnahmen überführen – inklusive Maßnahmenliste und Druckansicht.",
+          backHome: "Zurück zur Startseite",
 
-        saving:"Speichern…",
-        saved:"Gespeichert",
-        lastSaved:"Zuletzt gespeichert:",
+          boxToolNameTitle: "Name Tool",
+          boxToolNameText: "Mindmap – Struktur & Maßnahmen",
+          boxGoalTitle: "Ziel",
+          boxGoalText: "Ideen sichtbar machen, Beziehungen klären und relevante Punkte in umsetzbare Maßnahmen überführen.",
+          boxHowTitle: "So benutzt du das Tool",
+          step1: "Meta speichern: Thema / Ziel / Scope / Notizen → setzt die Wurzel (Root) der Mindmap.",
+          step2: "Mindmap bauen: Unterknoten / Nachbarknoten anlegen, verschieben (Drag) und zoomen (Scroll).",
+          step3: "Aus Knoten Maßnahmen ableiten: Knoten auswählen → Maßnahme + Termin speichern.",
+          step4: "Maßnahmen steuern: offen / abgeschlossen / verworfen, löschen, drucken, JSON exportieren/importieren.",
+          boxPrivacyTitle: "Datenschutz",
+          boxPrivacyText: "Dieses Tool arbeitet vollständig im Browser. Daten werden lokal (Browser-Speicher) gehalten und optional als JSON exportiert/importiert. Es werden keine Daten an Server übertragen.",
 
-        mapTitle:"Mindmap",
-        mapSub:"Scroll = Zoom · Drag = Pan · Recenter = Zentrieren · Unterknoten/Nachbarknoten hinzufügen",
-        btnRecenter:"Zentrieren",
-        btnUndo:"Rückgängig",
-        btnRedo:"Wiederholen",
-        btnDelete:"Löschen",
-        btnResetMap:"Reset",
+          sec1Title: "1. Meta (Thema / Ziel / Scope)",
+          sec1Sub: "Wichtig: „Speichern“ aktualisiert die Wurzel (Root) der Mindmap und wird lokal gesichert.",
+          metaNotSaved: "Nicht gespeichert",
+          metaSaved: "Gespeichert",
+          metaTopicLabel: "Thema (wird Root-Knoten)",
+          metaGoalLabel: "Ziel / Outcome",
+          metaScopeLabel: "Scope",
+          metaNotesLabel: "Notizen",
+          btnSaveMeta: "Speichern",
+          btnRecenter: "Recenter",
+          metaHint: "Tipp: Root entspricht dem Thema. Leere Themen werden neutral dargestellt.",
 
-        selected:"Ausgewählt",
-        path:"Pfad",
+          sec2Title: "2. Mindmap (bauen & strukturieren)",
+          sec2Sub: "Scroll = Zoom · Drag = Pan · Doppelklick = Text bearbeiten · Knoten auswählen für Aktionen.",
+          selNone: "Kein Knoten ausgewählt",
+          btnChild: "Unterknoten",
+          btnSibling: "Nachbarknoten",
+          btnEdit: "Bearbeiten",
+          btnDelete: "Löschen",
+          btnUndo: "Rückgängig",
+          btnRedo: "Wiederholen",
+          btnZoomIn: "Zoom +",
+          btnZoomOut: "Zoom −",
+          btnResetMap: "Reset Mindmap",
+          mapHint: "Hinweis: „Unterknoten“ legt ein Kind unter dem ausgewählten Knoten an. „Nachbarknoten“ erzeugt ein Geschwister-Element (Root hat keine Geschwister).",
 
-        rateTitle:"2) Bewerten",
-        rateSub:"Bewerte den ausgewählten Knoten. Rot/Gelb können in Maßnahmen überführt werden (Bewertung ist jederzeit änderbar).",
-        rateRed:"Rot",
-        rateYellow:"Gelb",
-        rateGreen:"Grün",
-        rateNone:"Keine Bewertung",
-        rateInfo:"Bewertung:",
+          sec3Title: "3. Ableitung von Maßnahmen",
+          sec3Sub: "Knoten auswählen → Maßnahme formulieren → Termin setzen → Speichern (wandert in die Maßnahmenliste).",
+          srcNodeLabel: "Bezug (aus Mindmap)",
+          srcNodeHint: "Tipp: Knoten anklicken. Der Bezug wird automatisch gesetzt.",
+          actionLabel: "Maßnahme",
+          dueLabel: "Termin / Datum",
+          ownerLabel: "Owner (optional)",
+          btnSaveAction: "Maßnahme speichern",
+          btnClearAction: "Eingabe leeren",
+          actionHint: "Nach dem Speichern kannst du direkt die nächste Maßnahme anlegen.",
 
-        actionsDraftTitle:"3) Ableitung von Maßnahmen",
-        actionsDraftSub:"Erstelle aus dem ausgewählten (Rot/Gelb) Knoten eine Maßnahme. Speichern legt sie in der Maßnahmenliste ab und leert das Formular.",
-        lblFromNode:"Bezug (Knoten)",
-        lblAction:"Maßnahme",
-        phAction:"Was wird getan? (klar, überprüfbar)",
-        lblOwner:"Owner",
-        phOwner:"z.B. Max Mustermann",
-        lblDue:"Termin",
-        lblStatus:"Status",
-        stOpen:"Offen",
-        stDone:"Abgeschlossen",
-        stDrop:"Verworfen",
-        lblActionNote:"Notiz (optional)",
-        phActionNote:"z.B. Nachweis / Link / Messkriterium",
+          sec4Title: "4. Maßnahmenliste",
+          sec4Sub: "Status steuern: offen / abgeschlossen / verworfen. Maßnahmen können gelöscht werden.",
+          items: "Einträge",
+          listHint: "Profi-Tipp: Nutze „Verworfen“ statt Löschen, wenn du Transparenz für Entscheidungen behalten willst.",
 
-        btnSaveAction:"In Maßnahmenliste speichern",
-        btnClearDraft:"Entwurf leeren",
+          statusOpen: "Offen",
+          statusDone: "Abgeschlossen",
+          statusDrop: "Verworfen",
+          setOpen: "Offen",
+          setDone: "Abschließen",
+          setDrop: "Verwerfen",
+          del: "Löschen",
 
-        actionsListTitle:"Maßnahmenliste",
-        actionsListSub:"Hier sind alle gespeicherten Maßnahmen. Status ändern, bearbeiten oder löschen.",
-        thAction:"Maßnahme",
-        thFrom:"Bezug",
-        thOwner:"Owner",
-        thDue:"Termin",
-        thStatus:"Status",
-        thOps:"Aktion",
-        btnEdit:"Bearbeiten",
-        btnUpdate:"Speichern",
-        btnCancel:"Abbrechen",
-        btnDel:"Löschen",
+          btnExportJson: "JSON speichern",
+          btnImportJson: "JSON laden",
+          btnPrint: "Drucken",
+          btnResetAll: "Alles löschen",
 
-        btnPrint:"Drucken",
-        btnExportJson:"JSON speichern",
-        btnImportJson:"JSON laden",
+          moreTitle: "Weiterführende Infos",
+          moreSub: "Lexikonartikel & passende Weiterbildungen (öffnet in neuem Tab).",
+          lexTitle: "Lexikon",
+          lexText: "Definition, Einsatzbereiche & Tipps für Mindmaps.",
+          lexLink: "Zum Lexikonartikel: Mindmap",
+          trainTitle: "Ausbildungen & Seminare",
+          trainText: "Vertiefe deine Methodenkompetenz im Qualitätsmanagement:",
+          trainKvp: "KVP Seminare",
+          trainQm: "Qualitätsmanagement",
+          trainOpex: "OPEX Seminare & Ausbildungen",
+          trainFmea: "FMEA Schulungen",
 
-        moreTitle:"Weiterführende Infos",
-        moreSub:"Lexikonartikel & passende Weiterbildungen (öffnet in neuem Tab).",
-        lexTitle:"Lexikon",
-        lexText:"Definition, Einsatzbereiche & Tipps zum Mindmapping.",
-        lexLink:"Zum Lexikonartikel: Mindmap",
-        trainTitle:"Ausbildungen & Seminare",
-        trainText:"Vertiefe deine Methodenkompetenz im Qualitätsmanagement:",
-        trainKvp:"KVP Seminare",
-        trainQm:"Qualitätsmanagement",
-        trainOpex:"OPEX Seminare & Ausbildungen",
-        trainFmea:"FMEA Schulungen",
+          poweredBy: "Powered by",
 
-        poweredBy:"Quality Services & Wissen GmbH",
+          confirmResetMap: "Mindmap zurücksetzen (nur Root behalten)?",
+          confirmResetAll: "Alles löschen (Meta, Mindmap, Maßnahmen)?",
+          needSelection: "Bitte zuerst einen Knoten auswählen.",
+          cannotSiblingRoot: "Root hat keinen Nachbarknoten.",
+          cannotDeleteRoot: "Root kann nicht gelöscht werden.",
+          savedToast: "Gespeichert.",
+          importedToast: "JSON geladen.",
+          invalidJson: "JSON ungültig.",
+          printToast: "Druckdialog geöffnet.",
+          actionNeedText: "Bitte Maßnahme ausfüllen.",
+          actionNeedNode: "Bitte einen Knoten als Bezug auswählen.",
+          newNodeTopic: "Neue Idee"
+        },
+        en: {
+          title: "Mindmap Tool – Ideas → Actions",
+          subtitle: "Structure ideas, connect them, and turn the relevant ones into concrete actions – including action list and print view.",
+          backHome: "Back to home",
 
-        promptNodeText:"Text für den neuen Knoten:",
-        warnSelectNode:"Bitte zuerst einen Knoten auswählen.",
-        warnSiblingRoot:"Für den Root-Knoten ist kein Nachbarknoten möglich.",
-        warnAddFailed:"Knoten konnte nicht hinzugefügt werden.",
-        confirmDelete:"Ausgewählten Knoten löschen?",
-        confirmReset:"Mindmap zurücksetzen (inkl. Bewertungen)?",
-        confirmImport:"JSON laden? Aktuelle Daten werden überschrieben.",
-        loadError:"Fehler beim Laden der Datei.",
-        savedAction:"Maßnahme gespeichert.",
-        needRedYellow:"Nur Rot oder Gelb werden typischerweise in Maßnahmen überführt (du kannst trotzdem speichern)."
-      },
-      en:{
-        title:"Mindmap Tool – Ideas → Rating → Actions",
-        subtitle:"Create a mind map, rate nodes (Red/Yellow/Green) and derive actions.",
-        backHome:"Back to home",
+          boxToolNameTitle: "Tool name",
+          boxToolNameText: "Mindmap – Structure & Actions",
+          boxGoalTitle: "Goal",
+          boxGoalText: "Make ideas visible, clarify relationships, and turn relevant points into executable actions.",
+          boxHowTitle: "How to use this tool",
+          step1: "Save meta: Topic / Goal / Scope / Notes → sets the mindmap root node.",
+          step2: "Build the mindmap: add child/sibling nodes, move (drag) and zoom (scroll).",
+          step3: "Derive actions from nodes: select a node → save action + due date.",
+          step4: "Manage actions: open / done / discarded, delete, print, export/import JSON.",
+          boxPrivacyTitle: "Privacy",
+          boxPrivacyText: "This tool runs entirely in your browser. Data is stored locally (browser storage) and can optionally be exported/imported as JSON. No data is sent to any server.",
 
-        boxToolNameTitle:"Tool name",
-        boxToolNameText:"Mind map – idea structure & action derivation",
-        boxGoalTitle:"Goal",
-        boxGoalText:"Collect ideas, cluster them, rate nodes and turn relevant points into concrete actions incl. due date/owner.",
-        boxHowTitle:"How to use this tool",
-        step1:"Fill topic/goal/scope (autosave).",
-        step2:"Build the mind map: add child/sibling nodes, move, delete.",
-        step3:"Rate nodes: red/yellow/green.",
-        step4:"Derive actions from red/yellow → save to action list.",
-        step5:"At the bottom: save/load JSON & print.",
-        boxPrivacyTitle:"Privacy",
-        boxPrivacyText:"This tool runs entirely in your browser. No data is stored on any server. Only the person saving/loading locally has access.",
+          sec1Title: "1. Meta (Topic / Goal / Scope)",
+          sec1Sub: "Important: “Save” updates the root node and stores everything locally.",
+          metaNotSaved: "Not saved",
+          metaSaved: "Saved",
+          metaTopicLabel: "Topic (becomes the root node)",
+          metaGoalLabel: "Goal / Outcome",
+          metaScopeLabel: "Scope",
+          metaNotesLabel: "Notes",
+          btnSaveMeta: "Save",
+          btnRecenter: "Recenter",
+          metaHint: "Tip: The root equals the topic. Empty topics stay neutral.",
 
-        lblTopic:"Topic / Title",
-        lblGoal:"Goal",
-        lblScope:"Scope / boundaries",
-        lblNotes:"Notes",
-        phTopic:"e.g. Improve process X / workshop mind map",
-        phGoal:"e.g. 10 implementable improvements by end of Q2",
-        phScope:"e.g. Line A / Berlin site / inbound only",
-        phNotes:"Context, participants, assumptions, links...",
+          sec2Title: "2. Mindmap (build & structure)",
+          sec2Sub: "Scroll = Zoom · Drag = Pan · Double click = edit text · Select nodes for actions.",
+          selNone: "No node selected",
+          btnChild: "Child node",
+          btnSibling: "Sibling node",
+          btnEdit: "Edit",
+          btnDelete: "Delete",
+          btnUndo: "Undo",
+          btnRedo: "Redo",
+          btnZoomIn: "Zoom +",
+          btnZoomOut: "Zoom −",
+          btnResetMap: "Reset mindmap",
+          mapHint: "Note: “Child node” adds a child under the selected node. “Sibling node” adds a sibling (root has no siblings).",
 
-        saving:"Saving…",
-        saved:"Saved",
-        lastSaved:"Last saved:",
+          sec3Title: "3. Derive actions",
+          sec3Sub: "Select a node → write an action → set due date → Save (moves into the action list).",
+          srcNodeLabel: "Reference (from mindmap)",
+          srcNodeHint: "Tip: click a node. The reference updates automatically.",
+          actionLabel: "Action",
+          dueLabel: "Due date",
+          ownerLabel: "Owner (optional)",
+          btnSaveAction: "Save action",
+          btnClearAction: "Clear input",
+          actionHint: "After saving you can immediately create the next action.",
 
-        mapTitle:"Mind map",
-        mapSub:"Scroll = zoom · Drag = pan · Recenter · Add child/sibling nodes",
-        btnRecenter:"Recenter",
-        btnUndo:"Undo",
-        btnRedo:"Redo",
-        btnDelete:"Delete",
-        btnResetMap:"Reset",
+          sec4Title: "4. Action list",
+          sec4Sub: "Manage status: open / done / discarded. Actions can be deleted.",
+          items: "items",
+          listHint: "Pro tip: use “Discarded” instead of delete to keep decision transparency.",
 
-        selected:"Selected",
-        path:"Path",
+          statusOpen: "Open",
+          statusDone: "Done",
+          statusDrop: "Discarded",
+          setOpen: "Open",
+          setDone: "Mark done",
+          setDrop: "Discard",
+          del: "Delete",
 
-        rateTitle:"2) Rating",
-        rateSub:"Rate the selected node. Red/Yellow can be turned into actions (rating can be changed anytime).",
-        rateRed:"Red",
-        rateYellow:"Yellow",
-        rateGreen:"Green",
-        rateNone:"No rating",
-        rateInfo:"Rating:",
+          btnExportJson: "Export JSON",
+          btnImportJson: "Import JSON",
+          btnPrint: "Print",
+          btnResetAll: "Clear all",
 
-        actionsDraftTitle:"3) Derive actions",
-        actionsDraftSub:"Create an action from the selected (red/yellow) node. Saving moves it to the action list and clears the form.",
-        lblFromNode:"Reference (node)",
-        lblAction:"Action",
-        phAction:"What will be done? (clear, verifiable)",
-        lblOwner:"Owner",
-        phOwner:"e.g. Jane Doe",
-        lblDue:"Due date",
-        lblStatus:"Status",
-        stOpen:"Open",
-        stDone:"Done",
-        stDrop:"Discarded",
-        lblActionNote:"Note (optional)",
-        phActionNote:"e.g. evidence / link / acceptance criteria",
+          moreTitle: "More information",
+          moreSub: "Glossary article & relevant training (opens in a new tab).",
+          lexTitle: "Glossary",
+          lexText: "Definition, use cases & tips for mindmaps.",
+          lexLink: "Open glossary article: Mindmap",
+          trainTitle: "Training & courses",
+          trainText: "Deepen your method skills in quality management:",
+          trainKvp: "CIP (KVP) seminars",
+          trainQm: "Quality management",
+          trainOpex: "OPEX training & courses",
+          trainFmea: "FMEA training",
 
-        btnSaveAction:"Save to action list",
-        btnClearDraft:"Clear draft",
+          poweredBy: "Powered by",
 
-        actionsListTitle:"Action list",
-        actionsListSub:"All saved actions appear here. Change status, edit or delete.",
-        thAction:"Action",
-        thFrom:"Reference",
-        thOwner:"Owner",
-        thDue:"Due",
-        thStatus:"Status",
-        thOps:"Ops",
-        btnEdit:"Edit",
-        btnUpdate:"Save",
-        btnCancel:"Cancel",
-        btnDel:"Delete",
+          confirmResetMap: "Reset mindmap (keep only root)?",
+          confirmResetAll: "Clear everything (meta, mindmap, actions)?",
+          needSelection: "Please select a node first.",
+          cannotSiblingRoot: "Root has no sibling.",
+          cannotDeleteRoot: "Root cannot be deleted.",
+          savedToast: "Saved.",
+          importedToast: "JSON loaded.",
+          invalidJson: "Invalid JSON.",
+          printToast: "Print dialog opened.",
+          actionNeedText: "Please fill in the action.",
+          actionNeedNode: "Please select a node as reference.",
+          newNodeTopic: "New idea"
+        }
+      };
 
-        btnPrint:"Print",
-        btnExportJson:"Save JSON",
-        btnImportJson:"Load JSON",
+      let currentLang = localStorage.getItem(LANG_KEY)
+        || (navigator.language && navigator.language.toLowerCase().startsWith("de") ? "de" : "en");
 
-        moreTitle:"More information",
-        moreSub:"Glossary & relevant training (opens in a new tab).",
-        lexTitle:"Glossary",
-        lexText:"Definition, use cases & tips for mind mapping.",
-        lexLink:"Open glossary article: Mind map",
-        trainTitle:"Training & courses",
-        trainText:"Deepen your method skills in quality management:",
-        trainKvp:"CIP / Kaizen (KVP) training",
-        trainQm:"Quality management",
-        trainOpex:"OPEX courses",
-        trainFmea:"FMEA training",
+      function t(key){ return (I18N[currentLang] && I18N[currentLang][key]) ? I18N[currentLang][key] : key; }
 
-        poweredBy:"Quality Services & Wissen GmbH",
+      function applyI18n(){
+        document.documentElement.lang = currentLang;
 
-        promptNodeText:"Text for the new node:",
-        warnSelectNode:"Please select a node first.",
-        warnSiblingRoot:"No sibling node for the root node.",
-        warnAddFailed:"Node could not be added.",
-        confirmDelete:"Delete selected node?",
-        confirmReset:"Reset the mind map (incl. ratings)?",
-        confirmImport:"Load JSON? Current data will be overwritten.",
-        loadError:"Error loading file.",
-        savedAction:"Action saved.",
-        needRedYellow:"Typically only Red or Yellow are converted to actions (you can still save)."
-      }
-    };
+        ROOT.querySelectorAll("[data-i18n]").forEach(el=>{
+          el.textContent = t(el.dataset.i18n);
+        });
 
-    let currentLang = (localStorage.getItem("qmLang")
-      || (navigator.language && navigator.language.toLowerCase().startsWith("de") ? "de" : "en"));
-
-    function t(key){ return (I18N[currentLang] && I18N[currentLang][key]) ? I18N[currentLang][key] : key; }
-
-    function applyI18n(){
-      document.documentElement.lang = currentLang;
-
-      document.querySelectorAll("[data-i18n]").forEach(el=>{
-        el.textContent = t(el.dataset.i18n);
-      });
-      document.querySelectorAll("[data-i18n-placeholder]").forEach(el=>{
-        el.placeholder = t(el.dataset.i18nPlaceholder);
-      });
-
-      const deBtn = document.getElementById("btnLangDE");
-      const enBtn = document.getElementById("btnLangEN");
-      if(deBtn && enBtn){
-        deBtn.classList.toggle("primary", currentLang==="de");
-        enBtn.classList.toggle("primary", currentLang==="en");
-      }
-    }
-
-    function setLanguage(lang){
-      currentLang = (lang==="de"||lang==="en") ? lang : "de";
-      localStorage.setItem("qmLang", currentLang);
-      applyI18n();
-      renderActionsTable();
-      updateRatingUI();
-      updateDraftHint();
-      updateSaveLabel(true);
-    }
-
-    /* ================= State ================= */
-    const STORAGE_KEY = "qm_mindmap_state_v1";
-
-    const $ = (id)=> document.getElementById(id);
-
-    function uid(){
-      try{ return crypto.randomUUID(); }catch{ return "id_" + Math.random().toString(16).slice(2); }
-    }
-    function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
-
-    function toast(msg){
-      const el = document.getElementById("toast");
-      if(!el) return;
-      el.textContent = msg;
-      el.classList.add("show");
-      clearTimeout(toast._tmr);
-      toast._tmr = setTimeout(()=> el.classList.remove("show"), 2600);
-    }
-
-    let state = {
-      lang: currentLang,
-      meta:{ topic:"", goal:"", scope:"", notes:"" },
-      mind:{
-        // jsMind format: node array
-        nodes:[
-          { id:"root", isroot:true, topic:"Mindmap" }
-        ],
-        // ratings per node id: 'red' | 'yellow' | 'green' | null
-        ratings:{}
-      },
-      actions:[], // list items: {id, fromId, fromPath, fromText, text, owner, due, status, note, ts}
-      ts: new Date().toISOString()
-    };
-
-    /* History for undo/redo (map + ratings) */
-    const history = { past:[], future:[] };
-    const HISTORY_MAX = 40;
-
-    function pushHistory(){
-      history.past.push(deepClone(state));
-      if(history.past.length > HISTORY_MAX) history.past.shift();
-      history.future = [];
-      updateUndoRedoUI();
-    }
-    function canUndo(){ return history.past.length>0; }
-    function canRedo(){ return history.future.length>0; }
-
-    function updateUndoRedoUI(){
-      $("btnUndo").disabled = !canUndo();
-      $("btnRedo").disabled = !canRedo();
-    }
-
-    /* Save indicator */
-    let saveTimer = null;
-    let lastSavedAt = null;
-    function setSaveState(mode){
-      const dot = $("saveDot");
-      const txt = $("saveText");
-      if(mode==="saving"){
-        dot.classList.add("saving"); dot.classList.remove("idle");
-        txt.textContent = t("saving");
-      }else if(mode==="saved"){
-        dot.classList.remove("saving"); dot.classList.remove("idle");
-        txt.textContent = t("saved");
-      }else{
-        dot.classList.remove("saving"); dot.classList.add("idle");
-        txt.textContent = t("saved");
-      }
-    }
-    function updateSaveLabel(force){
-      if(!lastSavedAt && !force) return;
-      const when = $("saveWhen");
-      if(!when) return;
-      if(!lastSavedAt){ when.textContent = ""; return; }
-      const d = lastSavedAt;
-      const pad = (n)=> String(n).padStart(2,"0");
-      when.textContent = `${t("lastSaved")} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-    }
-    function scheduleSave(){
-      setSaveState("saving");
-      updateSaveLabel(false);
-      clearTimeout(saveTimer);
-      saveTimer = setTimeout(()=>{
-        persist();
-        lastSavedAt = new Date();
-        setSaveState("saved");
-        updateSaveLabel(true);
-      }, 450);
-    }
-
-    function persist(){
-      state.lang = currentLang;
-      state.ts = new Date().toISOString();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
-    function restore(){
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if(!raw) return false;
-      try{
-        const parsed = JSON.parse(raw);
-        if(!parsed || typeof parsed !== "object") return false;
-        state = parsed;
-        if(state.lang==="de"||state.lang==="en") currentLang = state.lang;
-        return true;
-      }catch(e){
-        return false;
-      }
-    }
-
-    /* ================= jsMind init ================= */
-    let jm = null;
-    const jmOptions = {
-      container:"jsmind_container",
-      editable:true,
-      theme:null,
-      support_html:false,
-      view:{
-        engine:"svg" // crisp print
-      },
-      layout:{
-        hspace:30, vspace:10, pspace:13
-      },
-      shortcut:{
-        enable:false
-      }
-    };
-
-    function initMind(){
-      jm = new jsMind(jmOptions);
-      jm.show({ meta:{ name:"mindmap", author:"", version:"1.0" }, format:"node_array", data: state.mind.nodes });
-
-      // sync root topic with meta topic (if meta topic filled)
-      if(state.meta.topic){
-        try{ jm.update_node("root", state.meta.topic); }catch(e){}
+        // active language button style
+        $("#btnLangDE").classList.toggle("primary", currentLang === "de");
+        $("#btnLangEN").classList.toggle("primary", currentLang === "en");
       }
 
-      // hook selection
-      const cont = $("jsmind_container");
-      cont.addEventListener("click", ()=>{
-        updateSelectionPill();
-        updateRatingUI();
-        updateDraftFromSelection();
-      });
+      function setLanguage(lang){
+        currentLang = (lang === "de" || lang === "en") ? lang : "de";
+        localStorage.setItem(LANG_KEY, currentLang);
+        applyI18n();
+        // keep content; only update placeholders if still empty
+        if(!$("#metaTopic").value.trim()){
+          $("#metaTopic").placeholder = (currentLang === "de")
+            ? "z.B. Prozess X – Probleme & Verbesserungen"
+            : "e.g. Process X – Problems & Improvements";
+        }
+        if(!$("#actionOwner").value.trim()){
+          $("#actionOwner").placeholder = (currentLang === "de")
+            ? "z.B. Einkauf / QS / Produktion"
+            : "e.g. Purchasing / QA / Production";
+        }
+      }
 
-      // basic zoom / pan
-      wireZoomPan();
-    }
+      /* ========== Toast ========== */
+      function toast(msg){
+        const el = $("#toast");
+        el.textContent = msg;
+        el.classList.add("show");
+        window.clearTimeout(toast._tmr);
+        toast._tmr = window.setTimeout(()=> el.classList.remove("show"), 2400);
+      }
 
-    /* ===== Zoom / Pan (Scroll zoom, drag pan, recenter) ===== */
-    function wireZoomPan(){
-      const wrap = $("jmWrap");
-      const cont = $("jsmind_container");
+      /* ========== State ========== */
+      let state = {
+        lang: currentLang,
+        meta: { topic:"", goal:"", scope:"", notes:"" },
+        mind: null,        // jsMind get_data('node_array')
+        measures: [],      // {id, nodeId, nodePath, nodeTopic, text, due, owner, status, createdAt}
+        ts: new Date().toISOString()
+      };
 
-      let scale = 1;
-      let pan = { x:0, y:0 };
-      let dragging = false;
-      let last = { x:0, y:0 };
+      function defaultRootTopic(){
+        return (currentLang === "de") ? "Thema" : "Topic";
+      }
 
-      function applyTransform(){
-        const el = cont.querySelector("svg") || cont.firstElementChild;
-        if(!el) return;
-        el.style.transformOrigin = "0 0";
-        el.style.transform = `translate(${pan.x}px, ${pan.y}px) scale(${scale})`;
+      function defaultMind(){
+        const topic = (state.meta.topic && state.meta.topic.trim()) ? state.meta.topic.trim() : defaultRootTopic();
+        return {
+          meta: { name:"qm_mindmap", author:"", version:"1.0" },
+          format: "node_array",
+          data: [
+            { id:"root", isroot:true, topic }
+          ]
+        };
+      }
+
+      function persist(){
+        state.lang = currentLang;
+        state.ts = new Date().toISOString();
+        try{
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        }catch(e){
+          // ignore storage errors
+        }
+      }
+
+      function restore(){
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return false;
+        try{
+          const p = JSON.parse(raw);
+          if(!p || typeof p !== "object") return false;
+          state.lang = (p.lang === "de" || p.lang === "en") ? p.lang : currentLang;
+          state.meta = p.meta && typeof p.meta === "object" ? {
+            topic: String(p.meta.topic ?? ""),
+            goal: String(p.meta.goal ?? ""),
+            scope: String(p.meta.scope ?? ""),
+            notes: String(p.meta.notes ?? "")
+          } : { topic:"", goal:"", scope:"", notes:"" };
+
+          state.mind = p.mind && typeof p.mind === "object" ? p.mind : null;
+          state.measures = Array.isArray(p.measures) ? p.measures : [];
+          state.ts = String(p.ts ?? new Date().toISOString());
+          return true;
+        }catch(e){
+          return false;
+        }
+      }
+
+      function syncMetaInputs(){
+        $("#metaTopic").value = state.meta.topic;
+        $("#metaGoal").value  = state.meta.goal;
+        $("#metaScope").value = state.meta.scope;
+        $("#metaNotes").value = state.meta.notes;
+      }
+
+      /* ========== jsMind init ========== */
+      let jm = null;
+
+      const options = {
+        container: "jsmind_container",
+        editable: true,
+        theme: "primary",
+        mode: "full",
+        view: {
+          engine: "svg",
+          draggable: true,
+          hide_scrollbars_when_draggable: true,
+          zoom: { min: 0.5, max: 2.0, step: 0.1 }
+        }
+      };
+
+      function safeGetMind(){
+        try{
+          if(jm && typeof jm.get_data === "function"){
+            return jm.get_data("node_array");
+          }
+        }catch(e){}
+        return null;
+      }
+
+      /* ========== History (Undo/Redo) ========== */
+      const HISTORY_MAX = 30;
+      let history = [];
+      let future = [];
+      let lastSig = "";
+      let lastChangeAt = 0;
+
+      function sigOf(mind){
+        try{ return JSON.stringify(mind && mind.data ? mind.data : []); }
+        catch(e){ return String(Date.now()); }
+      }
+
+      function commitHistorySnapshot(){
+        const mind = safeGetMind();
+        if(!mind) return;
+        const sig = sigOf(mind);
+        const top = history.length ? history[history.length-1].sig : "";
+        if(sig === top) return;
+
+        history.push({ sig, mind });
+        if(history.length > HISTORY_MAX) history.shift();
+        future = [];
+
+        $("#btnUndo").disabled = history.length <= 1;
+        $("#btnRedo").disabled = future.length === 0;
+      }
+
+      function applyMindSnapshot(mind){
+        if(!jm) return;
+        jm.show(mind);
+        // keep selection UI fresh
+        window.setTimeout(updateSelectionUI, 60);
+        // refresh signature baseline
+        lastSig = sigOf(safeGetMind());
+      }
+
+      function undo(){
+        if(history.length <= 1) return;
+        const cur = history.pop();
+        future.push(cur);
+        const prev = history[history.length-1];
+        applyMindSnapshot(prev.mind);
+
+        $("#btnUndo").disabled = history.length <= 1;
+        $("#btnRedo").disabled = future.length === 0;
+      }
+
+      function redo(){
+        if(!future.length) return;
+        const snap = future.pop();
+        history.push(snap);
+        applyMindSnapshot(snap.mind);
+
+        $("#btnUndo").disabled = history.length <= 1;
+        $("#btnRedo").disabled = future.length === 0;
+      }
+
+      /* ========== Selection helpers ========== */
+      function getSelectedNode(){
+        try{
+          if(!jm) return null;
+          if(typeof jm.get_selected_node === "function") return jm.get_selected_node();
+        }catch(e){}
+        return null;
+      }
+
+      function nodePath(node){
+        if(!node) return "—";
+        const parts = [];
+        let cur = node;
+        // jsMind nodes usually have: topic, parent, isroot
+        while(cur){
+          parts.push(cur.topic || "");
+          if(cur.isroot) break;
+          cur = cur.parent || null;
+        }
+        return parts.reverse().filter(Boolean).join(" › ") || "—";
+      }
+
+      function updateSelectionUI(){
+        const n = getSelectedNode();
+        const label = n ? (n.topic || "") : t("selNone");
+        $("#selText").textContent = n ? label : t("selNone");
+        $("#srcNode").value = n ? nodePath(n) : "—";
+
+        // auto prefill action text only if empty
+        if(n && !$("#actionText").value.trim()){
+          $("#actionText").value = (n.topic || "");
+        }
+      }
+
+      /* ========== Map operations ========== */
+      function newId(){
+        return "n_" + Date.now().toString(16) + "_" + Math.random().toString(16).slice(2);
+      }
+
+      function addChild(){
+        const sel = getSelectedNode();
+        const parentId = sel ? sel.id : "root";
+        const id = newId();
+        const topic = t("newNodeTopic");
+
+        try{
+          if(typeof jm.add_node === "function"){
+            jm.add_node(parentId, id, topic);
+          }else{
+            // fallback: re-render from data
+            const mind = safeGetMind() || defaultMind();
+            mind.data.push({ id, parentid: parentId, topic });
+            applyMindSnapshot(mind);
+          }
+          if(typeof jm.select_node === "function") jm.select_node(id);
+          if(typeof jm.begin_edit === "function") jm.begin_edit(id);
+        }catch(e){}
+
+        markDirty();
+      }
+
+      function addSibling(){
+        const sel = getSelectedNode();
+        if(!sel){ toast(t("needSelection")); return; }
+        if(sel.isroot){ toast(t("cannotSiblingRoot")); return; }
+
+        const id = newId();
+        const topic = t("newNodeTopic");
+        try{
+          if(typeof jm.insert_node_after === "function"){
+            jm.insert_node_after(sel.id, id, topic);
+          }else if(typeof jm.add_node === "function"){
+            const pid = sel.parent ? sel.parent.id : "root";
+            jm.add_node(pid, id, topic);
+          }
+          if(typeof jm.select_node === "function") jm.select_node(id);
+          if(typeof jm.begin_edit === "function") jm.begin_edit(id);
+        }catch(e){}
+
+        markDirty();
+      }
+
+      function editNode(){
+        const sel = getSelectedNode();
+        if(!sel){ toast(t("needSelection")); return; }
+        try{
+          if(typeof jm.begin_edit === "function") jm.begin_edit(sel.id);
+        }catch(e){}
+      }
+
+      function deleteNode(){
+        const sel = getSelectedNode();
+        if(!sel){ toast(t("needSelection")); return; }
+        if(sel.isroot){ toast(t("cannotDeleteRoot")); return; }
+
+        try{
+          if(typeof jm.remove_node === "function") jm.remove_node(sel.id);
+        }catch(e){}
+
+        markDirty();
+      }
+
+      function zoomIn(){
+        try{
+          if(jm && jm.view && typeof jm.view.zoomIn === "function") return jm.view.zoomIn();
+          if(jm && jm.view && typeof jm.view.zoom_in === "function") return jm.view.zoom_in();
+        }catch(e){}
+      }
+
+      function zoomOut(){
+        try{
+          if(jm && jm.view && typeof jm.view.zoomOut === "function") return jm.view.zoomOut();
+          if(jm && jm.view && typeof jm.view.zoom_out === "function") return jm.view.zoom_out();
+        }catch(e){}
       }
 
       function recenter(){
-        scale = 1;
-        pan = { x:0, y:0 };
-        applyTransform();
+        try{
+          // Prefer centering root if API exists
+          if(jm && jm.view && typeof jm.view.center_node === "function"){
+            const root = jm.get_node ? jm.get_node("root") : null;
+            if(root) return jm.view.center_node(root);
+          }
+        }catch(e){}
+        // fallback: select root
+        try{
+          if(typeof jm.select_node === "function") jm.select_node("root");
+        }catch(e){}
       }
 
-      // wheel zoom
-      wrap.addEventListener("wheel", (e)=>{
-        e.preventDefault();
-        const delta = (e.deltaY > 0) ? -0.08 : 0.08;
-        scale = Math.min(2.2, Math.max(0.5, scale + delta));
-        applyTransform();
-      }, { passive:false });
+      function resetMap(){
+        if(!confirm(t("confirmResetMap"))) return;
+        const mind = defaultMind();
+        applyMindSnapshot(mind);
+        markDirty(true);
+      }
 
-      // drag pan
-      wrap.addEventListener("mousedown", (e)=>{
-        // do not pan when interacting with input elements
-        const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
-        if(tag==="input"||tag==="textarea"||tag==="button"||tag==="select") return;
-        dragging = true;
-        last = { x:e.clientX, y:e.clientY };
-        wrap.style.cursor = "grabbing";
-      });
-      window.addEventListener("mousemove", (e)=>{
-        if(!dragging) return;
-        const dx = e.clientX - last.x;
-        const dy = e.clientY - last.y;
-        last = { x:e.clientX, y:e.clientY };
-        pan.x += dx;
-        pan.y += dy;
-        applyTransform();
-      });
-      window.addEventListener("mouseup", ()=>{
-        if(!dragging) return;
-        dragging = false;
-        wrap.style.cursor = "default";
-      });
+      function resetAll(){
+        if(!confirm(t("confirmResetAll"))) return;
+        localStorage.removeItem(STORAGE_KEY);
+        state = { lang: currentLang, meta:{topic:"",goal:"",scope:"",notes:""}, mind:null, measures:[], ts:new Date().toISOString() };
 
-      $("btnRecenter").addEventListener("click", ()=> recenter());
+        syncMetaInputs();
+        $("#actionText").value = "";
+        $("#actionDue").value = "";
+        $("#actionOwner").value = "";
+        $("#srcNode").value = "—";
 
-      // expose
-      wireZoomPan._recenter = recenter;
-    }
+        applyMindSnapshot(defaultMind());
+        history = [];
+        future = [];
+        initHistory();
+        renderMeasures();
+        setMetaSaved(false);
+        toast("OK");
+      }
 
-    /* ===== Selected node helpers ===== */
-    function getSelected(){
-      if(!jm) return null;
-      const s = jm.get_selected_node && jm.get_selected_node();
-      return s || null;
-    }
-
-    function updateSelectionPill(){
-      const sel = getSelected();
-      const id = sel ? sel.id : "root";
-      $("selNode").textContent = id;
-      $("selPath").textContent = getNodePathText(sel) || "—";
-    }
-
-    function getNodePathText(node){
-      try{
-        const n = node || getSelected();
-        if(!n) return "";
-        const parts = [];
-        let cur = n;
-        while(cur){
-          parts.push(cur.topic || cur.id);
-          cur = cur.parent;
-          if(cur && cur.id==="root"){ parts.push(cur.topic || "root"); break; }
+      /* ========== Meta save (THIS WAS BROKEN: must update root) ========== */
+      function setMetaSaved(saved){
+        const pill = $("#metaStatePill");
+        pill.classList.remove("ok","warn");
+        if(saved){
+          pill.classList.add("ok");
+          pill.innerHTML = "● " + t("metaSaved");
+        }else{
+          pill.classList.add("warn");
+          pill.innerHTML = "● " + t("metaNotSaved");
         }
-        return parts.reverse().join(" / ");
-      }catch(e){
-        return "";
-      }
-    }
-
-    /* ===== Ratings ===== */
-    function getRating(nodeId){
-      return state.mind.ratings && state.mind.ratings[nodeId] ? state.mind.ratings[nodeId] : null;
-    }
-    function setRating(nodeId, rate){
-      if(!state.mind.ratings) state.mind.ratings = {};
-      if(rate===null) delete state.mind.ratings[nodeId];
-      else state.mind.ratings[nodeId] = rate;
-    }
-
-    function updateRatingUI(){
-      const sel = getSelected();
-      const id = sel ? sel.id : "root";
-      const r = getRating(id);
-
-      document.querySelectorAll("#ratingRow .pill").forEach(p=>{
-        p.classList.toggle("selected", p.dataset.rate === r);
-      });
-
-      const info = $("rateInfo");
-      if(!r) info.textContent = `${t("rateInfo")} ${t("rateNone")}`;
-      else info.textContent = `${t("rateInfo")} ${r==="red"?t("rateRed"):r==="yellow"?t("rateYellow"):t("rateGreen")}`;
-    }
-
-    document.querySelectorAll("#ratingRow .pill").forEach(p=>{
-      p.addEventListener("click", ()=>{
-        const sel = getSelected();
-        const id = sel ? sel.id : "root";
-        const rate = p.dataset.rate;
-        pushHistory();
-        setRating(id, rate);
-        updateRatingUI();
-        updateDraftFromSelection();
-        scheduleSave();
-      });
-    });
-
-    /* ===== Draft action ===== */
-    function updateDraftFromSelection(){
-      const sel = getSelected();
-      const id = sel ? sel.id : "root";
-      const path = getNodePathText(sel) || "—";
-      const topic = (sel && sel.topic) ? sel.topic : "root";
-      $("actFrom").value = `${path}  [${id}]`;
-      updateDraftHint();
-    }
-
-    function updateDraftHint(){
-      const sel = getSelected();
-      const id = sel ? sel.id : "root";
-      const r = getRating(id);
-      const hint = $("draftHint");
-      if(r==="green"){
-        hint.textContent = t("needRedYellow");
-      }else{
-        hint.textContent = "";
-      }
-    }
-
-    function clearDraft(){
-      $("actText").value = "";
-      $("actOwner").value = "";
-      $("actDue").value = "";
-      $("actStatus").value = "open";
-      $("actNote").value = "";
-    }
-
-    $("btnClearDraft").addEventListener("click", ()=>{
-      clearDraft();
-      scheduleSave();
-    });
-
-    $("btnSaveAction").addEventListener("click", ()=>{
-      const sel = getSelected();
-      const id = sel ? sel.id : "root";
-      const fromPath = getNodePathText(sel) || "—";
-      const fromText = (sel && sel.topic) ? sel.topic : "root";
-
-      const text = ($("actText").value || "").trim();
-      if(!text){
-        toast(currentLang==="de" ? "Bitte Maßnahme eingeben." : "Please enter an action.");
-        return;
       }
 
-      pushHistory();
-      state.actions.push({
-        id: uid(),
-        fromId: id,
-        fromPath,
-        fromText,
-        text,
-        owner: ($("actOwner").value || "").trim(),
-        due: $("actDue").value || "",
-        status: $("actStatus").value || "open",
-        note: ($("actNote").value || "").trim(),
-        ts: new Date().toISOString()
-      });
+      function saveMeta(){
+        state.meta.topic = $("#metaTopic").value.trim();
+        state.meta.goal  = $("#metaGoal").value.trim();
+        state.meta.scope = $("#metaScope").value.trim();
+        state.meta.notes = $("#metaNotes").value.trim();
 
-      renderActionsTable();
-      clearDraft();
-      toast(t("savedAction"));
-      scheduleSave();
-    });
+        const rootText = state.meta.topic || defaultRootTopic();
 
-    /* ===== Actions table ===== */
-    function statusLabel(st){
-      if(st==="done") return t("stDone");
-      if(st==="drop") return t("stDrop");
-      return t("stOpen");
-    }
-    function statusClass(st){
-      if(st==="done") return "done";
-      if(st==="drop") return "drop";
-      return "open";
-    }
+        // Update root node topic
+        try{
+          if(jm && typeof jm.update_node === "function"){
+            jm.update_node("root", rootText);
+          }else{
+            // fallback: rebuild mind data root topic
+            const mind = safeGetMind() || defaultMind();
+            const root = (mind.data || []).find(n=>n.id==="root") || null;
+            if(root) root.topic = rootText;
+            applyMindSnapshot(mind);
+          }
+          if(typeof jm.select_node === "function") jm.select_node("root");
+        }catch(e){}
 
-    function renderActionsTable(){
-      const tbody = $("actionsBody");
-      tbody.innerHTML = "";
-
-      if(!Array.isArray(state.actions) || state.actions.length===0){
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td colspan="6" style="color:var(--muted);font-size:13px;">${currentLang==="de"?"Noch keine Maßnahmen.":"No actions yet."}</td>`;
-        tbody.appendChild(tr);
-        return;
+        setMetaSaved(true);
+        commitHistorySnapshot();
+        persistAll();
+        toast(t("savedToast"));
       }
 
-      state.actions.forEach((a)=>{
-        const tr = document.createElement("tr");
-        tr.dataset.id = a.id;
+      /* ========== Measures ========== */
+      function renderMeasures(){
+        const host = $("#measureList");
+        host.innerHTML = "";
 
-        tr.innerHTML = `
-          <td>
-            <div style="font-weight:800;">${escapeHtml(a.text)}</div>
-            ${a.note ? `<div style="color:var(--muted);font-size:12px;margin-top:4px;">${escapeHtml(a.note)}</div>` : ``}
-          </td>
-          <td style="color:var(--muted);font-size:12px;">
-            <div><strong>${escapeHtml(a.fromText || "")}</strong></div>
-            <div>${escapeHtml(a.fromPath || "")} <span style="opacity:.6;">[${escapeHtml(a.fromId||"")}]</span></div>
-          </td>
-          <td>${escapeHtml(a.owner||"")}</td>
-          <td>${escapeHtml(a.due||"")}</td>
-          <td><span class="status ${statusClass(a.status)}">${statusLabel(a.status)}</span></td>
-          <td>
-            <div class="row-actions">
-              <button type="button" class="icon-btn" data-act="edit">${t("btnEdit")}</button>
-              <button type="button" class="icon-btn danger" data-act="del">${t("btnDel")}</button>
+        $("#countText").textContent = String(state.measures.length);
+
+        if(!state.measures.length){
+          const empty = document.createElement("div");
+          empty.className = "hint";
+          empty.textContent = (currentLang === "de")
+            ? "Noch keine Maßnahmen. Wähle einen Mindmap-Knoten aus und speichere eine Maßnahme."
+            : "No actions yet. Select a mindmap node and save an action.";
+          host.appendChild(empty);
+          return;
+        }
+
+        state.measures.forEach(m=>{
+          const item = document.createElement("div");
+          item.className = "measure-item";
+
+          const stClass = (m.status === "done") ? "st-done" : (m.status === "drop") ? "st-drop" : "st-open";
+          const stLabel = (m.status === "done") ? t("statusDone") : (m.status === "drop") ? t("statusDrop") : t("statusOpen");
+
+          item.innerHTML = `
+            <div class="measure-top">
+              <div>
+                <p class="measure-title">${escapeHtml(m.text || "")}</p>
+                <div class="measure-meta">
+                  <strong>${escapeHtml(stLabel)}</strong> ·
+                  ${m.due ? (currentLang==="de" ? "Termin: " : "Due: ") + escapeHtml(m.due) : (currentLang==="de" ? "Kein Termin" : "No due date")}
+                  ${m.owner ? (" · " + (currentLang==="de" ? "Owner: " : "Owner: ") + escapeHtml(m.owner)) : ""}
+                  <br/>
+                  <span style="color:#64748b">${currentLang==="de" ? "Bezug:" : "Reference:"}</span>
+                  <strong>${escapeHtml(m.nodePath || "—")}</strong>
+                </div>
+              </div>
+              <div class="measure-actions">
+                <span class="status ${stClass}">${escapeHtml(stLabel)}</span>
+                <button type="button" class="mini" data-act="open" data-id="${m.id}">${escapeHtml(t("setOpen"))}</button>
+                <button type="button" class="mini" data-act="done" data-id="${m.id}">${escapeHtml(t("setDone"))}</button>
+                <button type="button" class="mini" data-act="drop" data-id="${m.id}">${escapeHtml(t("setDrop"))}</button>
+                <button type="button" class="mini" data-act="del" data-id="${m.id}" style="color:var(--red)">${escapeHtml(t("del"))}</button>
+              </div>
             </div>
-          </td>
-        `;
-
-        tbody.appendChild(tr);
-
-        tr.querySelector('[data-act="del"]').addEventListener("click", ()=>{
-          pushHistory();
-          state.actions = state.actions.filter(x=>x.id !== a.id);
-          renderActionsTable();
-          scheduleSave();
+          `;
+          host.appendChild(item);
         });
 
-        tr.querySelector('[data-act="edit"]').addEventListener("click", ()=>{
-          enterEditRow(tr, a);
+        host.querySelectorAll("button[data-act]").forEach(btn=>{
+          btn.addEventListener("click", ()=>{
+            const act = btn.getAttribute("data-act");
+            const id = btn.getAttribute("data-id");
+            const idx = state.measures.findIndex(x=>x.id===id);
+            if(idx < 0) return;
+
+            if(act === "del"){
+              state.measures.splice(idx,1);
+              persistAll();
+              renderMeasures();
+              return;
+            }
+            state.measures[idx].status = (act === "done") ? "done" : (act === "drop") ? "drop" : "open";
+            persistAll();
+            renderMeasures();
+          });
         });
+      }
+
+      function saveAction(){
+        const sel = getSelectedNode();
+        if(!sel){ toast(t("actionNeedNode")); return; }
+
+        const text = $("#actionText").value.trim();
+        if(!text){ toast(t("actionNeedText")); return; }
+
+        const due = $("#actionDue").value || "";
+        const owner = $("#actionOwner").value.trim();
+
+        state.measures.unshift({
+          id: newId(),
+          nodeId: sel.id,
+          nodeTopic: sel.topic || "",
+          nodePath: nodePath(sel),
+          text,
+          due,
+          owner,
+          status: "open",
+          createdAt: new Date().toISOString()
+        });
+
+        persistAll();
+        renderMeasures();
+
+        // clear measure input for next one
+        $("#actionText").value = "";
+        $("#actionDue").value = "";
+        $("#actionOwner").value = "";
+        toast(t("savedToast"));
+      }
+
+      function clearAction(){
+        $("#actionText").value = "";
+        $("#actionDue").value = "";
+        $("#actionOwner").value = "";
+      }
+
+      /* ========== JSON import/export ========== */
+      function downloadJson(){
+        // capture latest mind
+        state.mind = safeGetMind() || defaultMind();
+        state.lang = currentLang;
+        state.ts = new Date().toISOString();
+
+        const blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "mindmap_tool_export.json";
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function loadJsonFile(file){
+        file.text().then(txt=>{
+          const parsed = JSON.parse(txt);
+          if(!parsed || typeof parsed !== "object") throw new Error("bad json");
+
+          // apply language first
+          if(parsed.lang === "de" || parsed.lang === "en"){
+            setLanguage(parsed.lang);
+          }
+
+          state.lang = (parsed.lang === "de" || parsed.lang === "en") ? parsed.lang : currentLang;
+          state.meta = parsed.meta && typeof parsed.meta==="object" ? {
+            topic: String(parsed.meta.topic ?? ""),
+            goal: String(parsed.meta.goal ?? ""),
+            scope: String(parsed.meta.scope ?? ""),
+            notes: String(parsed.meta.notes ?? "")
+          } : { topic:"", goal:"", scope:"", notes:"" };
+
+          state.mind = parsed.mind && typeof parsed.mind==="object" ? parsed.mind : null;
+          state.measures = Array.isArray(parsed.measures) ? parsed.measures : [];
+          state.ts = String(parsed.ts ?? new Date().toISOString());
+
+          syncMetaInputs();
+
+          // ensure root topic matches meta
+          const mind = state.mind || defaultMind();
+          const rootTxt = state.meta.topic || defaultRootTopic();
+          try{
+            const root = (mind.data || []).find(n=>n.id==="root");
+            if(root) root.topic = rootTxt;
+          }catch(e){}
+
+          applyMindSnapshot(mind);
+
+          renderMeasures();
+          setMetaSaved(true);
+          persist();
+
+          // reset history
+          history = [];
+          future = [];
+          initHistory();
+
+          toast(t("importedToast"));
+        }).catch(()=>{
+          toast(t("invalidJson"));
+        });
+      }
+
+      /* ========== Autosave / Dirty tracking ========== */
+      function persistAll(){
+        // capture mind
+        state.mind = safeGetMind() || defaultMind();
+        persist();
+        // meta saved badge if topic differs from root, keep saved as-is (user clicks Save)
+      }
+
+      function markDirty(forceCommit=false){
+        // mark change time for idle commit
+        lastChangeAt = Date.now();
+        persistAll();
+        updateSelectionUI();
+
+        if(forceCommit){
+          commitHistorySnapshot();
+          lastChangeAt = 0;
+        }
+      }
+
+      function initHistory(){
+        const mind = safeGetMind() || defaultMind();
+        lastSig = sigOf(mind);
+        history.push({ sig:lastSig, mind });
+        $("#btnUndo").disabled = history.length <= 1;
+        $("#btnRedo").disabled = true;
+      }
+
+      // detect edits (including inline edits) and commit after idle
+      window.setInterval(()=>{
+        const mind = safeGetMind();
+        if(!mind) return;
+
+        const sig = sigOf(mind);
+        if(sig !== lastSig){
+          lastSig = sig;
+          lastChangeAt = Date.now();
+          persistAll();
+          updateSelectionUI();
+          // we do NOT commit history on every keystroke
+        }else{
+          // commit snapshot after user is idle for ~1.2s
+          if(lastChangeAt && (Date.now() - lastChangeAt) > 1200){
+            commitHistorySnapshot();
+            lastChangeAt = 0;
+          }
+        }
+      }, 450);
+
+      /* ========== Utilities ========== */
+      function escapeHtml(s){
+        return String(s ?? "")
+          .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+          .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+      }
+
+      /* ========== Scroll = Zoom (wheel) ========== */
+      function bindScrollZoom(){
+        const el = $("#jsmind_container");
+        el.addEventListener("wheel", (ev)=>{
+          // Scroll = zoom (requested)
+          ev.preventDefault();
+          if(ev.deltaY < 0) zoomIn();
+          else zoomOut();
+        }, { passive:false });
+      }
+
+      /* ========== Init ========== */
+      restore();
+      if(state.lang === "de" || state.lang === "en") currentLang = state.lang;
+
+      setLanguage(currentLang);
+      syncMetaInputs();
+
+      // init year
+      $("#copyrightYear").textContent = String(new Date().getFullYear());
+
+      // build mindmap
+      jm = new jsMind(options);
+      const mindToShow = state.mind || defaultMind();
+
+      // ensure root topic matches meta
+      const rootTxt = state.meta.topic || defaultRootTopic();
+      try{
+        const root = (mindToShow.data || []).find(n=>n.id==="root");
+        if(root) root.topic = rootTxt;
+      }catch(e){}
+
+      jm.show(mindToShow);
+
+      bindScrollZoom();
+      initHistory();
+      renderMeasures();
+      updateSelectionUI();
+      setMetaSaved(false);
+
+      // click in container updates selection UI
+      $("#jsmind_container").addEventListener("mousedown", ()=> window.setTimeout(updateSelectionUI, 40));
+      $("#jsmind_container").addEventListener("touchstart", ()=> window.setTimeout(updateSelectionUI, 40), {passive:true});
+
+      // Buttons
+      $("#btnLangDE").addEventListener("click", ()=> setLanguage("de"));
+      $("#btnLangEN").addEventListener("click", ()=> setLanguage("en"));
+
+      $("#btnSaveMeta").addEventListener("click", saveMeta);
+      $("#btnRecenterRoot").addEventListener("click", ()=>{ recenter(); toast(t("savedToast")); });
+
+      $("#btnAddChild").addEventListener("click", ()=>{ addChild(); setMetaSaved(false); });
+      $("#btnAddSibling").addEventListener("click", ()=>{ addSibling(); setMetaSaved(false); });
+      $("#btnEditNode").addEventListener("click", ()=>{ editNode(); });
+      $("#btnDeleteNode").addEventListener("click", ()=>{ deleteNode(); setMetaSaved(false); });
+
+      $("#btnUndo").addEventListener("click", ()=>{ undo(); markDirty(true); });
+      $("#btnRedo").addEventListener("click", ()=>{ redo(); markDirty(true); });
+
+      $("#btnZoomIn").addEventListener("click", zoomIn);
+      $("#btnZoomOut").addEventListener("click", zoomOut);
+
+      $("#btnResetMap").addEventListener("click", ()=>{ resetMap(); setMetaSaved(false); });
+
+      $("#btnSaveAction").addEventListener("click", saveAction);
+      $("#btnClearAction").addEventListener("click", clearAction);
+
+      $("#btnExportJson").addEventListener("click", downloadJson);
+      $("#btnImportJson").addEventListener("click", ()=> $("#jsonFile").click());
+      $("#jsonFile").addEventListener("change", (ev)=>{
+        const f = ev.target.files && ev.target.files[0];
+        if(!f) return;
+        loadJsonFile(f);
+        ev.target.value = "";
       });
-    }
 
-    function enterEditRow(tr, a){
-      tr.innerHTML = `
-        <td>
-          <textarea class="textarea" style="min-height:60px;" data-edit="text">${escapeHtml(a.text)}</textarea>
-          <input class="input" style="margin-top:8px;" data-edit="note" value="${escapeHtml(a.note||"")}" placeholder="${t("phActionNote")}">
-        </td>
-        <td style="color:var(--muted);font-size:12px;">
-          <div><strong>${escapeHtml(a.fromText||"")}</strong></div>
-          <div>${escapeHtml(a.fromPath||"")} <span style="opacity:.6;">[${escapeHtml(a.fromId||"")}]</span></div>
-        </td>
-        <td><input class="input" data-edit="owner" value="${escapeHtml(a.owner||"")}" placeholder="${t("phOwner")}"></td>
-        <td><input class="input" type="date" data-edit="due" value="${escapeHtml(a.due||"")}"></td>
-        <td>
-          <select class="input" data-edit="status">
-            <option value="open"${a.status==="open"?" selected":""}>${t("stOpen")}</option>
-            <option value="done"${a.status==="done"?" selected":""}>${t("stDone")}</option>
-            <option value="drop"${a.status==="drop"?" selected":""}>${t("stDrop")}</option>
-          </select>
-        </td>
-        <td>
-          <div class="row-actions">
-            <button type="button" class="icon-btn" data-act="save">${t("btnUpdate")}</button>
-            <button type="button" class="icon-btn" data-act="cancel">${t("btnCancel")}</button>
-          </div>
-        </td>
-      `;
-
-      tr.querySelector('[data-act="cancel"]').addEventListener("click", ()=>{
-        renderActionsTable();
+      $("#btnPrint").addEventListener("click", ()=>{
+        window.print();
+        toast(t("printToast"));
       });
 
-      tr.querySelector('[data-act="save"]').addEventListener("click", ()=>{
-        pushHistory();
-        const upd = {
-          text: tr.querySelector('[data-edit="text"]').value.trim(),
-          note: tr.querySelector('[data-edit="note"]').value.trim(),
-          owner: tr.querySelector('[data-edit="owner"]').value.trim(),
-          due: tr.querySelector('[data-edit="due"]').value,
-          status: tr.querySelector('[data-edit="status"]').value
-        };
-        state.actions = state.actions.map(x=> x.id===a.id ? {...x, ...upd} : x);
-        renderActionsTable();
-        scheduleSave();
-      });
-    }
+      $("#btnResetAll").addEventListener("click", resetAll);
 
-    function escapeHtml(s){
-      return String(s??"")
-        .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
-    }
+      // initial autosave of restored state
+      persistAll();
 
-    /* ===== Mindmap commands (Child / Sibling / Delete) ===== */
-    function syncMindToState(){
-      if(!jm) return;
-      const data = jm.get_data && jm.get_data("node_array");
-      if(data && data.data) state.mind.nodes = data.data;
-    }
-
-    function addChild(){
-      if(!jm) return;
-      const sel = getSelected();
-      const rootId = (jm.get_root && jm.get_root()) ? jm.get_root().id : "root";
-      const parentId = sel ? sel.id : rootId;
-
-      const text = prompt(t("promptNodeText"), "");
-      if(text === null) return;
-      const topic = (text || "").trim() || (currentLang==="de" ? "Neuer Knoten" : "New node");
-
-      pushHistory();
-      const id = uid();
-      const ok = jm.add_node(parentId, id, topic);
-      if(ok){
-        try{ jm.expand_node(parentId); }catch(e){}
-        jm.select_node(id);
-        try{ jm.view && jm.view.scroll_node_to_center && jm.view.scroll_node_to_center(id); }catch(e){}
-        updateSelectionPill();
-        scheduleSave();
-      }else{
-        toast(t("warnAddFailed"));
-      }
-    }
-
-    function addSibling(){
-      if(!jm) return;
-      const sel = getSelected();
-      if(!sel){ toast(t("warnSelectNode")); return; }
-      if(sel.id === "root"){ toast(t("warnSiblingRoot")); return; }
-
-      const rootId = (jm.get_root && jm.get_root()) ? jm.get_root().id : "root";
-      const parentId = sel.parent ? sel.parent.id : rootId;
-
-      const text = prompt(t("promptNodeText"), "");
-      if(text === null) return;
-      const topic = (text || "").trim() || (currentLang==="de" ? "Neuer Knoten" : "New node");
-
-      pushHistory();
-      const id = uid();
-      const ok = jm.add_node(parentId, id, topic);
-      if(ok){
-        try{ jm.expand_node(parentId); }catch(e){}
-        jm.select_node(id);
-        try{ jm.view && jm.view.scroll_node_to_center && jm.view.scroll_node_to_center(id); }catch(e){}
-        updateSelectionPill();
-        scheduleSave();
-      }else{
-        toast(t("warnAddFailed"));
-      }
-    }
-
-    function deleteNode(){
-      if(!jm) return;
-      const sel = getSelected();
-      if(!sel){ toast(t("warnSelectNode")); return; }
-      if(sel.id === "root"){
-        toast(currentLang==="de" ? "Root kann nicht gelöscht werden." : "Root cannot be deleted.");
-        return;
-      }
-      if(!confirm(t("confirmDelete"))) return;
-
-      pushHistory();
-      // remove rating
-      if(state.mind.ratings) delete state.mind.ratings[sel.id];
-      jm.remove_node(sel.id);
-
-      updateSelectionPill();
-      updateRatingUI();
-      updateDraftFromSelection();
-      scheduleSave();
-    }
-
-    function resetMind(){
-      if(!confirm(t("confirmReset"))) return;
-      pushHistory();
-      state.mind.nodes = [{ id:"root", isroot:true, topic: state.meta.topic || "Mindmap" }];
-      state.mind.ratings = {};
-      state.actions = [];
-      history.future = [];
-      history.past = [];
-      updateUndoRedoUI();
-
-      jm.show({ meta:{ name:"mindmap", author:"", version:"1.0" }, format:"node_array", data: state.mind.nodes });
-      try{ wireZoomPan._recenter && wireZoomPan._recenter(); }catch(e){}
-      renderActionsTable();
-      updateSelectionPill();
-      updateRatingUI();
-      updateDraftFromSelection();
-      scheduleSave();
-    }
-
-    function doUndo(){
-      if(!canUndo()) return;
-      syncMindToState();
-      history.future.push(deepClone(state));
-      state = history.past.pop();
-      applyStateToUI(true);
-      scheduleSave();
-    }
-    function doRedo(){
-      if(!canRedo()) return;
-      syncMindToState();
-      history.past.push(deepClone(state));
-      state = history.future.pop();
-      applyStateToUI(true);
-      scheduleSave();
-    }
-
-    function applyStateToUI(rebuildMind){
-      // meta
-      $("scopeTopic").value = state.meta.topic || "";
-      $("scopeGoal").value = state.meta.goal || "";
-      $("scopeScope").value = state.meta.scope || "";
-      $("scopeNotes").value = state.meta.notes || "";
-
-      if(rebuildMind && jm){
-        jm.show({ meta:{ name:"mindmap", author:"", version:"1.0" }, format:"node_array", data: state.mind.nodes });
-      }else if(jm){
-        // still update root topic if changed
-        try{ jm.update_node("root", state.meta.topic || (currentLang==="de"?"Mindmap":"Mind map")); }catch(e){}
-      }
-
-      renderActionsTable();
-      updateSelectionPill();
-      updateRatingUI();
-      updateDraftFromSelection();
-      updateUndoRedoUI();
-    }
-
-    /* UI button wire */
-    // Add child/sibling via keyboard-like buttons (German labels)
-    // we place them as context menu for selected node: using native jsMind commands:
-    // We'll add two extra buttons under the map for clarity.
+    })();
   </script>
-
-  <!-- PART 1/3 ends here -->
+</body>
+</html>
