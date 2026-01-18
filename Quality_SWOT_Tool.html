@@ -1,397 +1,1131 @@
-<style>
-  /* Add-on Styles (scoped via .qm-swot-addon-*) */
-  .qm-swot-addon-duewrap{
-    display:flex;
-    gap:10px;
-    align-items:center;
-    flex-wrap:wrap;
-    margin-top:8px;
-    padding-top:8px;
-    border-top:1px dashed rgba(0,0,0,.08);
-  }
-  .qm-swot-addon-duewrap label{
-    font-size:12px;
-    font-weight:900;
-    text-transform:uppercase;
-    letter-spacing:.2px;
-    color:#334155;
-  }
-  .qm-swot-addon-duewrap input[type="date"]{
-    padding:8px 10px;
-    border:1px solid rgba(17,85,178,.15);
-    border-radius:4px;
-    font-size:13px;
-  }
-  .qm-swot-addon-overview{
-    margin-top:16px;
-    border:1px solid rgba(17,85,178,.15);
-    border-radius:4px;
-    background:#fff;
-    box-shadow: 0 4px 12px rgba(27,51,92,.08);
-    overflow:hidden;
-  }
-  .qm-swot-addon-overview-head{
-    background:#f8fafc;
-    padding:14px 16px;
-    border-bottom:2px solid #1155b2;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    flex-wrap:wrap;
-  }
-  .qm-swot-addon-overview-title{
-    margin:0;
-    font-size:13px;
-    font-weight:900;
-    text-transform:uppercase;
-    letter-spacing:.3px;
-    color:#09387a;
-  }
-  .qm-swot-addon-overview-sub{
-    margin:2px 0 0;
-    font-size:12px;
-    color:#64748b;
-  }
-  .qm-swot-addon-overview-body{ padding:14px 16px; }
-  .qm-swot-addon-table{
-    width:100%;
-    border-collapse:collapse;
-    font-size:13px;
-  }
-  .qm-swot-addon-table th,
-  .qm-swot-addon-table td{
-    border-bottom:1px solid rgba(0,0,0,.06);
-    padding:10px 8px;
-    vertical-align:top;
-  }
-  .qm-swot-addon-table th{
-    text-align:left;
-    font-size:12px;
-    font-weight:900;
-    text-transform:uppercase;
-    letter-spacing:.2px;
-    color:#334155;
-    background: rgba(17,85,178,.04);
-  }
-  .qm-swot-addon-muted{ color:#64748b; font-size:12px; }
-  .qm-swot-addon-actions{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    align-items:center;
-  }
-  .qm-swot-addon-btn{
-    background:#fff;
-    border: 1px solid rgba(17,85,178,.15);
-    color:#09387a;
-    padding:10px 14px;
-    border-radius:4px;
-    font-weight:900;
-    cursor:pointer;
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:.3px;
-    user-select:none;
-  }
-  .qm-swot-addon-btn.primary{
-    background:#1155b2;
-    border-color:#1155b2;
-    color:#fff;
-  }
-  .qm-swot-addon-btn:hover{ transform: translateY(-1px); }
-  .qm-swot-addon-btn:active{ transform: translateY(1px); }
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SWOT Tool – Analyse & Maßnahmen</title>
 
-  /* Print */
-  @media print{
-    .qm-no-print{ display:none !important; }
-    .qm-swot-addon-overview{ box-shadow:none; }
-    input[type="date"]{ border:1px solid #ccc !important; }
-  }
-</style>
+  <!-- html2canvas (wird für PNG-Export benötigt) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-<script>
-(function(){
-  // -------- Settings / keys --------
-  const LANG_KEY = "qmLang"; // same key like your other tools
-  const DUE_KEY_PREFIX = "qm_swot_due_"; // localStorage per measure
+  <style>
+    :root {
+      --blue: #1155b2;
+      --dark: #09387a;
+      --light-bg: #f8fafc;
+      --note: #fff9c4;
 
-  // -------- i18n --------
-  const TXT = {
-    de: {
-      renameTitle: "Ableitung von Maßnahmen",
-      dueLabel: "Termin / Datum",
-      overviewTitle: "Maßnahmenübersicht",
-      overviewSub: "Alle Maßnahmen gesammelt (inkl. Termin).",
-      colMeasure: "Maßnahme",
-      colDue: "Termin",
-      colSource: "Quelle",
-      colIndex: "#",
-      print: "Drucken",
-      printHint: "Print: nutzt den aktuellen Stand."
-    },
-    en: {
-      renameTitle: "Derivation of actions",
-      dueLabel: "Due date",
-      overviewTitle: "Action overview",
-      overviewSub: "All actions in one place (including due date).",
-      colMeasure: "Action",
-      colDue: "Due",
-      colSource: "Source",
-      colIndex: "#",
-      print: "Print",
-      printHint: "Print uses the current state."
+      /* SWOT Highlights */
+      --s-bg: #ecfdf5;  /* Strengths */
+      --w-bg: #fff1f2;  /* Weaknesses */
+      --o-bg: #eff6ff;  /* Opportunities */
+      --t-bg: #fff7ed;  /* Threats */
+      --s-b: #22c55e;
+      --w-b: #ef4444;
+      --o-b: #3b82f6;
+      --t-b: #f97316;
     }
-  };
 
-  function getLang(){
-    const l = (localStorage.getItem(LANG_KEY) || "de").toLowerCase();
-    return (l === "en") ? "en" : "de";
-  }
-  function t(k){
-    return TXT[getLang()][k] || k;
-  }
+    body { margin: 0; background: #ffffff; }
 
-  // -------- helpers --------
-  function norm(s){ return (s||"").toLowerCase().replace(/\s+/g," ").trim(); }
-  function hash(str){
-    // small stable hash (not crypto) for localStorage keys
-    let h = 0;
-    const s = String(str||"");
-    for(let i=0;i<s.length;i++){
-      h = ((h<<5) - h) + s.charCodeAt(i);
-      h |= 0;
+    .swot-app { max-width: 1100px; margin: 20px auto; font-family: 'Segoe UI', Roboto, sans-serif; color: #27304d; padding: 0 12px; }
+    .swot-card { background: #fff; border: 1px solid #d1d9e6; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; }
+
+    /* Intro-Sektion */
+    .tool-intro { padding: 22px 25px; border-bottom: 3px solid var(--blue); background: var(--light-bg); }
+    .tool-intro-top { display:flex; align-items:flex-start; justify-content:space-between; gap: 15px; flex-wrap: wrap; }
+    .tool-title { margin: 0; color: var(--dark); font-size: 20px; text-transform: uppercase; }
+    .tool-sub { margin: 6px 0 0; font-size: 13px; color: #64748b; }
+
+    .tool-grid { margin-top: 16px; display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .tool-box { background:#fff; border: 1px solid #d1d9e6; border-radius: 4px; padding: 12px 14px; }
+    .tool-box h3 { margin: 0 0 6px 0; font-size: 13px; color: var(--dark); text-transform: uppercase; }
+    .tool-box p, .tool-box ol { margin: 0; font-size: 13px; color:#334155; }
+    .tool-box ol { padding-left: 18px; }
+    .tool-privacy { border-left: 3px solid var(--blue); }
+
+    .tool-box a { color: var(--blue); text-decoration: none; }
+    .tool-box a:hover { text-decoration: underline; }
+
+    .swot-body { padding: 25px; }
+    .swot-drawing-area { padding: 22px; background: white; border: 1px solid #edf2f7; position: relative; }
+
+    /* Kopfbereich im Capture */
+    .swot-headerbar {
+      display:flex; justify-content:space-between; align-items:flex-start; gap: 12px; flex-wrap: wrap;
+      padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid #eef2f7;
     }
-    return String(Math.abs(h));
-  }
-
-  // Find the "actions derived from SWOT" heading by text
-  function findSwotDerivationHeading(){
-    const headings = Array.from(document.querySelectorAll("h1,h2,h3,h4"));
-    const deNeedle = "aus swot entstehen maßnahmen";
-    const enNeedle = "actions"; // fallback heuristic
-    for(const h of headings){
-      const tx = norm(h.textContent);
-      if(tx.includes(deNeedle)) return h;
-      // if user had "Highlight: Aus SWOT entstehen Maßnahmen"
-      if(tx.includes("highlight") && tx.includes("swot") && tx.includes("maßnahmen")) return h;
+    .swot-context { flex: 1; min-width: 260px; }
+    .swot-context label { display:block; font-size: 12px; color:#64748b; margin-bottom: 6px; text-transform: uppercase; font-weight: 700; }
+    .swot-context textarea {
+      width: 100%; min-height: 64px; resize: vertical; border: 1px solid #d1d9e6; border-radius: 4px;
+      padding: 10px; font-family: inherit; font-size: 13px; outline: none;
     }
-    // fallback: look for a heading containing "swot" + "maßnahmen"
-    for(const h of headings){
-      const tx = norm(h.textContent);
-      if(tx.includes("swot") && (tx.includes("maßnahmen") || tx.includes("measures") || tx.includes("actions"))) return h;
+    .swot-badges { display:flex; gap: 8px; flex-wrap: wrap; align-items:center; }
+    .badge {
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      padding: 6px 8px; border-radius: 999px; border: 1px solid #d1d9e6; background: #fff; color:#334155;
     }
-    return null;
-  }
+    .badge.s { border-color: var(--s-b); }
+    .badge.w { border-color: var(--w-b); }
+    .badge.o { border-color: var(--o-b); }
+    .badge.t { border-color: var(--t-b); }
 
-  // Locate the container that actually holds the measures list near the heading
-  function findMeasuresHost(heading){
-    if(!heading) return null;
+    /* Achsen Hinweis */
+    .swot-axis {
+      display:flex; justify-content:space-between; align-items:center; gap: 10px; flex-wrap: wrap;
+      margin: 6px 0 10px 0; font-size: 12px; color:#64748b;
+    }
+    .swot-axis strong { color: var(--dark); }
 
-    const card = heading.closest("section, .card, .swot-card, .vuca-card, .ishikawa-card") || heading.parentElement;
-    if(!card) return null;
+    /* SWOT Matrix */
+    .swot-matrix {
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .swot-quadrant {
+      border: 1px solid #d1d9e6;
+      border-radius: 4px;
+      padding: 12px 14px;
+      min-height: 190px;
+      display:flex;
+      flex-direction: column;
+    }
+    .q-title {
+      display:flex; justify-content:space-between; align-items:center; gap: 10px;
+      margin: 0 0 10px 0;
+      font-size: 13px; font-weight: 900; text-transform: uppercase;
+      color: var(--dark);
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .q-title small { font-weight: 800; color:#64748b; text-transform: none; }
+    .q-s { background: var(--s-bg); border-left: 4px solid var(--s-b); }
+    .q-w { background: var(--w-bg); border-left: 4px solid var(--w-b); }
+    .q-o { background: var(--o-bg); border-left: 4px solid var(--o-b); }
+    .q-t { background: var(--t-bg); border-left: 4px solid var(--t-b); }
 
-    // heuristic: first list after heading
-    // try: within the same card, find a UL/OL with LI items
-    const lists = Array.from(card.querySelectorAll("ul,ol")).filter(l => l.querySelector("li"));
-    if(lists.length) return lists[0];
+    .notes-container { display:flex; flex-direction: column; gap: 6px; flex-grow: 1; }
+    .note-item {
+      background: var(--note);
+      padding: 6px;
+      font-size: 12px;
+      border-left: 3px solid #fbc02d;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+      position: relative;
+      padding-right: 30px;
+      border-radius: 3px;
+    }
+    .note-item textarea { width: 100%; border: none; background: transparent; resize: none; font-family: inherit; outline: none; }
 
-    // fallback: any container with measure-ish class names
-    const maybe = card.querySelector('[class*="measure"],[class*="massnah"],[class*="action"]');
-    return maybe || null;
-  }
+    .note-delete {
+      position: absolute;
+      top: 4px; right: 6px;
+      border: none; background: transparent; cursor: pointer;
+      font-size: 18px; line-height: 1;
+      color: #94a3b8;
+    }
+    .note-delete:hover { color: #e53e3e; }
 
-  // Extract measure text from a list item (robust)
-  function getMeasureText(li){
-    // try to ignore our injected duewrap text
-    const clone = li.cloneNode(true);
-    clone.querySelectorAll(".qm-swot-addon-duewrap").forEach(x=>x.remove());
-    return norm(clone.textContent).replace(/\s+/g," ").trim();
-  }
+    .btn-add {
+      background: none; border: 1px dashed #cbd5e1; color: #94a3b8;
+      cursor: pointer; font-size: 11px;
+      margin-top: 10px; padding: 6px; border-radius: 4px;
+      text-transform: uppercase; font-weight: 800;
+    }
+    .btn-add:hover { background: rgba(255,255,255,0.7); color: var(--blue); border-color: var(--blue); }
 
-  // Inject date picker into each measure item
-  function enhanceMeasuresWithDueDates(measuresHost){
-    if(!measuresHost) return [];
+    /* Ableitung der Maßnahmen */
+    .swot-highlight {
+      margin-top: 16px;
+      border-top: 2px solid var(--blue);
+      padding-top: 14px;
+    }
+    .highlight-title {
+      margin: 0 0 6px 0;
+      font-size: 13px;
+      color: var(--dark);
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+    .highlight-sub {
+      margin: 0 0 10px 0;
+      font-size: 13px;
+      color: #64748b;
+    }
 
-    const items = Array.from(measuresHost.querySelectorAll("li"));
-    const rows = [];
+    /* Maßnahmenübersicht (neu) */
+    .overview-box{
+      background:#fff;
+      border: 1px solid #d1d9e6;
+      border-radius: 4px;
+      padding: 12px 14px;
+      margin: 10px 0 12px;
+    }
+    .overview-head{
+      display:flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .overview-title{
+      margin:0;
+      font-size: 13px;
+      color: var(--dark);
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+    .overview-sub{
+      margin:0;
+      font-size: 12px;
+      color:#64748b;
+    }
+    .overview-table{
+      width:100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      color:#334155;
+    }
+    .overview-table th,
+    .overview-table td{
+      border-top: 1px solid #eef2f7;
+      padding: 8px 6px;
+      vertical-align: top;
+    }
+    .overview-table th{
+      font-size: 11px;
+      text-transform: uppercase;
+      color:#64748b;
+      letter-spacing:.3px;
+      text-align:left;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      border: 1px solid #d1d9e6;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      white-space: nowrap;
+      background:#fff;
+    }
+    .tag.so{ border-color: var(--s-b); }
+    .tag.st{ border-color: var(--t-b); }
+    .tag.wo{ border-color: var(--o-b); }
+    .tag.wt{ border-color: var(--w-b); }
 
-    items.forEach((li, idx)=>{
-      if(li.querySelector(".qm-swot-addon-duewrap")) {
-        // still collect row
-        const text = getMeasureText(li);
-        const key = DUE_KEY_PREFIX + hash(text || ("idx_"+idx));
-        const due = localStorage.getItem(key) || "";
-        rows.push({ idx: idx+1, text, due, key, source: "" });
+    .strategy-grid {
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .strategy-box {
+      background:#fff;
+      border: 1px solid #d1d9e6;
+      border-radius: 4px;
+      padding: 12px 14px;
+    }
+    .strategy-box h4 {
+      margin: 0 0 6px 0;
+      font-size: 13px;
+      color: var(--dark);
+      text-transform: uppercase;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 10px;
+    }
+    .strategy-pill {
+      font-size: 11px;
+      font-weight: 900;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #d1d9e6;
+      background: #fff;
+      color:#334155;
+      white-space: nowrap;
+    }
+    .pill-so { border-color: var(--s-b); }
+    .pill-st { border-color: var(--t-b); }
+    .pill-wo { border-color: var(--o-b); }
+    .pill-wt { border-color: var(--w-b); }
+
+    .strategy-box p { margin: 0; font-size: 13px; color:#334155; }
+    .strategy-list { margin: 10px 0 0; display:flex; flex-direction: column; gap: 8px; }
+
+    .measure-item {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 8px 10px;
+      position: relative;
+      padding-right: 30px;
+      display:flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .measure-item textarea {
+      width: 100%;
+      border: none;
+      resize: vertical;
+      min-height: 42px;
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+      background: transparent;
+    }
+    .measure-meta{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      font-size: 12px;
+      color:#64748b;
+    }
+    .measure-meta label{
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 11px;
+      color:#64748b;
+      letter-spacing:.25px;
+    }
+    .measure-meta input[type="date"]{
+      border: 1px solid #d1d9e6;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-family: inherit;
+      font-size: 13px;
+      background:#fff;
+      color:#334155;
+    }
+
+    .measure-delete {
+      position:absolute;
+      top: 6px; right: 8px;
+      border: none; background: transparent; cursor: pointer;
+      font-size: 18px; line-height: 1;
+      color: #94a3b8;
+    }
+    .measure-delete:hover { color: #e53e3e; }
+
+    .measure-actions { margin-top: 10px; display:flex; gap: 8px; flex-wrap: wrap; }
+    .mini-btn {
+      padding: 8px 10px;
+      font-size: 11px;
+      font-weight: 900;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid #d1d9e6;
+      background: #fff;
+      text-transform: uppercase;
+      color:#334155;
+    }
+    .mini-btn:hover { border-color: var(--blue); color: var(--blue); background: #f8fafc; }
+
+    /* Actions */
+    .swot-actions {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 2px solid var(--blue);
+      display:flex; gap: 10px; flex-wrap: wrap;
+    }
+    .i-btn {
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid #d1d9e6;
+      background: #fff;
+      text-transform: uppercase;
+      text-decoration: none;
+      display:inline-flex; align-items:center;
+    }
+    .i-btn.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .i-btn.danger { color: #e53e3e; }
+
+    /* Sprachumschalter */
+    .lang-switch { display:flex; gap: 8px; align-items:center; }
+    .lang-switch .i-btn { padding: 8px 12px; font-size: 12px; }
+
+    /* Letzte Sektion */
+    .tool-more { margin-top: 22px; padding-top: 18px; border-top: 2px solid var(--blue); }
+    .more-title { margin: 0 0 6px 0; font-size: 13px; color: var(--dark); text-transform: uppercase; }
+    .more-sub { margin: 0 0 10px 0; font-size: 13px; color: #64748b; }
+    .more-list { margin: 8px 0 0; padding-left: 18px; font-size: 13px; color:#334155; }
+    .more-list li { margin: 4px 0; }
+
+    /* Footer */
+    .swot-footer {
+      padding: 12px 25px;
+      background: var(--light-bg);
+      border-top: 1px solid #d1d9e6;
+      font-size: 12px;
+      color: #64748b;
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .tool-grid { grid-template-columns: 1fr; }
+      .swot-matrix { grid-template-columns: 1fr; }
+      .strategy-grid { grid-template-columns: 1fr; }
+      .tool-intro, .swot-body, .swot-footer { padding-left: 16px; padding-right: 16px; }
+    }
+
+    /* Print */
+    @media print {
+      .swot-actions,
+      .lang-switch,
+      .tool-more a {
+        display: none !important;
+      }
+      .swot-card { box-shadow: none !important; border: none !important; }
+      .swot-app { margin: 0 !important; padding: 0 !important; }
+      .swot-body { padding: 0 !important; }
+      .swot-drawing-area { border: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="qm-swot-app" class="swot-app">
+    <section class="swot-card">
+
+      <!-- Intro -->
+      <section class="tool-intro">
+        <div class="tool-intro-top">
+          <div>
+            <h2 class="tool-title" data-i18n="title">SWOT Tool – Analyse &amp; Maßnahmen</h2>
+            <p class="tool-sub" data-i18n="subtitle">Stärken/Schwächen &amp; Chancen/Risiken strukturieren – und daraus konkrete Maßnahmen ableiten.</p>
+          </div>
+
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+            <div class="lang-switch" aria-label="Language switch">
+              <button type="button" class="i-btn" id="btnLangDE">DE</button>
+              <button type="button" class="i-btn" id="btnLangEN">EN</button>
+            </div>
+            <a class="i-btn" href="https://tools.quality.de/" data-i18n="backHome">Zurück zur Startseite</a>
+          </div>
+        </div>
+
+        <div class="tool-grid">
+          <div class="tool-box">
+            <h3 data-i18n="boxToolNameTitle">Name Tool</h3>
+            <p data-i18n="boxToolNameText">SWOT-Analyse – Matrix + Maßnahmen (SO / ST / WO / WT)</p>
+          </div>
+
+          <div class="tool-box">
+            <h3 data-i18n="boxGoalTitle">Ziel</h3>
+            <p data-i18n="boxGoalText">Eine kompakte Strategie-Übersicht erstellen: Faktoren sammeln, bewerten und anschließend in umsetzbare Maßnahmen überführen.</p>
+          </div>
+
+          <div class="tool-box">
+            <h3 data-i18n="boxHowTitle">So benutzt du das Tool</h3>
+            <ol>
+              <li data-i18n="step1">Thema/Scope oben eintragen.</li>
+              <li data-i18n="step2">SWOT-Faktoren pro Quadrant hinzufügen (X löscht Einträge).</li>
+              <li data-i18n="step3">Aus der SWOT Maßnahmen ableiten (SO/ST/WO/WT) und mit Datum planen.</li>
+              <li data-i18n="step4">Export als PNG oder als JSON speichern (und wieder laden).</li>
+            </ol>
+          </div>
+
+          <div class="tool-box tool-privacy">
+            <h3 data-i18n="boxPrivacyTitle">Datenschutz</h3>
+            <p data-i18n="boxPrivacyText">Dieses Tool arbeitet vollständig im Browser. Es werden keine Daten auf einem Server gespeichert. Zugriff hat nur die Person, die die Datei lokal speichert bzw. lädt.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="swot-body">
+        <div id="capture-area" class="swot-drawing-area">
+
+          <!-- Kopf / Kontext -->
+          <div class="swot-headerbar">
+            <div class="swot-context">
+              <label for="contextInput" data-i18n="contextLabel">Thema / Ziel / Scope</label>
+              <textarea id="contextInput" data-i18n-placeholder="contextPlaceholder" placeholder="z.B. Produktlinie X – Markteintritt DACH 2026, Ziel: Umsatz +15% ..."></textarea>
+            </div>
+            <div class="swot-badges" aria-label="Legende">
+              <span class="badge s" data-i18n="badgeS">Stärken (Intern)</span>
+              <span class="badge w" data-i18n="badgeW">Schwächen (Intern)</span>
+              <span class="badge o" data-i18n="badgeO">Chancen (Extern)</span>
+              <span class="badge t" data-i18n="badgeT">Risiken (Extern)</span>
+            </div>
+          </div>
+
+          <!-- Achsen Hinweis -->
+          <div class="swot-axis">
+            <div><strong data-i18n="axisInternStrong">Intern</strong>: <span data-i18n="axisInternText">Stärken / Schwächen</span></div>
+            <div><strong data-i18n="axisExternStrong">Extern</strong>: <span data-i18n="axisExternText">Chancen / Risiken</span></div>
+          </div>
+
+          <!-- SWOT Matrix -->
+          <div class="swot-matrix">
+            <div class="swot-quadrant q-s" data-q="S">
+              <div class="q-title">
+                <span data-i18n="qS">Stärken</span>
+                <small data-i18n="qSsub">(Intern)</small>
+              </div>
+              <div class="notes-container" id="notes-S"></div>
+              <button class="btn-add" type="button" onclick="addNote('S')" data-i18n="btnAddFactor">+ Faktor</button>
+            </div>
+
+            <div class="swot-quadrant q-w" data-q="W">
+              <div class="q-title">
+                <span data-i18n="qW">Schwächen</span>
+                <small data-i18n="qWsub">(Intern)</small>
+              </div>
+              <div class="notes-container" id="notes-W"></div>
+              <button class="btn-add" type="button" onclick="addNote('W')" data-i18n="btnAddFactor">+ Faktor</button>
+            </div>
+
+            <div class="swot-quadrant q-o" data-q="O">
+              <div class="q-title">
+                <span data-i18n="qO">Chancen</span>
+                <small data-i18n="qOsub">(Extern)</small>
+              </div>
+              <div class="notes-container" id="notes-O"></div>
+              <button class="btn-add" type="button" onclick="addNote('O')" data-i18n="btnAddFactor">+ Faktor</button>
+            </div>
+
+            <div class="swot-quadrant q-t" data-q="T">
+              <div class="q-title">
+                <span data-i18n="qT">Risiken</span>
+                <small data-i18n="qTsub">(Extern)</small>
+              </div>
+              <div class="notes-container" id="notes-T"></div>
+              <button class="btn-add" type="button" onclick="addNote('T')" data-i18n="btnAddFactor">+ Faktor</button>
+            </div>
+          </div>
+
+          <!-- Ableitung: Maßnahmen -->
+          <section class="swot-highlight" aria-label="Maßnahmen aus SWOT">
+            <h3 class="highlight-title" data-i18n="deriveTitle">Ableitung von Maßnahmen</h3>
+            <p class="highlight-sub" data-i18n="deriveSub">
+              Vorgehen: (1) Faktoren clustern &amp; bewerten → (2) Strategietyp wählen (SO/ST/WO/WT) → (3) Maßnahmen formulieren → (4) Termin setzen &amp; umsetzen.
+            </p>
+
+            <!-- Maßnahmenübersicht (neu) -->
+            <div class="overview-box" aria-label="Maßnahmenübersicht">
+              <div class="overview-head">
+                <h4 class="overview-title" data-i18n="overviewTitle">Maßnahmenübersicht</h4>
+                <p class="overview-sub" data-i18n="overviewSub">Alle Maßnahmen aus SO/ST/WO/WT in einer Liste.</p>
+              </div>
+              <div id="measuresOverview"></div>
+            </div>
+
+            <div class="strategy-grid">
+              <div class="strategy-box">
+                <h4><span data-i18n="soTitle">SO-Strategien</span> <span class="strategy-pill pill-so" data-i18n="soPill">Stärken × Chancen</span></h4>
+                <p data-i18n="soDesc">Offensiv nutzen: Stärken einsetzen, um Chancen maximal auszuschöpfen.</p>
+                <div class="strategy-list" id="measures-SO"></div>
+                <div class="measure-actions">
+                  <button class="mini-btn" type="button" onclick="addMeasure('SO')" data-i18n="btnAddMeasure">+ Maßnahme</button>
+                </div>
+              </div>
+
+              <div class="strategy-box">
+                <h4><span data-i18n="stTitle">ST-Strategien</span> <span class="strategy-pill pill-st" data-i18n="stPill">Stärken × Risiken</span></h4>
+                <p data-i18n="stDesc">Absichern: Stärken nutzen, um Risiken zu reduzieren oder zu umgehen.</p>
+                <div class="strategy-list" id="measures-ST"></div>
+                <div class="measure-actions">
+                  <button class="mini-btn" type="button" onclick="addMeasure('ST')" data-i18n="btnAddMeasure">+ Maßnahme</button>
+                </div>
+              </div>
+
+              <div class="strategy-box">
+                <h4><span data-i18n="woTitle">WO-Strategien</span> <span class="strategy-pill pill-wo" data-i18n="woPill">Schwächen × Chancen</span></h4>
+                <p data-i18n="woDesc">Aufholen: Schwächen abbauen, um Chancen realistisch nutzen zu können.</p>
+                <div class="strategy-list" id="measures-WO"></div>
+                <div class="measure-actions">
+                  <button class="mini-btn" type="button" onclick="addMeasure('WO')" data-i18n="btnAddMeasure">+ Maßnahme</button>
+                </div>
+              </div>
+
+              <div class="strategy-box">
+                <h4><span data-i18n="wtTitle">WT-Strategien</span> <span class="strategy-pill pill-wt" data-i18n="wtPill">Schwächen × Risiken</span></h4>
+                <p data-i18n="wtDesc">Schützen: Schwächen minimieren und Risiken vermeiden (Defensivstrategie).</p>
+                <div class="strategy-list" id="measures-WT"></div>
+                <div class="measure-actions">
+                  <button class="mini-btn" type="button" onclick="addMeasure('WT')" data-i18n="btnAddMeasure">+ Maßnahme</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="swot-actions">
+          <a class="i-btn" href="https://tools.quality.de/" data-i18n="backHome">Zurück zur Startseite</a>
+          <button type="button" class="i-btn primary" id="btnExport" data-i18n="btnExport">Bild exportieren (PNG)</button>
+          <button type="button" class="i-btn" id="btnPrint" data-i18n="btnPrint">Drucken</button>
+          <button type="button" class="i-btn" id="btnSave" data-i18n="btnSave">JSON Speichern</button>
+          <label class="i-btn" style="cursor:pointer">
+            <span data-i18n="btnUpload">Upload</span>
+            <input type="file" id="btnLoad" hidden>
+          </label>
+          <button type="button" class="i-btn danger" id="btnReset" data-i18n="btnReset">Reset</button>
+        </div>
+
+        <!-- Letzte Sektion (Links) -->
+        <section class="tool-more">
+          <h3 class="more-title" data-i18n="moreTitle">Weiterführende Infos</h3>
+          <p class="more-sub" data-i18n="moreSub">Lexikonartikel &amp; passende Weiterbildungen (öffnet in neuem Tab).</p>
+
+          <div class="tool-grid">
+            <div class="tool-box">
+              <h3 data-i18n="lexTitle">Lexikon</h3>
+              <p data-i18n="lexText">Definition, Einsatzbereiche &amp; Tipps zur SWOT-Analyse.</p>
+              <p style="margin-top:8px;">
+                <a href="https://www.quality.de/lexikon/swot-analyse/" target="_blank" rel="noopener" data-i18n="lexLink">
+                  Zum Lexikonartikel: SWOT-Analyse
+                </a>
+              </p>
+            </div>
+
+            <div class="tool-box">
+              <h3 data-i18n="trainTitle">Ausbildungen &amp; Seminare</h3>
+              <p data-i18n="trainText">Vertiefe deine Methodenkompetenz im Qualitätsmanagement:</p>
+              <ul class="more-list">
+                <li>
+                  <a href="https://www.quality.de/weiterbildung/8d-seminare-8d-schulungen/" target="_blank" rel="noopener" data-i18n="train8d">
+                    8D Schulungen
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.quality.de/weiterbildung/kvp/" target="_blank" rel="noopener" data-i18n="trainKvp">
+                    KVP Schulungen
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.quality.de/weiterbildung/qualitaetsmanagement/" target="_blank" rel="noopener" data-i18n="trainQm">
+                    Qualitätsmanagement
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.quality.de/weiterbildung/opex-seminare-ausbildungen/" target="_blank" rel="noopener" data-i18n="trainOpex">
+                    OPEX Seminare &amp; Ausbildungen
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Footer -->
+      <footer class="swot-footer">
+        <div>© <span id="copyrightYear"></span></div>
+        <div><span data-i18n="poweredBy">Powered by</span> Quality Services &amp; Wissen GmbH</div>
+      </footer>
+
+    </section>
+  </div>
+
+  <script>
+    /* ========= i18n (DE/EN) ========= */
+    const I18N = {
+      de: {
+        title: "SWOT Tool – Analyse & Maßnahmen",
+        subtitle: "Stärken/Schwächen & Chancen/Risiken strukturieren – und daraus konkrete Maßnahmen ableiten.",
+        backHome: "Zurück zur Startseite",
+
+        boxToolNameTitle: "Name Tool",
+        boxToolNameText: "SWOT-Analyse – Matrix + Maßnahmen (SO / ST / WO / WT)",
+        boxGoalTitle: "Ziel",
+        boxGoalText: "Eine kompakte Strategie-Übersicht erstellen: Faktoren sammeln, bewerten und anschließend in umsetzbare Maßnahmen überführen.",
+        boxHowTitle: "So benutzt du das Tool",
+        step1: "Thema/Scope oben eintragen.",
+        step2: "SWOT-Faktoren pro Quadrant hinzufügen (X löscht Einträge).",
+        step3: "Aus der SWOT Maßnahmen ableiten (SO/ST/WO/WT) und mit Datum planen.",
+        step4: "Export als PNG oder als JSON speichern (und wieder laden).",
+        boxPrivacyTitle: "Datenschutz",
+        boxPrivacyText: "Dieses Tool arbeitet vollständig im Browser. Es werden keine Daten auf einem Server gespeichert. Zugriff hat nur die Person, die die Datei lokal speichert bzw. lädt.",
+
+        contextLabel: "Thema / Ziel / Scope",
+        contextPlaceholder: "z.B. Produktlinie X – Markteintritt DACH 2026, Ziel: Umsatz +15% ...",
+
+        badgeS: "Stärken (Intern)",
+        badgeW: "Schwächen (Intern)",
+        badgeO: "Chancen (Extern)",
+        badgeT: "Risiken (Extern)",
+
+        axisInternStrong: "Intern",
+        axisInternText: "Stärken / Schwächen",
+        axisExternStrong: "Extern",
+        axisExternText: "Chancen / Risiken",
+
+        qS: "Stärken",
+        qSsub: "(Intern)",
+        qW: "Schwächen",
+        qWsub: "(Intern)",
+        qO: "Chancen",
+        qOsub: "(Extern)",
+        qT: "Risiken",
+        qTsub: "(Extern)",
+
+        btnAddFactor: "+ Faktor",
+        factorPlaceholder: "Faktor eingeben...",
+        deleteFactor: "Eintrag löschen",
+
+        deriveTitle: "Ableitung von Maßnahmen",
+        deriveSub: "Vorgehen: (1) Faktoren clustern & bewerten → (2) Strategietyp wählen (SO/ST/WO/WT) → (3) Maßnahmen formulieren → (4) Termin setzen & umsetzen.",
+
+        overviewTitle: "Maßnahmenübersicht",
+        overviewSub: "Alle Maßnahmen aus SO/ST/WO/WT in einer Liste.",
+        ovColType: "Typ",
+        ovColMeasure: "Maßnahme",
+        ovColDue: "Termin",
+        ovEmpty: "Noch keine Maßnahmen. Füge Maßnahmen in SO/ST/WO/WT hinzu.",
+
+        soTitle: "SO-Strategien",
+        soPill: "Stärken × Chancen",
+        soDesc: "Offensiv nutzen: Stärken einsetzen, um Chancen maximal auszuschöpfen.",
+        stTitle: "ST-Strategien",
+        stPill: "Stärken × Risiken",
+        stDesc: "Absichern: Stärken nutzen, um Risiken zu reduzieren oder zu umgehen.",
+        woTitle: "WO-Strategien",
+        woPill: "Schwächen × Chancen",
+        woDesc: "Aufholen: Schwächen abbauen, um Chancen realistisch nutzen zu können.",
+        wtTitle: "WT-Strategien",
+        wtPill: "Schwächen × Risiken",
+        wtDesc: "Schützen: Schwächen minimieren und Risiken vermeiden (Defensivstrategie).",
+
+        btnAddMeasure: "+ Maßnahme",
+        measurePlaceholder: "Maßnahme formulieren (Was? Wer? Bis wann? Wirkung?) ...",
+        dueLabel: "Termin",
+        deleteMeasure: "Maßnahme löschen",
+
+        btnExport: "Bild exportieren (PNG)",
+        btnPrint: "Drucken",
+        btnSave: "JSON Speichern",
+        btnUpload: "Upload",
+        btnReset: "Reset",
+        confirmReset: "Alles löschen?",
+
+        moreTitle: "Weiterführende Infos",
+        moreSub: "Lexikonartikel & passende Weiterbildungen (öffnet in neuem Tab).",
+        lexTitle: "Lexikon",
+        lexText: "Definition, Einsatzbereiche & Tipps zur SWOT-Analyse.",
+        lexLink: "Zum Lexikonartikel: SWOT-Analyse",
+        trainTitle: "Ausbildungen & Seminare",
+        trainText: "Vertiefe deine Methodenkompetenz im Qualitätsmanagement:",
+        train8d: "8D Schulungen",
+        trainKvp: "KVP Schulungen",
+        trainQm: "Qualitätsmanagement",
+        trainOpex: "OPEX Seminare & Ausbildungen",
+
+        poweredBy: "Powered by",
+
+        pngName: "Quality_SWOT.png",
+        jsonName: "SWOT_Export.json",
+        loadError: "Fehler beim Laden der Datei."
+      },
+      en: {
+        title: "SWOT Tool – Analysis & Actions",
+        subtitle: "Structure strengths/weaknesses and opportunities/threats – and derive concrete actions.",
+        backHome: "Back to home",
+
+        boxToolNameTitle: "Tool name",
+        boxToolNameText: "SWOT analysis – matrix + actions (SO / ST / WO / WT)",
+        boxGoalTitle: "Goal",
+        boxGoalText: "Create a compact strategy overview: collect factors, assess them, then translate them into actionable measures.",
+        boxHowTitle: "How to use this tool",
+        step1: "Enter topic/scope at the top.",
+        step2: "Add SWOT factors per quadrant (X deletes entries).",
+        step3: "Derive actions from SWOT (SO/ST/WO/WT) and set a due date.",
+        step4: "Export as PNG or save as JSON (and load again).",
+        boxPrivacyTitle: "Privacy",
+        boxPrivacyText: "This tool runs entirely in your browser. No data is stored on any server. Only the person saving/loading files locally has access.",
+
+        contextLabel: "Topic / goal / scope",
+        contextPlaceholder: "e.g., Product line X – DACH market entry 2026, goal: revenue +15% ...",
+
+        badgeS: "Strengths (Internal)",
+        badgeW: "Weaknesses (Internal)",
+        badgeO: "Opportunities (External)",
+        badgeT: "Threats (External)",
+
+        axisInternStrong: "Internal",
+        axisInternText: "Strengths / Weaknesses",
+        axisExternStrong: "External",
+        axisExternText: "Opportunities / Threats",
+
+        qS: "Strengths",
+        qSsub: "(Internal)",
+        qW: "Weaknesses",
+        qWsub: "(Internal)",
+        qO: "Opportunities",
+        qOsub: "(External)",
+        qT: "Threats",
+        qTsub: "(External)",
+
+        btnAddFactor: "+ Factor",
+        factorPlaceholder: "Enter factor...",
+        deleteFactor: "Delete entry",
+
+        deriveTitle: "Deriving actions",
+        deriveSub: "Process: (1) cluster & assess factors → (2) choose strategy type (SO/ST/WO/WT) → (3) formulate actions → (4) set due dates & execute.",
+
+        overviewTitle: "Action overview",
+        overviewSub: "All actions from SO/ST/WO/WT in one list.",
+        ovColType: "Type",
+        ovColMeasure: "Action",
+        ovColDue: "Due date",
+        ovEmpty: "No actions yet. Add actions in SO/ST/WO/WT.",
+
+        soTitle: "SO strategies",
+        soPill: "Strengths × Opportunities",
+        soDesc: "Go on the offensive: use strengths to leverage opportunities.",
+        stTitle: "ST strategies",
+        stPill: "Strengths × Threats",
+        stDesc: "Safeguard: use strengths to reduce or avoid threats.",
+        woTitle: "WO strategies",
+        woPill: "Weaknesses × Opportunities",
+        woDesc: "Catch up: reduce weaknesses to realistically use opportunities.",
+        wtTitle: "WT strategies",
+        wtPill: "Weaknesses × Threats",
+        wtDesc: "Protect: minimize weaknesses and avoid threats (defensive).",
+
+        btnAddMeasure: "+ Action",
+        measurePlaceholder: "Formulate action (What? Who? By when? Impact?) ...",
+        dueLabel: "Due date",
+        deleteMeasure: "Delete action",
+
+        btnExport: "Export image (PNG)",
+        btnPrint: "Print",
+        btnSave: "Save JSON",
+        btnUpload: "Upload",
+        btnReset: "Reset",
+        confirmReset: "Delete everything?",
+
+        moreTitle: "More information",
+        moreSub: "Glossary article & relevant training (opens in a new tab).",
+        lexTitle: "Glossary",
+        lexText: "Definition, use cases & tips for SWOT analysis.",
+        lexLink: "Open glossary article: SWOT analysis",
+        trainTitle: "Training & courses",
+        trainText: "Deepen your method skills in quality management:",
+        train8d: "8D training",
+        trainKvp: "Continuous improvement (CIP) training",
+        trainQm: "Quality management",
+        trainOpex: "OPEX seminars & training",
+
+        poweredBy: "Powered by",
+
+        pngName: "Quality_SWOT.png",
+        jsonName: "SWOT_Export.json",
+        loadError: "Error loading the file."
+      }
+    };
+
+    let currentLang = (localStorage.getItem("qmLang")
+      || (navigator.language && navigator.language.toLowerCase().startsWith("de") ? "de" : "en"));
+
+    function t(key) {
+      return (I18N[currentLang] && I18N[currentLang][key]) ? I18N[currentLang][key] : key;
+    }
+
+    function applyI18n() {
+      document.documentElement.lang = currentLang;
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.dataset.i18n;
+        el.textContent = t(key);
+      });
+
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        const key = el.dataset.i18nPlaceholder;
+        el.placeholder = t(key);
+      });
+
+      document.querySelectorAll(".note-item textarea").forEach(ta => {
+        if (ta.dataset.i18nPlaceholder) ta.placeholder = t(ta.dataset.i18nPlaceholder);
+      });
+      document.querySelectorAll(".note-delete").forEach(btn => {
+        if (btn.dataset.i18nTitle) btn.title = t(btn.dataset.i18nTitle);
+        if (btn.dataset.i18nAria) btn.setAttribute("aria-label", t(btn.dataset.i18nAria));
+      });
+
+      document.querySelectorAll(".measure-item textarea").forEach(ta => {
+        if (ta.dataset.i18nPlaceholder) ta.placeholder = t(ta.dataset.i18nPlaceholder);
+      });
+      document.querySelectorAll(".measure-delete").forEach(btn => {
+        if (btn.dataset.i18nTitle) btn.title = t(btn.dataset.i18nTitle);
+        if (btn.dataset.i18nAria) btn.setAttribute("aria-label", t(btn.dataset.i18nAria));
+      });
+      document.querySelectorAll("[data-i18n-due-label]").forEach(el=>{
+        el.textContent = t("dueLabel");
+      });
+
+      const deBtn = document.getElementById("btnLangDE");
+      const enBtn = document.getElementById("btnLangEN");
+      if (deBtn && enBtn) {
+        deBtn.classList.toggle("primary", currentLang === "de");
+        enBtn.classList.toggle("primary", currentLang === "en");
+      }
+
+      rebuildOverview();
+    }
+
+    function setLanguage(lang) {
+      currentLang = (lang === "de" || lang === "en") ? lang : "de";
+      localStorage.setItem("qmLang", currentLang);
+      applyI18n();
+    }
+
+    function addNote(q, val = '') {
+      const container = document.getElementById(`notes-${q}`);
+      const div = document.createElement('div');
+      div.className = 'note-item';
+
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'note-delete';
+      del.dataset.i18nTitle = 'deleteFactor';
+      del.dataset.i18nAria  = 'deleteFactor';
+      del.title = t('deleteFactor');
+      del.setAttribute('aria-label', t('deleteFactor'));
+      del.innerHTML = '&times;';
+      del.onclick = () => { div.remove(); };
+
+      const ta = document.createElement('textarea');
+      ta.rows = 2;
+      ta.dataset.i18nPlaceholder = 'factorPlaceholder';
+      ta.placeholder = t('factorPlaceholder');
+      ta.value = val;
+
+      div.appendChild(del);
+      div.appendChild(ta);
+      container.appendChild(div);
+    }
+
+    function addMeasure(type, val = '', due = '') {
+      const container = document.getElementById(`measures-${type}`);
+      const div = document.createElement('div');
+      div.className = 'measure-item';
+
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'measure-delete';
+      del.dataset.i18nTitle = 'deleteMeasure';
+      del.dataset.i18nAria  = 'deleteMeasure';
+      del.title = t('deleteMeasure');
+      del.setAttribute('aria-label', t('deleteMeasure'));
+      del.innerHTML = '&times;';
+      del.onclick = () => { div.remove(); rebuildOverview(); };
+
+      const ta = document.createElement('textarea');
+      ta.dataset.i18nPlaceholder = 'measurePlaceholder';
+      ta.placeholder = t('measurePlaceholder');
+      ta.value = val;
+
+      const meta = document.createElement('div');
+      meta.className = 'measure-meta';
+
+      const lab = document.createElement('label');
+      lab.setAttribute('data-i18n-due-label', '1');
+      lab.textContent = t('dueLabel');
+
+      const dt = document.createElement('input');
+      dt.type = 'date';
+      dt.value = due || '';
+      dt.addEventListener('input', rebuildOverview);
+
+      ta.addEventListener('input', rebuildOverview);
+
+      meta.appendChild(lab);
+      meta.appendChild(dt);
+
+      div.appendChild(del);
+      div.appendChild(ta);
+      div.appendChild(meta);
+      container.appendChild(div);
+
+      rebuildOverview();
+    }
+
+    function tagClass(type){
+      const t = String(type).toLowerCase();
+      return (t === "so" || t === "st" || t === "wo" || t === "wt") ? t : "";
+    }
+
+    function formatDateISOToLocale(iso){
+      if(!iso) return "";
+      try{
+        const d = new Date(iso + "T00:00:00");
+        if(Number.isNaN(d.getTime())) return iso;
+        return d.toLocaleDateString(currentLang === "de" ? "de-DE" : "en-GB", { year:"numeric", month:"2-digit", day:"2-digit" });
+      }catch{
+        return iso;
+      }
+    }
+
+    function rebuildOverview(){
+      const host = document.getElementById("measuresOverview");
+      if(!host) return;
+
+      const types = ["SO","ST","WO","WT"];
+      const rows = [];
+
+      types.forEach(tp=>{
+        const list = document.querySelectorAll(`#measures-${tp} .measure-item`);
+        list.forEach(item=>{
+          const text = (item.querySelector("textarea")?.value || "").trim();
+          const due  = (item.querySelector('input[type="date"]')?.value || "").trim();
+          if(!text && !due) return;
+          rows.push({ type: tp, text, due });
+        });
+      });
+
+      if(rows.length === 0){
+        host.innerHTML = `<div style="font-size:13px;color:#64748b;">${t("ovEmpty")}</div>`;
         return;
       }
 
-      const text = getMeasureText(li);
-      const key = DUE_KEY_PREFIX + hash(text || ("idx_"+idx));
-      const dueSaved = localStorage.getItem(key) || "";
-
-      const wrap = document.createElement("div");
-      wrap.className = "qm-swot-addon-duewrap";
-
-      const lab = document.createElement("label");
-      lab.textContent = t("dueLabel");
-
-      const input = document.createElement("input");
-      input.type = "date";
-      input.value = dueSaved;
-      input.className = "qm-swot-addon-due";
-
-      input.addEventListener("change", ()=>{
-        localStorage.setItem(key, input.value || "");
-        buildOverview(); // refresh overview when due date changes
-      });
-
-      wrap.appendChild(lab);
-      wrap.appendChild(input);
-
-      li.appendChild(wrap);
-
-      rows.push({ idx: idx+1, text, due: input.value || "", key, source: "" });
-    });
-
-    return rows;
-  }
-
-  // Create (or reuse) overview section after the derivation card
-  function ensureOverviewSection(heading){
-    const card = heading.closest("section, .card, .swot-card, .vuca-card, .ishikawa-card") || heading.parentElement;
-    if(!card) return null;
-
-    let ov = card.querySelector(".qm-swot-addon-overview");
-    if(ov) return ov;
-
-    ov = document.createElement("div");
-    ov.className = "qm-swot-addon-overview";
-
-    ov.innerHTML = `
-      <div class="qm-swot-addon-overview-head">
-        <div>
-          <h3 class="qm-swot-addon-overview-title">${t("overviewTitle")}</h3>
-          <p class="qm-swot-addon-overview-sub">${t("overviewSub")}</p>
-        </div>
-        <div class="qm-swot-addon-actions qm-no-print">
-          <button type="button" class="qm-swot-addon-btn primary" id="qmSwotPrintBtn">${t("print")}</button>
-          <span class="qm-swot-addon-muted">${t("printHint")}</span>
-        </div>
-      </div>
-      <div class="qm-swot-addon-overview-body">
-        <div id="qmSwotOverviewTableWrap"></div>
-      </div>
-    `;
-
-    // Insert right AFTER the card content (below the measures derivation area)
-    card.appendChild(ov);
-
-    // Wire print
-    const pb = ov.querySelector("#qmSwotPrintBtn");
-    if(pb){
-      pb.addEventListener("click", ()=> window.print());
-    }
-
-    return ov;
-  }
-
-  // Rename heading: remove "Highlight" and set new title
-  function renameDerivationHeading(heading){
-    if(!heading) return;
-
-    // If it contains "Highlight:" -> replace fully
-    const tx = heading.textContent || "";
-    if(/highlight/i.test(tx) || /aus swot entstehen maßnahmen/i.test(tx)){
-      heading.textContent = t("renameTitle");
-    }
-  }
-
-  // Build overview table from current measures list
-  function buildOverview(){
-    const heading = findSwotDerivationHeading();
-    if(!heading) return;
-
-    const host = findMeasuresHost(heading);
-    if(!host) return;
-
-    // ensure due inputs exist and collect rows
-    const rows = enhanceMeasuresWithDueDates(host);
-
-    const ov = ensureOverviewSection(heading);
-    if(!ov) return;
-
-    // update overview texts on language switch
-    ov.querySelector(".qm-swot-addon-overview-title").textContent = t("overviewTitle");
-    ov.querySelector(".qm-swot-addon-overview-sub").textContent = t("overviewSub");
-    const pb = ov.querySelector("#qmSwotPrintBtn");
-    if(pb) pb.textContent = t("print");
-    const hint = ov.querySelector(".qm-swot-addon-muted");
-    if(hint) hint.textContent = t("printHint");
-
-    // table
-    const wrap = ov.querySelector("#qmSwotOverviewTableWrap");
-    if(!wrap) return;
-
-    if(!rows.length){
-      wrap.innerHTML = `<div class="qm-swot-addon-muted">—</div>`;
-      return;
-    }
-
-    const bodyRows = rows.map(r=>{
-      const due = r.due ? r.due : "—";
-      return `
-        <tr>
-          <td>${r.idx}</td>
-          <td>${(r.text || "—")}</td>
-          <td>${due}</td>
-          <td>${r.source || "—"}</td>
-        </tr>
+      const head = `
+        <table class="overview-table">
+          <thead>
+            <tr>
+              <th style="width:90px;">${t("ovColType")}</th>
+              <th>${t("ovColMeasure")}</th>
+              <th style="width:140px;">${t("ovColDue")}</th>
+            </tr>
+          </thead>
+          <tbody>
       `;
-    }).join("");
 
-    wrap.innerHTML = `
-      <table class="qm-swot-addon-table">
-        <thead>
+      const body = rows.map(r=>{
+        const dueTxt = r.due ? formatDateISOToLocale(r.due) : "—";
+        const txt = r.text ? r.text.replace(/</g,"&lt;").replace(/>/g,"&gt;") : "—";
+        return `
           <tr>
-            <th style="width:52px">${t("colIndex")}</th>
-            <th>${t("colMeasure")}</th>
-            <th style="width:150px">${t("colDue")}</th>
-            <th style="width:140px">${t("colSource")}</th>
+            <td><span class="tag ${tagClass(r.type)}">${r.type}</span></td>
+            <td>${txt}</td>
+            <td>${dueTxt}</td>
           </tr>
-        </thead>
-        <tbody>
-          ${bodyRows}
-        </tbody>
-      </table>
-    `;
-  }
+        `;
+      }).join("");
 
-  // Observe dynamic changes (if measures are generated live)
-  let pending = false;
-  function schedule(){
-    if(pending) return;
-    pending = true;
-    requestAnimationFrame(()=>{
-      pending = false;
-      const heading = findSwotDerivationHeading();
-      if(!heading) return;
-      renameDerivationHeading(heading);
-      buildOverview();
-    });
-  }
+      host.innerHTML = head + body + "</tbody></table>";
+    }
 
-  // React to language changes (buttons or storage)
-  window.addEventListener("storage", (e)=>{
-    if(e.key === LANG_KEY) schedule();
-  });
+    document.getElementById('btnExport').onclick = () => {
+      const area = document.getElementById('capture-area');
+      html2canvas(area, { scale: 2 }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = t('pngName');
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    };
 
-  // Mutation observer catches rerenders
-  const mo = new MutationObserver(()=> schedule());
-  mo.observe(document.body, { childList:true, subtree:true });
+    document.getElementById('btnPrint').onclick = () => {
+      window.print();
+    };
 
-  // Initial run
-  schedule();
+    document.getElementById('btnSave').onclick = () => {
+      const data = {
+        lang: currentLang,
+        context: document.getElementById('contextInput').value,
+        swot: {
+          S: Array.from(document.querySelectorAll('#notes-S textarea')).map(t => t.value),
+          W: Array.from(document.querySelectorAll('#notes-W textarea')).map(t => t.value),
+          O: Array.from(document.querySelectorAll('#notes-O textarea')).map(t => t.value),
+          T: Array.from(document.querySelectorAll('#notes-T textarea')).map(t => t.value),
+        },
+        measures: {
+          SO: Array.from(document.querySelectorAll('#measures-SO .measure-item')).map(el => ({
+            text: el.querySelector('textarea')?.value || "",
+            due: el.querySelector('input[type="date"]')?.value || ""
+          })),
+          ST: Array.from(document.querySelectorAll('#measures-ST .measure-item')).map(el => ({
+            text: el.querySelector('textarea')?.value || "",
+            due: el.querySelector('input[type="date"]')?.value || ""
+          })),
+          WO: Array.from(document.querySelectorAll('#measures-WO .measure-item')).map(el => ({
+            text: el.querySelector('textarea')?.value || "",
+            due: el.querySelector('input[type="date"]')?.value || ""
+          })),
+          WT: Array.from(document.querySelectorAll('#measures-WT .measure-item')).map(el => ({
+            text: el.querySelector('textarea')?.value || "",
+            due: el.querySelector('input[type="date"]')?.value || ""
+          })),
+        }
+      };
 
-})();
-</script>
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = t('jsonName');
+      a.click();
+    };
+
+    document.getElementById('btnLoad').onchange = (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const data = JSON.parse(ev.target.result);
+
+          if (data.lang === "de" || data.lang === "en") setLanguage(data.lang);
+
+          document.getElementById('contextInput').value = data.context || '';
+
+          ['S','W','O','T'].forEach(k => {
+            const c = document.getElementById(`notes-${k}`);
+            c.innerHTML = '';
+            ((data.swot && data.swot[k]) || []).forEach(txt => addNote(k, txt));
+          });
+
+          ['SO','ST','WO','WT'].forEach(k => {
+            const c = document.getElementById(`measures-${k}`);
+            c.innerHTML = '';
+            const arr = (data.measures && data.measures[k]) ? data.measures[k] : [];
+            arr.forEach(item => {
+              if (typeof item === "string") addMeasure(k, item, "");
+              else addMeasure(k, item.text || "", item.due || "");
+            });
+          });
+
+          applyI18n();
+          rebuildOverview();
+
+        } catch (err) {
+          alert(t('loadError'));
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    };
+
+    document.getElementById('btnReset').onclick = () => {
+      if (confirm(t('confirmReset'))) location.reload();
+    };
+
+    (function setCopyrightYear(){
+      const el = document.getElementById('copyrightYear');
+      if (el) el.textContent = new Date().getFullYear();
+    })();
+
+    document.getElementById("btnLangDE").onclick = () => setLanguage("de");
+    document.getElementById("btnLangEN").onclick = () => setLanguage("en");
+
+    setLanguage(currentLang);
+    rebuildOverview();
+  </script>
+</body>
+</html>
