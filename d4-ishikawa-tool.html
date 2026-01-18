@@ -24,6 +24,10 @@
   .tool-box ol { padding-left: 18px; }
   .tool-privacy { border-left: 3px solid var(--blue); }
 
+  /* Links in Boxen */
+  .tool-box a { color: var(--blue); text-decoration: none; }
+  .tool-box a:hover { text-decoration: underline; }
+
   .ishikawa-body { padding: 25px; }
   .ishikawa-drawing-area { padding: 50px 20px; background: white; border: 1px solid #edf2f7; position: relative; }
 
@@ -80,6 +84,26 @@
   .i-btn { padding: 10px 18px; font-size: 13px; font-weight: bold; border-radius: 4px; cursor: pointer; border: 1px solid #d1d9e6; background: #fff; text-transform: uppercase; text-decoration: none; display:inline-flex; align-items:center; }
   .i-btn.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
   .i-btn.danger { color: #e53e3e; }
+
+  /* NEU: Weiterführende Infos */
+  .tool-more { margin-top: 22px; padding-top: 18px; border-top: 2px solid var(--blue); }
+  .more-title { margin: 0 0 6px 0; font-size: 13px; color: var(--dark); text-transform: uppercase; }
+  .more-sub { margin: 0 0 10px 0; font-size: 13px; color: #64748b; }
+  .more-list { margin: 8px 0 0; padding-left: 18px; font-size: 13px; color:#334155; }
+  .more-list li { margin: 4px 0; }
+
+  /* NEU: Footer */
+  .ishikawa-footer {
+    padding: 12px 25px;
+    background: var(--light-bg);
+    border-top: 1px solid #d1d9e6;
+    font-size: 12px;
+    color: #64748b;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
 
   @media (max-width: 900px) {
     .ishikawa-row { margin-right: 0; grid-template-columns: 1fr; }
@@ -183,7 +207,54 @@
         <label class="i-btn" style="cursor:pointer">Upload <input type="file" id="btnLoad" hidden></label>
         <button type="button" class="i-btn danger" onclick="confirm('Alles löschen?') && location.reload()">Reset</button>
       </div>
+
+      <!-- NEU: Letzte Sektion (2 Spalten) -->
+      <section class="tool-more">
+        <h3 class="more-title">Weiterführende Infos</h3>
+        <p class="more-sub">Lexikonartikel & passende Weiterbildungen (öffnet in neuem Tab).</p>
+
+        <div class="tool-grid">
+          <div class="tool-box">
+            <h3>Lexikon</h3>
+            <p>Hintergrund, Nutzen & Anwendung des Ishikawa-Diagramms.</p>
+            <p style="margin-top:8px;">
+              <a href="https://www.quality.de/lexikon/ishikawa/" target="_blank" rel="noopener">
+                Zum Lexikonartikel: Ishikawa
+              </a>
+            </p>
+          </div>
+
+          <div class="tool-box">
+            <h3>Ausbildungen &amp; Seminare</h3>
+            <p>Vertiefe deine Methodenkompetenz im Qualitätsmanagement:</p>
+            <ul class="more-list">
+              <li>
+                <a href="https://www.quality.de/weiterbildung/fmea-schulung/" target="_blank" rel="noopener">
+                  FMEA Schulungen
+                </a>
+              </li>
+              <li>
+                <a href="https://www.quality.de/weiterbildung/8d-seminare-8d-schulungen/" target="_blank" rel="noopener">
+                  8D Schulungen
+                </a>
+              </li>
+              <li>
+                <a href="https://www.quality.de/weiterbildung/kvp/" target="_blank" rel="noopener">
+                  KVP Schulungen (QM)
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
     </div>
+
+    <!-- NEU: Footer mit Copyright + Powered by -->
+    <footer class="ishikawa-footer">
+      <div>© <span id="copyrightYear"></span></div>
+      <div>Powered by Quality Services &amp; Wissen GmbH</div>
+    </footer>
 
   </section>
 </div>
@@ -265,4 +336,10 @@
     /* Damit man dieselbe Datei direkt nochmal laden kann */
     e.target.value = '';
   };
+
+  /* NEU: Copyright-Jahr automatisch setzen */
+  (function setCopyrightYear(){
+    const el = document.getElementById('copyrightYear');
+    if (el) el.textContent = new Date().getFullYear();
+  })();
 </script>
