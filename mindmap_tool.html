@@ -216,13 +216,15 @@
       margin-top:10px;
     }
 
-    /* Wrapper like a manager grid with scroll */
+    /* Wrapper like a manager grid
+       UPDATE: no vertical scrolling; list must be fully visible */
     #qm-mindmap-app .measure-table-wrap{
       border:1px solid #e2e8f0;
       border-radius:var(--radius);
-      overflow:auto;
       background:#fff;
-      max-height:520px;
+      max-height:none;          /* <- show everything */
+      overflow-y:visible;       /* <- no vertical scrollbar */
+      overflow-x:auto;          /* <- keep horizontal only if needed */
     }
 
     /* Table */
@@ -1041,7 +1043,7 @@
         applyMindSnapshot(snap.mind);
 
         $("#btnUndo").disabled = history.length <= 1;
-        $("#btnRedo").disabled = future.length === 0;
+        $("#btnRedo").disabled = future.length <= 0;
       }
 
       /* ========== Selection helpers ========== */
