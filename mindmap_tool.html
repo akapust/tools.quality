@@ -127,7 +127,7 @@
     }
     #qm-mindmap-app .hint{ margin:10px 0 0; font-size:12px; color:var(--muted); }
 
-    /* Measures */
+    /* Measures (OLD styles kept; new table styles override relevant parts) */
     #qm-mindmap-app .measure-list{ display:flex; flex-direction:column; gap:10px; margin-top:10px; }
     #qm-mindmap-app .measure-item{
       border:1px solid #e2e8f0; border-radius:var(--radius); padding:10px; background:#fff;
@@ -204,6 +204,196 @@
       #qm-mindmap-app .footer{ border-top:1px solid #000; }
       a{ color:#000; text-decoration:none; }
     }
+
+    /* ============================================================
+       Measures (Manager-Table View) – OPTIK ONLY
+       ============================================================ */
+
+    /* override old flex-list to behave like a manager area */
+    #qm-mindmap-app .measure-list{
+      display:block;
+      gap:0;
+      margin-top:10px;
+    }
+
+    /* Wrapper like a manager grid with scroll */
+    #qm-mindmap-app .measure-table-wrap{
+      border:1px solid #e2e8f0;
+      border-radius:var(--radius);
+      overflow:auto;
+      background:#fff;
+      max-height:520px;
+    }
+
+    /* Table */
+    #qm-mindmap-app .measure-table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      min-width:880px;
+      font-size:13px;
+    }
+
+    #qm-mindmap-app .measure-table thead th{
+      position:sticky;
+      top:0;
+      z-index:2;
+      background:var(--light-bg);
+      color:var(--dark);
+      text-transform:uppercase;
+      letter-spacing:.3px;
+      font-weight:900;
+      font-size:11px;
+      padding:10px 12px;
+      border-bottom:1px solid #e5eaf2;
+      white-space:nowrap;
+    }
+
+    #qm-mindmap-app .measure-table td{
+      padding:10px 12px;
+      border-bottom:1px solid #eef2f7;
+      vertical-align:top;
+    }
+
+    #qm-mindmap-app .measure-table tbody tr:nth-child(even){
+      background:#fbfcfe;
+    }
+
+    #qm-mindmap-app .measure-table tbody tr:hover{
+      background:#f8fafc;
+    }
+
+    /* left accent by status */
+    #qm-mindmap-app .measure-table td:first-child{
+      border-left:4px solid transparent;
+    }
+    #qm-mindmap-app .measure-table tr[data-status="open"] td:first-child{
+      border-left-color:rgba(245,158,11,.75);
+    }
+    #qm-mindmap-app .measure-table tr[data-status="done"] td:first-child{
+      border-left-color:rgba(22,163,74,.75);
+    }
+    #qm-mindmap-app .measure-table tr[data-status="drop"] td:first-child{
+      border-left-color:rgba(229,62,62,.75);
+    }
+
+    /* Columns */
+    #qm-mindmap-app .measure-table .col-status{ width:120px; }
+    #qm-mindmap-app .measure-table .col-due{ width:140px; white-space:nowrap; }
+    #qm-mindmap-app .measure-table .col-owner{ width:180px; }
+    #qm-mindmap-app .measure-table .col-actions{ width:260px; }
+
+    /* Action cell layout */
+    #qm-mindmap-app .m-action{
+      font-weight:900;
+      color:#0f172a;
+      margin:0 0 4px 0;
+      line-height:1.25;
+      word-break:break-word;
+    }
+
+    #qm-mindmap-app .m-sub{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.3;
+    }
+
+    #qm-mindmap-app .m-label{
+      display:inline-block;
+      margin-right:6px;
+      font-weight:900;
+      text-transform:uppercase;
+      font-size:10px;
+      letter-spacing:.25px;
+      color:#64748b;
+    }
+
+    #qm-mindmap-app .muted{
+      color:var(--muted);
+    }
+
+    /* Actions as compact manager controls */
+    #qm-mindmap-app .measure-row-actions{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      align-items:center;
+    }
+
+    #qm-mindmap-app .measure-row-actions .mini{
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:11px;
+      font-weight:900;
+    }
+
+    #qm-mindmap-app .measure-row-actions .mini[data-act="open"]{
+      border-color:rgba(245,158,11,.35);
+      background:rgba(245,158,11,.06);
+    }
+
+    #qm-mindmap-app .measure-row-actions .mini[data-act="done"]{
+      border-color:rgba(22,163,74,.35);
+      background:rgba(22,163,74,.06);
+    }
+
+    #qm-mindmap-app .measure-row-actions .mini[data-act="drop"]{
+      border-color:rgba(229,62,62,.28);
+      background:rgba(229,62,62,.06);
+    }
+
+    #qm-mindmap-app .measure-row-actions .mini[data-act="del"]{
+      border-color:rgba(229,62,62,.35);
+      background:#fff;
+      color:var(--red);
+    }
+
+    /* Print: remove max-height so table prints fully */
+    @media print{
+      #qm-mindmap-app .measure-table-wrap{ max-height:none; overflow:visible; }
+      #qm-mindmap-app .measure-table{ min-width:0; }
+    }
+
+    /* Mobile: stack table rows */
+    @media (max-width: 720px){
+      #qm-mindmap-app .measure-table{ min-width:0; }
+      #qm-mindmap-app .measure-table thead{ display:none; }
+      #qm-mindmap-app .measure-table,
+      #qm-mindmap-app .measure-table tbody,
+      #qm-mindmap-app .measure-table tr,
+      #qm-mindmap-app .measure-table td{
+        display:block;
+        width:100%;
+      }
+
+      #qm-mindmap-app .measure-table tbody tr{
+        border:1px solid #e2e8f0;
+        border-radius:var(--radius);
+        margin:10px 0;
+        background:#fff !important;
+        overflow:hidden;
+      }
+
+      #qm-mindmap-app .measure-table td{
+        border-bottom:1px solid #eef2f7;
+        padding:10px 12px;
+      }
+
+      #qm-mindmap-app .measure-table td::before{
+        content:attr(data-label);
+        display:block;
+        margin-bottom:6px;
+        font-size:11px;
+        text-transform:uppercase;
+        font-weight:900;
+        color:var(--muted);
+        letter-spacing:.25px;
+      }
+
+      #qm-mindmap-app .measure-row-actions{ justify-content:flex-start; }
+      #qm-mindmap-app .measure-table td.col-actions{ border-bottom:0; }
+    }
   </style>
 </head>
 
@@ -257,7 +447,7 @@
 
       <div class="body">
 
-        <!-- SECTION 1 (WAS MISSING BEFORE): LABEL + META SAVE THAT UPDATES ROOT -->
+        <!-- SECTION 1 -->
         <section class="section" aria-labelledby="sec1">
           <div class="section-head">
             <div>
@@ -388,7 +578,7 @@
           </div>
         </section>
 
-        <!-- BOTTOM ACTIONS (JSON + PRINT MUST BE HERE BEFORE MORE INFOS) -->
+        <!-- BOTTOM ACTIONS -->
         <div class="actions-bottom">
           <button type="button" class="btn primary" id="btnExportJson" data-i18n="btnExportJson">JSON speichern</button>
           <button type="button" class="btn" id="btnImportJson" data-i18n="btnImportJson">JSON laden</button>
@@ -514,6 +704,14 @@
           setDrop: "Verwerfen",
           del: "Löschen",
 
+          /* NEW (table headers) */
+          colStatus: "Status",
+          colAction: "Maßnahme",
+          colDue: "Termin",
+          colOwner: "Owner",
+          colActions: "Aktionen",
+          refShort: "Bezug:",
+
           btnExportJson: "JSON speichern",
           btnImportJson: "JSON laden",
           btnPrint: "Drucken",
@@ -613,6 +811,14 @@
           setDrop: "Discard",
           del: "Delete",
 
+          /* NEW (table headers) */
+          colStatus: "Status",
+          colAction: "Action",
+          colDue: "Due",
+          colOwner: "Owner",
+          colActions: "Actions",
+          refShort: "Ref:",
+
           btnExportJson: "Export JSON",
           btnImportJson: "Import JSON",
           btnPrint: "Print",
@@ -679,6 +885,8 @@
             ? "z.B. Einkauf / QS / Produktion"
             : "e.g. Purchasing / QA / Production";
         }
+        // rerender measures so header labels follow language (optics only)
+        renderMeasures();
       }
 
       /* ========== Toast ========== */
@@ -849,7 +1057,6 @@
         if(!node) return "—";
         const parts = [];
         let cur = node;
-        // jsMind nodes usually have: topic, parent, isroot
         while(cur){
           parts.push(cur.topic || "");
           if(cur.isroot) break;
@@ -885,7 +1092,6 @@
           if(typeof jm.add_node === "function"){
             jm.add_node(parentId, id, topic);
           }else{
-            // fallback: re-render from data
             const mind = safeGetMind() || defaultMind();
             mind.data.push({ id, parentid: parentId, topic });
             applyMindSnapshot(mind);
@@ -954,13 +1160,11 @@
 
       function recenter(){
         try{
-          // Prefer centering root if API exists
           if(jm && jm.view && typeof jm.view.center_node === "function"){
             const root = jm.get_node ? jm.get_node("root") : null;
             if(root) return jm.view.center_node(root);
           }
         }catch(e){}
-        // fallback: select root
         try{
           if(typeof jm.select_node === "function") jm.select_node("root");
         }catch(e){}
@@ -993,7 +1197,7 @@
         toast("OK");
       }
 
-      /* ========== Meta save (THIS WAS BROKEN: must update root) ========== */
+      /* ========== Meta save (must update root) ========== */
       function setMetaSaved(saved){
         const pill = $("#metaStatePill");
         pill.classList.remove("ok","warn");
@@ -1014,12 +1218,10 @@
 
         const rootText = state.meta.topic || defaultRootTopic();
 
-        // Update root node topic
         try{
           if(jm && typeof jm.update_node === "function"){
             jm.update_node("root", rootText);
           }else{
-            // fallback: rebuild mind data root topic
             const mind = safeGetMind() || defaultMind();
             const root = (mind.data || []).find(n=>n.id==="root") || null;
             if(root) root.topic = rootText;
@@ -1034,7 +1236,7 @@
         toast(t("savedToast"));
       }
 
-      /* ========== Measures ========== */
+      /* ========== Measures (TABLE VIEW, functionality unchanged) ========== */
       function renderMeasures(){
         const host = $("#measureList");
         host.innerHTML = "";
@@ -1051,37 +1253,69 @@
           return;
         }
 
-        state.measures.forEach(m=>{
-          const item = document.createElement("div");
-          item.className = "measure-item";
+        const html = `
+          <div class="measure-table-wrap">
+            <table class="measure-table" role="table" aria-label="${escapeHtml(t("sec4Title"))}">
+              <thead>
+                <tr>
+                  <th class="col-status">${escapeHtml(t("colStatus"))}</th>
+                  <th>${escapeHtml(t("colAction"))}</th>
+                  <th class="col-due">${escapeHtml(t("colDue"))}</th>
+                  <th class="col-owner">${escapeHtml(t("colOwner"))}</th>
+                  <th class="col-actions" style="text-align:right">${escapeHtml(t("colActions"))}</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${state.measures.map(m=>{
+                  const stClass = (m.status === "done") ? "st-done" : (m.status === "drop") ? "st-drop" : "st-open";
+                  const stLabel = (m.status === "done") ? t("statusDone") : (m.status === "drop") ? t("statusDrop") : t("statusOpen");
 
-          const stClass = (m.status === "done") ? "st-done" : (m.status === "drop") ? "st-drop" : "st-open";
-          const stLabel = (m.status === "done") ? t("statusDone") : (m.status === "drop") ? t("statusDrop") : t("statusOpen");
+                  const dueTxt = m.due ? escapeHtml(m.due) : `<span class="muted">—</span>`;
+                  const ownerTxt = m.owner ? escapeHtml(m.owner) : `<span class="muted">—</span>`;
+                  const refTxt = escapeHtml(m.nodePath || "—");
+                  const actionTxt = escapeHtml(m.text || "");
 
-          item.innerHTML = `
-            <div class="measure-top">
-              <div>
-                <p class="measure-title">${escapeHtml(m.text || "")}</p>
-                <div class="measure-meta">
-                  <strong>${escapeHtml(stLabel)}</strong> ·
-                  ${m.due ? (currentLang==="de" ? "Termin: " : "Due: ") + escapeHtml(m.due) : (currentLang==="de" ? "Kein Termin" : "No due date")}
-                  ${m.owner ? (" · " + (currentLang==="de" ? "Owner: " : "Owner: ") + escapeHtml(m.owner)) : ""}
-                  <br/>
-                  <span style="color:#64748b">${currentLang==="de" ? "Bezug:" : "Reference:"}</span>
-                  <strong>${escapeHtml(m.nodePath || "—")}</strong>
-                </div>
-              </div>
-              <div class="measure-actions">
-                <span class="status ${stClass}">${escapeHtml(stLabel)}</span>
-                <button type="button" class="mini" data-act="open" data-id="${m.id}">${escapeHtml(t("setOpen"))}</button>
-                <button type="button" class="mini" data-act="done" data-id="${m.id}">${escapeHtml(t("setDone"))}</button>
-                <button type="button" class="mini" data-act="drop" data-id="${m.id}">${escapeHtml(t("setDrop"))}</button>
-                <button type="button" class="mini" data-act="del" data-id="${m.id}" style="color:var(--red)">${escapeHtml(t("del"))}</button>
-              </div>
-            </div>
-          `;
-          host.appendChild(item);
-        });
+                  const statusKey = (m.status === "done") ? "done" : (m.status === "drop") ? "drop" : "open";
+
+                  return `
+                    <tr data-status="${escapeHtml(statusKey)}">
+                      <td class="col-status" data-label="${escapeHtml(t("colStatus"))}">
+                        <span class="status ${stClass}">${escapeHtml(stLabel)}</span>
+                      </td>
+
+                      <td class="col-action" data-label="${escapeHtml(t("colAction"))}">
+                        <div class="m-action">${actionTxt}</div>
+                        <div class="m-sub">
+                          <span class="m-label">${escapeHtml(t("refShort"))}</span>
+                          <strong>${refTxt}</strong>
+                        </div>
+                      </td>
+
+                      <td class="col-due" data-label="${escapeHtml(t("colDue"))}">
+                        ${dueTxt}
+                      </td>
+
+                      <td class="col-owner" data-label="${escapeHtml(t("colOwner"))}">
+                        ${ownerTxt}
+                      </td>
+
+                      <td class="col-actions" data-label="${escapeHtml(t("colActions"))}">
+                        <div class="measure-row-actions">
+                          <button type="button" class="mini" data-act="open" data-id="${escapeHtml(m.id)}">${escapeHtml(t("setOpen"))}</button>
+                          <button type="button" class="mini" data-act="done" data-id="${escapeHtml(m.id)}">${escapeHtml(t("setDone"))}</button>
+                          <button type="button" class="mini" data-act="drop" data-id="${escapeHtml(m.id)}">${escapeHtml(t("setDrop"))}</button>
+                          <button type="button" class="mini" data-act="del" data-id="${escapeHtml(m.id)}">${escapeHtml(t("del"))}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        host.innerHTML = html;
 
         host.querySelectorAll("button[data-act]").forEach(btn=>{
           btn.addEventListener("click", ()=>{
@@ -1128,7 +1362,6 @@
         persistAll();
         renderMeasures();
 
-        // clear measure input for next one
         $("#actionText").value = "";
         $("#actionDue").value = "";
         $("#actionOwner").value = "";
@@ -1143,7 +1376,6 @@
 
       /* ========== JSON import/export ========== */
       function downloadJson(){
-        // capture latest mind
         state.mind = safeGetMind() || defaultMind();
         state.lang = currentLang;
         state.ts = new Date().toISOString();
@@ -1162,7 +1394,6 @@
           const parsed = JSON.parse(txt);
           if(!parsed || typeof parsed !== "object") throw new Error("bad json");
 
-          // apply language first
           if(parsed.lang === "de" || parsed.lang === "en"){
             setLanguage(parsed.lang);
           }
@@ -1181,7 +1412,6 @@
 
           syncMetaInputs();
 
-          // ensure root topic matches meta
           const mind = state.mind || defaultMind();
           const rootTxt = state.meta.topic || defaultRootTopic();
           try{
@@ -1195,7 +1425,6 @@
           setMetaSaved(true);
           persist();
 
-          // reset history
           history = [];
           future = [];
           initHistory();
@@ -1208,14 +1437,11 @@
 
       /* ========== Autosave / Dirty tracking ========== */
       function persistAll(){
-        // capture mind
         state.mind = safeGetMind() || defaultMind();
         persist();
-        // meta saved badge if topic differs from root, keep saved as-is (user clicks Save)
       }
 
       function markDirty(forceCommit=false){
-        // mark change time for idle commit
         lastChangeAt = Date.now();
         persistAll();
         updateSelectionUI();
@@ -1234,7 +1460,6 @@
         $("#btnRedo").disabled = true;
       }
 
-      // detect edits (including inline edits) and commit after idle
       window.setInterval(()=>{
         const mind = safeGetMind();
         if(!mind) return;
@@ -1245,9 +1470,7 @@
           lastChangeAt = Date.now();
           persistAll();
           updateSelectionUI();
-          // we do NOT commit history on every keystroke
         }else{
-          // commit snapshot after user is idle for ~1.2s
           if(lastChangeAt && (Date.now() - lastChangeAt) > 1200){
             commitHistorySnapshot();
             lastChangeAt = 0;
@@ -1266,7 +1489,6 @@
       function bindScrollZoom(){
         const el = $("#jsmind_container");
         el.addEventListener("wheel", (ev)=>{
-          // Scroll = zoom (requested)
           ev.preventDefault();
           if(ev.deltaY < 0) zoomIn();
           else zoomOut();
@@ -1280,14 +1502,11 @@
       setLanguage(currentLang);
       syncMetaInputs();
 
-      // init year
       $("#copyrightYear").textContent = String(new Date().getFullYear());
 
-      // build mindmap
       jm = new jsMind(options);
       const mindToShow = state.mind || defaultMind();
 
-      // ensure root topic matches meta
       const rootTxt = state.meta.topic || defaultRootTopic();
       try{
         const root = (mindToShow.data || []).find(n=>n.id==="root");
@@ -1302,7 +1521,6 @@
       updateSelectionUI();
       setMetaSaved(false);
 
-      // click in container updates selection UI
       $("#jsmind_container").addEventListener("mousedown", ()=> window.setTimeout(updateSelectionUI, 40));
       $("#jsmind_container").addEventListener("touchstart", ()=> window.setTimeout(updateSelectionUI, 40), {passive:true});
 
@@ -1345,7 +1563,6 @@
 
       $("#btnResetAll").addEventListener("click", resetAll);
 
-      // initial autosave of restored state
       persistAll();
 
     })();
