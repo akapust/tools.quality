@@ -1352,18 +1352,3 @@
   </script>
 </body>
 </html>
-
-
-<button id="dl">JSON herunterladen</button>
-<script>
-document.getElementById('dl').addEventListener('click', async () => {
-  const url = 'https://tools.quality.de/ki_strategie_roadmap_export.json';
-  const res = await fetch(url);
-  const blob = await res.blob();
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'ki_strategie_roadmap_export.json';
-  a.click();
-  URL.revokeObjectURL(a.href);
-});
-</script>
