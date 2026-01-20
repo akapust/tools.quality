@@ -135,6 +135,38 @@
     .tool-box a{ color: var(--blue); text-decoration:none; font-weight: 800; }
     .tool-box a:hover{ text-decoration: underline; }
 
+    .group-title{
+      margin:0 0 6px;
+      font-size:12px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.25px;
+      color:#0f172a;
+    }
+    .split-ol{ margin:0; padding-left:18px; }
+    .split-ol li{ margin:2px 0; }
+
+    /* Badge */
+    #qm-turtle-app .badge{
+      display:inline-flex; align-items:center; justify-content:center;
+      border-radius:999px; padding:4px 10px;
+      font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.3px;
+      border:1px solid var(--border); background:#fff; color:#0f172a;
+    }
+    #qm-turtle-app .badge.premium{ border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.10); color:#7c2d12; }
+    #qm-turtle-app .badge.api{ border-color:rgba(17,85,178,.35); background:rgba(17,85,178,.08); color:var(--dark); }
+    #qm-turtle-app .badge.lic{ border-color:rgba(22,163,74,.35); background:rgba(22,163,74,.08); color:#14532d; }
+
+    /* Pills */
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid var(--border); border-radius:999px; padding:6px 10px;
+      font-size:12px; font-weight:900; background:#fff; color:#0f172a;
+    }
+    .pill.warn{ border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.10); color:#7c2d12; }
+    .pill.bad{ border-color:rgba(229,62,62,.35); background:rgba(229,62,62,.08); color:#7f1d1d; }
+    .pill.ok{ border-color:rgba(22,163,74,.35); background:rgba(22,163,74,.08); color:#14532d; }
+
     /* Turtle header line (like screenshot) */
     .turtle-strip{
       display:flex;
@@ -363,13 +395,19 @@
       background:#fff;
       padding: 12px 14px;
     }
+
+    /* optimized, more logical draft layout */
     .draft-grid{
       display:grid;
-      grid-template-columns: 1.3fr .7fr .7fr;
+      grid-template-columns: 1.6fr .8fr .7fr 1.1fr;
       gap: 10px;
       align-items:end;
     }
-    @media(max-width: 980px){ .draft-grid{ grid-template-columns: 1fr; } }
+    .draft-grid .draft-full{ grid-column: 1 / -1; }
+    @media(max-width: 980px){
+      .draft-grid{ grid-template-columns: 1fr; }
+      .draft-grid .draft-full{ grid-column:auto; }
+    }
 
     .draft-actions{
       margin-top: 10px;
@@ -420,6 +458,7 @@
     .measures-table{
       width: 100%;
       border-collapse: collapse;
+      min-width: 980px;
     }
     .measures-table th, .measures-table td{
       padding: 10px 14px;
@@ -434,6 +473,7 @@
       letter-spacing:.2px;
       color:#334155;
       background: rgba(248,250,252,.8);
+      white-space:nowrap;
     }
     .m-title{
       font-weight: 900;
@@ -483,6 +523,31 @@
     .icon-btn.danger{ border-color: rgba(239,68,68,.30); color: #b91c1c; }
     .icon-btn.danger:hover{ background: rgba(239,68,68,.07); border-color: rgba(239,68,68,.45); color:#b91c1c; }
 
+    /* Mobile: stack table */
+    @media (max-width: 820px){
+      .measures-table{ min-width:0; }
+      .measures-table thead{ display:none; }
+      .measures-table, .measures-table tbody, .measures-table tr, .measures-table td{ display:block; width:100%; }
+      .measures-table tr{
+        border-top:1px solid rgba(15,23,42,.10);
+        padding:10px 0;
+      }
+      .measures-table td{
+        border-bottom:0;
+        padding:8px 14px;
+      }
+      .measures-table td::before{
+        content: attr(data-label);
+        display:block;
+        font-size:11px;
+        font-weight:900;
+        text-transform:uppercase;
+        color: var(--muted);
+        margin-bottom:6px;
+      }
+      .row-actions{ justify-content:flex-start; }
+    }
+
     /* Bottom actions */
     .actions{
       margin-top: 16px;
@@ -522,12 +587,33 @@
     .footer a{ color: var(--dark); font-weight: 900; text-decoration:none; }
     .footer a:hover{ text-decoration: underline; }
 
+    /* AI Section */
+    #qm-turtle-app .ai-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    #qm-turtle-app .ai-grid .full{ grid-column:1 / -1; }
+    #qm-turtle-app .ai-note{
+      margin:10px 0 0;
+      font-size:13px;
+      color:#334155;
+    }
+    #qm-turtle-app .ai-note strong{ color:#0f172a; }
+    #qm-turtle-app .ai-actions{
+      margin-top:12px;
+      padding-top:12px;
+      border-top:1px solid rgba(17,85,178,.12);
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-start;
+    }
+
     /* Print */
     @media print{
       body{ background:#fff; }
       #qm-turtle-app{ margin:0; padding:0; }
       .tool-intro, .actions, .tool-more, .lang-switch, .top-actions .btn,
-      .note-del, .note-to-measure, .add-entry, .row-actions, .chip { display:none !important; }
+      .note-del, .note-to-measure, .add-entry, .row-actions, .chip,
+      .ai-actions, #secAI { display:none !important; }
       .card{ box-shadow:none; border:none; }
       .diagram-wrap{ border:none; padding:0; }
       .measures-head{ background:#fff; }
@@ -572,18 +658,29 @@
 
           <div class="tool-box">
             <h3 data-i18n="boxHowTitle">So benutzt du das Tool</h3>
-            <ol>
+
+            <p class="group-title" data-i18n="howNoAiTitle">Ohne KI</p>
+            <ol class="split-ol">
               <li data-i18n="step1">Prozess im Zentrum ausfüllen (Zweck/Start/Ende).</li>
               <li data-i18n="step2">In den Boxen rundherum Einträge sammeln (+ Eintrag).</li>
               <li data-i18n="step3">Optional: Eintrag → Maßnahme übernehmen (→ Maßnahme).</li>
               <li data-i18n="step4">Maßnahme mit Termin speichern → erscheint in der Maßnahmenliste.</li>
               <li data-i18n="step5">Drucken oder JSON speichern/laden.</li>
             </ol>
+
+            <p class="group-title" style="margin-top:10px;" data-i18n="howAiTitle">Mit KI (Premium)</p>
+            <ol class="split-ol">
+              <li data-i18n="aiStep1">Prozessschritt & Kontext eingeben.</li>
+              <li data-i18n="aiStep2">Lizenzschlüssel & OpenAI API Key eingeben.</li>
+              <li data-i18n="aiStep3">Turtle + Maßnahmenliste generieren.</li>
+              <li data-i18n="aiStep4">Ergebnis übernehmen → danach wie gewohnt ergänzen, bewerten oder löschen.</li>
+            </ol>
           </div>
 
           <div class="tool-box tool-privacy">
             <h3 data-i18n="boxPrivacyTitle">Datenschutz</h3>
-            <p data-i18n="boxPrivacyText">Dieses Tool läuft vollständig im Browser. Es werden keine Daten auf einem Server gespeichert. Optional wird der aktuelle Stand lokal im Browser gespeichert (Autosave).</p>
+            <p><strong data-i18n="privacyNoAiHead">Ohne API/KI:</strong> <span data-i18n="privacyNoAiText">Dieses Tool läuft vollständig im Browser. Es werden keine Daten an Server übertragen. Optional wird der aktuelle Stand lokal im Browser gespeichert (Autosave) und kann als JSON exportiert/importiert werden.</span></p>
+            <p style="margin-top:8px;"><strong data-i18n="privacyAiHead">Mit API/KI (Premium):</strong> <span data-i18n="privacyAiText">Nur wenn du den KI-Assistenten nutzt, werden deine Eingaben (Prozessschritt/Kontext) aus dem Browser direkt an die OpenAI API übertragen. API Key und Lizenz bleiben lokal im Browser und werden nicht serverseitig gespeichert.</span></p>
           </div>
         </div>
       </section>
@@ -723,11 +820,11 @@
           <!-- Measures -->
           <section class="measures-section" aria-label="Ableitung von Maßnahmen">
             <h3 class="section-title" data-i18n="measuresTitle">Ableitung von Maßnahmen</h3>
-            <p class="section-sub" data-i18n="measuresSub">Formuliere Maßnahmen (Was?) mit Verantwortlichem (optional) und Termin – und speichere sie in die Maßnahmenliste.</p>
+            <p class="section-sub" data-i18n="measuresSub">Formuliere Maßnahmen (Was?) mit Verantwortlichem (optional), Termin und Nachweis/Wirksamkeit – und speichere sie in die Maßnahmenliste.</p>
 
             <div class="measure-draft">
               <div class="draft-grid">
-                <div class="field">
+                <div class="field draft-full">
                   <label for="draftMeasure" data-i18n="draftMeasureLabel">Maßnahme</label>
                   <textarea id="draftMeasure" data-i18n-placeholder="draftMeasurePh" placeholder="z.B. Lieferantenfreigabe beschleunigen: 2 Alternativen qualifizieren (inkl. Kriterien) ..."></textarea>
                 </div>
@@ -740,6 +837,11 @@
                 <div class="field">
                   <label for="draftDue" data-i18n="draftDueLabel">Termin</label>
                   <input id="draftDue" type="date" />
+                </div>
+
+                <div class="field">
+                  <label for="draftProof" data-i18n="draftProofLabel">Nachweis / Wirksamkeit</label>
+                  <input id="draftProof" type="text" data-i18n-placeholder="draftProofPh" placeholder="z.B. Audit, KPI, Dummy-Prüfung, Kurzzeitfähigkeit, Versuch ..." />
                 </div>
               </div>
 
@@ -770,7 +872,9 @@
                 <thead>
                   <tr>
                     <th data-i18n="thMeasure">Maßnahme</th>
+                    <th data-i18n="thProof">Nachweis</th>
                     <th style="width:120px;" data-i18n="thDue">Termin</th>
+                    <th style="width:180px;" data-i18n="thOwner">Owner</th>
                     <th style="width:160px;" data-i18n="thStatus">Status</th>
                     <th style="width:260px; text-align:right;" data-i18n="thActions">Aktionen</th>
                   </tr>
@@ -795,6 +899,57 @@
             <button type="button" class="btn danger" id="btnResetAll" data-i18n="btnResetAll">Reset</button>
           </div>
         </div>
+
+        <!-- AI ASSISTANT (Premium) -->
+        <section class="tool-more" style="margin-top:18px; border-top:2px solid var(--blue);" aria-labelledby="secAI">
+          <h3 class="more-title" id="secAI" data-i18n="aiTitle">KI Assistent (Premium)</h3>
+          <p class="more-sub" data-i18n="aiSub">Erzeuge aus Prozessschritt & Kontext ein ausgefülltes Turtle Diagramm inklusive Maßnahmenliste – danach arbeitest du wie gewohnt weiter.</p>
+
+          <p class="ai-note" data-i18n="aiPitch">
+            Nutze die volle Power des Tools: Der KI-Assistent erstellt dir in Sekunden ein vollständiges Turtle-Diagramm (Inputs/Outputs/Rollen/Methoden/Ressourcen/KPIs/Dokumente/Risiken) inkl. Maßnahmenliste – du bist damit <strong>bis zu 80% schneller</strong> und effizienter unterwegs. <strong>Kunden der Quality Services &amp; Wissen GmbH erhalten diese Funktion kostenlos.</strong>
+          </p>
+
+          <div class="ai-grid" style="margin-top:12px;">
+            <div>
+              <label for="aiLicense" class="field label" style="display:block;" data-i18n="aiLicenseLabel">Lizenzschlüssel</label>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <span class="badge lic" data-i18n="aiLicBadge">Lizenz</span>
+                <input id="aiLicense" type="password" placeholder="••••" style="width:100%; padding:10px 12px; border:1px solid rgba(15,23,42,.14); border-radius:6px;">
+              </div>
+              <div class="hint-mini" data-i18n="aiLicenseHint">Hinweis: erforderlich, um den KI-Assistenten zu aktivieren.</div>
+            </div>
+
+            <div>
+              <label for="aiApiKey" class="field label" style="display:block;" data-i18n="aiApiLabel">OpenAI API Key</label>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <span class="badge api" data-i18n="aiApiBadge">API</span>
+                <input id="aiApiKey" type="password" placeholder="sk-..." style="width:100%; padding:10px 12px; border:1px solid rgba(15,23,42,.14); border-radius:6px;">
+              </div>
+              <div class="hint-mini" data-i18n="aiApiHint">Der Key bleibt lokal in deinem Browser und wird nicht serverseitig gespeichert.</div>
+            </div>
+
+            <div class="full">
+              <label for="aiProcessStep" data-i18n="aiProcessLabel">Zu welchem Prozessschritt erstellen wir ein Turtle Diagramm?</label>
+              <input id="aiProcessStep" type="text" placeholder="z.B. Wareneingangsprüfung / Reklamationsbearbeitung / Produktion Linie A …" style="width:100%; padding:10px 12px; border:1px solid rgba(15,23,42,.14); border-radius:6px;">
+            </div>
+
+            <div class="full">
+              <label for="aiContext" data-i18n="aiContextLabel">Kontext</label>
+              <textarea id="aiContext" placeholder="Ziel, Problem, Randbedingungen, bekannte Risiken, KPIs, Stakeholder …" style="width:100%; padding:10px 12px; border:1px solid rgba(15,23,42,.14); border-radius:6px; min-height:90px;"></textarea>
+            </div>
+
+            <div class="full">
+              <div class="ai-actions">
+                <button type="button" class="btn primary" id="btnAiGenerate" data-i18n="aiBtnGenerate">Turtle & Maßnahmen generieren</button>
+                <button type="button" class="btn" id="btnAiApply" data-i18n="aiBtnApply" disabled>Ergebnis übernehmen</button>
+                <button type="button" class="btn" id="btnAiDownload" data-i18n="aiBtnDownload" disabled>Ergebnis als JSON speichern</button>
+                <span class="pill warn" id="aiStatePill">● <span id="aiStateText" data-i18n="aiStateIdle">Bereit</span></span>
+                <span class="badge premium" style="margin-left:auto;" data-i18n="aiPremiumBadge">Premium</span>
+              </div>
+              <div class="hint-mini" data-i18n="aiHint">Tipp: Nach dem Übernehmen kannst du Einträge und Maßnahmen wie gewohnt bearbeiten, ergänzen oder löschen.</div>
+            </div>
+          </div>
+        </section>
 
         <!-- More -->
         <section class="tool-more">
@@ -835,7 +990,7 @@
     const ROOT = document.getElementById("qm-turtle-app");
     if(!ROOT) return;
 
-    const STORAGE_KEY = "qm_turtle_state_v2";
+    const STORAGE_KEY = "qm_turtle_state_v3";
     const LANG_KEY = "qmLang";
 
     const $ = (sel) => ROOT.querySelector(sel);
@@ -853,13 +1008,23 @@
         boxGoalTitle: "Ziel",
         boxGoalText: "Prozess sauber abgrenzen, Schnittstellen klären und Schwachstellen/Risiken identifizieren – als Grundlage für Maßnahmen.",
         boxHowTitle: "So benutzt du das Tool",
+        howNoAiTitle: "Ohne KI",
+        howAiTitle: "Mit KI (Premium)",
         step1: "Prozess im Zentrum ausfüllen (Zweck/Start/Ende).",
         step2: "In den Boxen rundherum Einträge sammeln (+ Eintrag).",
         step3: "Optional: Eintrag → Maßnahme übernehmen (→ Maßnahme).",
         step4: "Maßnahme mit Termin speichern → erscheint in der Maßnahmenliste.",
         step5: "Drucken oder JSON speichern/laden.",
+        aiStep1: "Prozessschritt & Kontext eingeben.",
+        aiStep2: "Lizenzschlüssel & OpenAI API Key eingeben.",
+        aiStep3: "Turtle + Maßnahmenliste generieren.",
+        aiStep4: "Ergebnis übernehmen → danach wie gewohnt ergänzen, bewerten oder löschen.",
+
         boxPrivacyTitle: "Datenschutz",
-        boxPrivacyText: "Dieses Tool läuft vollständig im Browser. Es werden keine Daten auf einem Server gespeichert. Optional wird der aktuelle Stand lokal im Browser gespeichert (Autosave).",
+        privacyNoAiHead: "Ohne API/KI:",
+        privacyNoAiText: "Dieses Tool läuft vollständig im Browser. Es werden keine Daten an Server übertragen. Optional wird der aktuelle Stand lokal im Browser gespeichert (Autosave) und kann als JSON exportiert/importiert werden.",
+        privacyAiHead: "Mit API/KI (Premium):",
+        privacyAiText: "Nur wenn du den KI-Assistenten nutzt, werden deine Eingaben (Prozessschritt/Kontext) aus dem Browser direkt an die OpenAI API übertragen. API Key und Lizenz bleiben lokal im Browser und werden nicht serverseitig gespeichert.",
 
         stripLeftStrong: "Kern",
         stripLeftText: ": Prozess im Zentrum",
@@ -901,12 +1066,14 @@
         riskExtraPh: "Welche Barrieren/Controls reduzieren das Risiko? (optional)",
 
         measuresTitle: "Ableitung von Maßnahmen",
-        measuresSub: "Formuliere Maßnahmen (Was?) mit Verantwortlichem (optional) und Termin – und speichere sie in die Maßnahmenliste.",
+        measuresSub: "Formuliere Maßnahmen (Was?) mit Verantwortlichem (optional), Termin und Nachweis/Wirksamkeit – und speichere sie in die Maßnahmenliste.",
         draftMeasureLabel: "Maßnahme",
         draftMeasurePh: "z.B. Lieferantenfreigabe beschleunigen: 2 Alternativen qualifizieren (inkl. Kriterien) ...",
         draftOwnerLabel: "Owner",
         draftOwnerPh: "z.B. Einkauf",
         draftDueLabel: "Termin",
+        draftProofLabel: "Nachweis / Wirksamkeit",
+        draftProofPh: "z.B. Audit, KPI, Dummy-Prüfung, Kurzzeitfähigkeit, Versuch ...",
         btnSaveDraft: "In Maßnahmenliste speichern",
         btnClearDraft: "Eingabe leeren",
         draftHint: "Tipp: Nutze bei einem Eintrag oben den Button „→ Maßnahme“, um den Text in die Maßnahmen-Eingabe zu übernehmen.",
@@ -917,7 +1084,9 @@
         filterDone: "Abgeschlossen",
         filterDrop: "Verworfen",
         thMeasure: "Maßnahme",
+        thProof: "Nachweis",
         thDue: "Termin",
+        thOwner: "Owner",
         thStatus: "Status",
         thActions: "Aktionen",
         statusOpen: "Offen",
@@ -937,6 +1106,33 @@
         confirmReset: "Alles löschen (inkl. Autosave)?",
         jsonName: "Turtle_Export.json",
         loadError: "Fehler beim Laden der Datei.",
+
+        // AI
+        aiTitle: "KI Assistent (Premium)",
+        aiSub: "Erzeuge aus Prozessschritt & Kontext ein ausgefülltes Turtle Diagramm inklusive Maßnahmenliste – danach arbeitest du wie gewohnt weiter.",
+        aiPremiumBadge: "Premium",
+        aiPitch: "Nutze die volle Power des Tools: Der KI-Assistent erstellt dir in Sekunden ein vollständiges Turtle-Diagramm (Inputs/Outputs/Rollen/Methoden/Ressourcen/KPIs/Dokumente/Risiken) inkl. Maßnahmenliste – du bist damit <strong>bis zu 80% schneller</strong> und effizienter unterwegs. <strong>Kunden der Quality Services &amp; Wissen GmbH erhalten diese Funktion kostenlos.</strong>",
+        aiLicenseLabel: "Lizenzschlüssel",
+        aiLicBadge: "Lizenz",
+        aiLicenseHint: "Hinweis: erforderlich, um den KI-Assistenten zu aktivieren.",
+        aiApiLabel: "OpenAI API Key",
+        aiApiBadge: "API",
+        aiApiHint: "Der Key bleibt lokal in deinem Browser und wird nicht serverseitig gespeichert.",
+        aiProcessLabel: "Zu welchem Prozessschritt erstellen wir ein Turtle Diagramm?",
+        aiContextLabel: "Kontext",
+        aiBtnGenerate: "Turtle & Maßnahmen generieren",
+        aiBtnApply: "Ergebnis übernehmen",
+        aiBtnDownload: "Ergebnis als JSON speichern",
+        aiStateIdle: "Bereit",
+        aiStateWorking: "KI arbeitet…",
+        aiStateOk: "Ergebnis bereit",
+        aiStateBad: "Fehler",
+        aiHint: "Tipp: Nach dem Übernehmen kannst du Einträge und Maßnahmen wie gewohnt bearbeiten, ergänzen oder löschen.",
+        aiNeedLicense: "Lizenzschlüssel erforderlich (Premium).",
+        aiBadLicense: "Lizenzschlüssel ungültig.",
+        aiNeedKey: "OpenAI API Key fehlt.",
+        aiNeedProcess: "Bitte Prozessschritt ausfüllen.",
+        aiNeedContext: "Bitte Kontext ausfüllen.",
 
         moreTitle: "Weiterführende Infos",
         moreSub: "Lexikonartikel & passende Weiterbildungen (öffnet in neuem Tab).",
@@ -959,13 +1155,23 @@
         boxGoalTitle: "Goal",
         boxGoalText: "Define the process scope, clarify interfaces, and identify weaknesses/risks – as a basis for actions.",
         boxHowTitle: "How to use this tool",
+        howNoAiTitle: "Without AI",
+        howAiTitle: "With AI (Premium)",
         step1: "Fill out the center process (purpose/start/end).",
         step2: "Collect entries in the surrounding boxes (+ entry).",
         step3: "Optional: send an entry to the action draft (→ action).",
         step4: "Save the action with due date → it appears in the action list.",
         step5: "Print or save/load JSON.",
+        aiStep1: "Enter process step & context.",
+        aiStep2: "Enter license key & OpenAI API key.",
+        aiStep3: "Generate turtle + action list.",
+        aiStep4: "Apply result → then work as usual (edit, review, delete).",
+
         boxPrivacyTitle: "Privacy",
-        boxPrivacyText: "This tool runs entirely in your browser. No data is stored on any server. Optionally, the current state is saved locally in your browser (autosave).",
+        privacyNoAiHead: "Without API/AI:",
+        privacyNoAiText: "This tool runs entirely in your browser. No data is sent to any server. Optionally, the current state is saved locally (autosave) and can be exported/imported as JSON.",
+        privacyAiHead: "With API/AI (Premium):",
+        privacyAiText: "Only when you use the AI assistant, your inputs (process step/context) are sent from your browser directly to the OpenAI API. API key and license stay local in your browser and are not stored server-side.",
 
         stripLeftStrong: "Core",
         stripLeftText: ": process in the center",
@@ -1007,12 +1213,14 @@
         riskExtraPh: "Which barriers/controls reduce the risk? (optional)",
 
         measuresTitle: "Action derivation",
-        measuresSub: "Formulate actions (What?) with an owner (optional) and a due date – then save them into the action list.",
+        measuresSub: "Formulate actions (What?) with an owner (optional), due date and evidence/effectiveness – then save them into the action list.",
         draftMeasureLabel: "Action",
         draftMeasurePh: "e.g., accelerate supplier release: qualify 2 alternatives (incl. criteria) ...",
         draftOwnerLabel: "Owner",
         draftOwnerPh: "e.g., Purchasing",
         draftDueLabel: "Due date",
+        draftProofLabel: "Evidence / effectiveness",
+        draftProofPh: "e.g., audit, KPI, dummy test, trial, capability check ...",
         btnSaveDraft: "Save to action list",
         btnClearDraft: "Clear draft",
         draftHint: "Tip: Use the “→ Action” button on an entry above to copy its text into the action draft.",
@@ -1023,7 +1231,9 @@
         filterDone: "Done",
         filterDrop: "Discarded",
         thMeasure: "Action",
+        thProof: "Evidence",
         thDue: "Due",
+        thOwner: "Owner",
         thStatus: "Status",
         thActions: "Actions",
         statusOpen: "Open",
@@ -1043,6 +1253,33 @@
         confirmReset: "Delete everything (including autosave)?",
         jsonName: "Turtle_Export.json",
         loadError: "Error loading the file.",
+
+        // AI
+        aiTitle: "AI Assistant (Premium)",
+        aiSub: "Generate a filled turtle diagram including an action list from process step & context – then continue working as usual.",
+        aiPremiumBadge: "Premium",
+        aiPitch: "Unlock the full power: the AI assistant creates a complete turtle diagram (inputs/outputs/roles/methods/resources/KPIs/documents/risks) including an action list in seconds – making you <strong>up to 80% faster</strong> and more efficient. <strong>Customers of Quality Services &amp; Wissen GmbH get this feature for free.</strong>",
+        aiLicenseLabel: "License key",
+        aiLicBadge: "License",
+        aiLicenseHint: "Note: required to activate the AI assistant.",
+        aiApiLabel: "OpenAI API key",
+        aiApiBadge: "API",
+        aiApiHint: "The key stays locally in your browser and is not stored server-side.",
+        aiProcessLabel: "For which process step are we creating a turtle diagram?",
+        aiContextLabel: "Context",
+        aiBtnGenerate: "Generate turtle + actions",
+        aiBtnApply: "Apply result",
+        aiBtnDownload: "Download result as JSON",
+        aiStateIdle: "Ready",
+        aiStateWorking: "AI working…",
+        aiStateOk: "Result ready",
+        aiStateBad: "Error",
+        aiHint: "Tip: After applying, you can edit, add or delete entries and actions as usual.",
+        aiNeedLicense: "License key required (Premium).",
+        aiBadLicense: "Invalid license key.",
+        aiNeedKey: "OpenAI API key missing.",
+        aiNeedProcess: "Please fill in the process step.",
+        aiNeedContext: "Please fill in the context.",
 
         moreTitle: "More information",
         moreSub: "Glossary article & relevant training (opens in a new tab).",
@@ -1067,7 +1304,14 @@
 
     function applyI18n(){
       document.documentElement.lang = currentLang;
-      $$("[data-i18n]").forEach(el => el.textContent = t(el.dataset.i18n));
+      $$("[data-i18n]").forEach(el => {
+        // allow HTML in aiPitch
+        if(el.dataset.i18n === "aiPitch"){
+          el.innerHTML = t(el.dataset.i18n);
+        }else{
+          el.textContent = t(el.dataset.i18n);
+        }
+      });
       $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPlaceholder));
 
       // lang buttons
@@ -1106,8 +1350,8 @@
       processEnd: "",
       riskExtra: "",
       boxes: { people: [], how: [], with: [], input: [], output: [], risk: [], kpi: [], doc: [] },
-      draft: { text:"", owner:"", due:"" },
-      measures: [], // {id,text,owner,due,status,ts}
+      draft: { text:"", owner:"", due:"", proof:"" },
+      measures: [], // {id,text,owner,due,proof,status,ts}
       ts: new Date().toISOString()
     });
 
@@ -1143,7 +1387,12 @@
         });
 
         const d = p.draft || {};
-        state.draft = { text: String(d.text ?? ""), owner: String(d.owner ?? ""), due: String(d.due ?? "") };
+        state.draft = { 
+          text: String(d.text ?? ""), 
+          owner: String(d.owner ?? ""), 
+          due: String(d.due ?? ""), 
+          proof: String(d.proof ?? "") 
+        };
 
         const m = Array.isArray(p.measures) ? p.measures : [];
         state.measures = m.map(x=>({
@@ -1151,6 +1400,7 @@
           text: String(x.text || ""),
           owner: String(x.owner || ""),
           due: String(x.due || ""),
+          proof: String(x.proof || ""),
           status: (x.status==="done"||x.status==="drop"||x.status==="open") ? x.status : "open",
           ts: String(x.ts || new Date().toISOString())
         }));
@@ -1231,6 +1481,7 @@
       $("#draftMeasure").value = state.draft.text;
       $("#draftOwner").value = state.draft.owner;
       $("#draftDue").value = state.draft.due;
+      $("#draftProof").value = state.draft.proof;
     }
 
     // ---------- Measures ----------
@@ -1276,7 +1527,7 @@
       const list = filteredMeasures();
       if(list.length === 0){
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td colspan="4" style="color:#64748b; padding:14px;">${currentLang==="de" ? "Keine Maßnahmen im aktuellen Filter." : "No actions in the current filter."}</td>`;
+        tr.innerHTML = `<td colspan="6" style="color:#64748b; padding:14px;">${currentLang==="de" ? "Keine Maßnahmen im aktuellen Filter." : "No actions in the current filter."}</td>`;
         tbody.appendChild(tr);
         return;
       }
@@ -1286,28 +1537,45 @@
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>
+          <td data-label="${esc(t("thMeasure"))}">
             ${isEdit
               ? `<div class="field" style="margin:0;">
-                   <textarea data-edit="text" style="min-height:70px;">${esc(m.text)}</textarea>
-                 </div>
-                 <div class="two-cols" style="margin-top:8px;">
-                   <div class="field" style="margin:0;">
-                     <label style="margin:0 0 6px;">${esc(t("draftOwnerLabel"))}</label>
-                     <input data-edit="owner" type="text" value="${esc(m.owner)}"/>
-                   </div>
-                   <div class="field" style="margin:0;">
-                     <label style="margin:0 0 6px;">${esc(t("draftDueLabel"))}</label>
-                     <input data-edit="due" type="date" value="${esc(m.due)}"/>
-                   </div>
+                   <textarea data-edit="text" style="min-height:80px;">${esc(m.text)}</textarea>
                  </div>`
-              : `<p class="m-title">${esc(m.text || "—")}</p>
-                 <div class="m-meta">${esc(m.owner || "—")}</div>`
+              : `<p class="m-title">${esc(m.text || "—")}</p>`
             }
           </td>
-          <td>${isEdit ? "" : esc(m.due || "—")}</td>
-          <td>${statusPill(m.status)}</td>
-          <td style="text-align:right;">
+
+          <td data-label="${esc(t("thProof"))}">
+            ${isEdit
+              ? `<div class="field" style="margin:0;">
+                   <input data-edit="proof" type="text" value="${esc(m.proof)}" placeholder="${esc(t("draftProofPh"))}" />
+                 </div>`
+              : `<div class="m-meta">${esc(m.proof || "—")}</div>`
+            }
+          </td>
+
+          <td data-label="${esc(t("thDue"))}">
+            ${isEdit
+              ? `<div class="field" style="margin:0;">
+                   <input data-edit="due" type="date" value="${esc(m.due)}"/>
+                 </div>`
+              : esc(m.due || "—")
+            }
+          </td>
+
+          <td data-label="${esc(t("thOwner"))}">
+            ${isEdit
+              ? `<div class="field" style="margin:0;">
+                   <input data-edit="owner" type="text" value="${esc(m.owner)}" placeholder="${esc(t("draftOwnerPh"))}"/>
+                 </div>`
+              : `<div class="m-meta">${esc(m.owner || "—")}</div>`
+            }
+          </td>
+
+          <td data-label="${esc(t("thStatus"))}">${statusPill(m.status)}</td>
+
+          <td data-label="${esc(t("thActions"))}" style="text-align:right;">
             <div class="row-actions">
               ${isEdit
                 ? `<button type="button" class="icon-btn" data-act="save" data-id="${esc(m.id)}">${esc(t("btnSaveRow"))}</button>
@@ -1344,10 +1612,12 @@
         const text = rowEl.querySelector('[data-edit="text"]')?.value ?? m.text;
         const owner = rowEl.querySelector('[data-edit="owner"]')?.value ?? m.owner;
         const due = rowEl.querySelector('[data-edit="due"]')?.value ?? m.due;
+        const proof = rowEl.querySelector('[data-edit="proof"]')?.value ?? m.proof;
 
         m.text = String(text).trim();
         m.owner = String(owner).trim();
         m.due = String(due).trim();
+        m.proof = String(proof).trim();
 
         editRowId = null;
         persist();
@@ -1372,15 +1642,16 @@
       const text = ($("#draftMeasure").value || "").trim();
       const owner = ($("#draftOwner").value || "").trim();
       const due = ($("#draftDue").value || "").trim();
+      const proof = ($("#draftProof").value || "").trim();
 
       if(!text){
         alert(currentLang==="de" ? "Bitte eine Maßnahme formulieren." : "Please enter an action.");
         $("#draftMeasure").focus();
         return;
       }
-      state.measures.push({ id: uid(), text, owner, due, status: "open", ts: new Date().toISOString() });
+      state.measures.push({ id: uid(), text, owner, due, proof, status: "open", ts: new Date().toISOString() });
 
-      state.draft = { text:"", owner:"", due:"" };
+      state.draft = { text:"", owner:"", due:"", proof:"" };
       syncFields();
 
       persist();
@@ -1414,6 +1685,192 @@
       }).catch(()=> alert(t("loadError")));
     }
 
+    // ---------- AI ASSISTANT (Premium) ----------
+    async function sha256Hex(str){
+      const data = new TextEncoder().encode(str);
+      const digest = await crypto.subtle.digest("SHA-256", data);
+      return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,"0")).join("");
+    }
+    const LICENSE_HASH = "07aa2015d482734372d4a9a1c07c8290198526b9ce1fd2e2dcff4d05f6792a29";
+    let aiLastResult = null;
+
+    function setAiState(kind, textKey){
+      const pill = $("#aiStatePill");
+      const txt = $("#aiStateText");
+      if(!pill || !txt) return;
+
+      pill.classList.remove("ok","warn","bad");
+      if(kind==="ok") pill.classList.add("ok");
+      else if(kind==="bad") pill.classList.add("bad");
+      else pill.classList.add("warn");
+
+      txt.textContent = t(textKey);
+    }
+
+    async function checkLicense(){
+      const lic = ($("#aiLicense").value || "").trim();
+      if(!lic) throw new Error(t("aiNeedLicense"));
+      const h = await sha256Hex(lic);
+      if(h !== LICENSE_HASH) throw new Error(t("aiBadLicense"));
+      return true;
+    }
+
+    function normalizeAiResult(obj){
+      const safe = EMPTY_STATE();
+      safe.lang = currentLang;
+
+      safe.processPurpose = String(obj.processPurpose ?? "");
+      safe.processStart = String(obj.processStart ?? "");
+      safe.processEnd = String(obj.processEnd ?? "");
+      safe.riskExtra = String(obj.riskExtra ?? "");
+
+      const boxes = obj.boxes || {};
+      Object.keys(safe.boxes).forEach(k=>{
+        const arr = Array.isArray(boxes[k]) ? boxes[k] : [];
+        safe.boxes[k] = arr.slice(0, 12).map((x,i)=>({
+          id: String(x.id || (k+"_"+(i+1))),
+          text: String(x.text || "").trim()
+        })).filter(x=>x.text);
+      });
+
+      const measures = Array.isArray(obj.measures) ? obj.measures : [];
+      safe.measures = measures.slice(0, 30).map((m,i)=>({
+        id: String(m.id || ("m_"+String(i+1).padStart(2,"0"))),
+        text: String(m.text || "").trim(),
+        owner: String(m.owner || "").trim(),
+        due: String(m.due || "").trim(),
+        proof: String(m.proof || "").trim(),
+        status: (m.status==="done"||m.status==="drop"||m.status==="open") ? m.status : "open",
+        ts: new Date().toISOString()
+      })).filter(m=>m.text);
+
+      safe.draft = { text:"", owner:"", due:"", proof:"" };
+      safe.ts = new Date().toISOString();
+      return safe;
+    }
+
+    async function aiGenerate(){
+      try{
+        setAiState("warn","aiStateWorking");
+        $("#btnAiGenerate").disabled = true;
+        $("#btnAiApply").disabled = true;
+        $("#btnAiDownload").disabled = true;
+
+        await checkLicense();
+
+        const apiKey = ($("#aiApiKey").value || "").trim();
+        if(!apiKey) throw new Error(t("aiNeedKey"));
+
+        const processStep = ($("#aiProcessStep").value || "").trim();
+        if(!processStep) throw new Error(t("aiNeedProcess"));
+
+        const contextText = ($("#aiContext").value || "").trim();
+        if(!contextText) throw new Error(t("aiNeedContext"));
+
+        const system = `
+You are a quality management assistant. Return ONLY valid JSON (no markdown).
+Create a filled Turtle diagram for the given process step and context.
+
+Output JSON schema:
+{
+  "processPurpose": "short purpose/outcome",
+  "processStart": "short trigger/start",
+  "processEnd": "short end/hand-off",
+  "riskExtra": "optional barriers/controls text",
+  "boxes": {
+    "people": [{"id":"p1","text":"..."}],
+    "how": [{"id":"h1","text":"..."}],
+    "with": [{"id":"w1","text":"..."}],
+    "input": [{"id":"i1","text":"..."}],
+    "output": [{"id":"o1","text":"..."}],
+    "risk": [{"id":"r1","text":"..."}],
+    "kpi": [{"id":"k1","text":"..."}],
+    "doc": [{"id":"d1","text":"..."}]
+  },
+  "measures": [
+    {"id":"m_01","text":"action","owner":"department or role","due":"YYYY-MM-DD or empty","proof":"evidence/effectiveness verification","status":"open"}
+  ]
+}
+
+Guidelines:
+- Provide 5–9 entries per box where meaningful; keep each entry concise.
+- Measures: 8–16 actions; include realistic due dates (next 2–12 weeks) where useful; else empty.
+- proof: suggested verification (audit, KPI, test, trial, short-term capability, checklists, etc.)
+- Use German if the user input is German, else English.
+`.trim();
+
+        const user = (currentLang==="de")
+          ? `Prozessschritt: ${processStep}\nKontext: ${contextText}`
+          : `Process step: ${processStep}\nContext: ${contextText}`;
+
+        const payload = {
+          model: "gpt-4.1-mini",
+          input: [
+            { role: "system", content: system },
+            { role: "user", content: user }
+          ],
+          temperature: 0.4
+        };
+
+        const res = await fetch("https://api.openai.com/v1/responses", {
+          method: "POST",
+          headers: {
+            "Content-Type":"application/json",
+            "Authorization":"Bearer " + apiKey
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if(!res.ok){
+          const txt = await res.text().catch(()=> "");
+          throw new Error("OpenAI error: " + res.status + " " + txt);
+        }
+
+        const data = await res.json();
+        const text = (data && data.output_text) ? data.output_text : "";
+
+        if(!text) throw new Error("No output_text");
+        let parsed = null;
+        try{
+          parsed = JSON.parse(text);
+        }catch(e){
+          const m = text.match(/\{[\s\S]*\}/);
+          if(m) parsed = JSON.parse(m[0]);
+          else throw e;
+        }
+
+        aiLastResult = normalizeAiResult(parsed);
+
+        setAiState("ok","aiStateOk");
+        $("#btnAiApply").disabled = false;
+        $("#btnAiDownload").disabled = false;
+
+      }catch(err){
+        setAiState("bad","aiStateBad");
+        alert(String(err.message || err));
+      }finally{
+        $("#btnAiGenerate").disabled = false;
+      }
+    }
+
+    function aiApply(){
+      if(!aiLastResult) return;
+      state = aiLastResult;
+      persist();
+      buildAll();
+    }
+
+    function aiDownload(){
+      if(!aiLastResult) return;
+      const blob = new Blob([JSON.stringify(aiLastResult, null, 2)], {type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = (currentLang==="de") ? "Turtle_KI_Export.json" : "Turtle_AI_Export.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
     // ---------- Build ----------
     function buildAll(){
       syncFields();
@@ -1444,10 +1901,11 @@
     $("#draftMeasure").addEventListener("input", (e)=>{ state.draft.text = e.target.value; persist(); });
     $("#draftOwner").addEventListener("input", (e)=>{ state.draft.owner = e.target.value; persist(); });
     $("#draftDue").addEventListener("input", (e)=>{ state.draft.due = e.target.value; persist(); });
+    $("#draftProof").addEventListener("input", (e)=>{ state.draft.proof = e.target.value; persist(); });
 
     $("#btnSaveDraft").addEventListener("click", saveDraftToList);
     $("#btnClearDraft").addEventListener("click", ()=>{
-      state.draft = { text:"", owner:"", due:"" };
+      state.draft = { text:"", owner:"", due:"", proof:"" };
       syncFields();
       persist();
       $("#draftMeasure").focus();
@@ -1477,6 +1935,11 @@
       state = EMPTY_STATE();
       buildAll();
     });
+
+    // AI buttons
+    $("#btnAiGenerate").addEventListener("click", aiGenerate);
+    $("#btnAiApply").addEventListener("click", aiApply);
+    $("#btnAiDownload").addEventListener("click", aiDownload);
 
     // ---------- Init ----------
     restore();
