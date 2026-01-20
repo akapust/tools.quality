@@ -680,7 +680,7 @@
           <div class="tool-box tool-privacy">
             <h3 data-i18n="boxPrivacyTitle">Datenschutz</h3>
             <p><strong data-i18n="privacyNoAiHead">Ohne API/KI:</strong> <span data-i18n="privacyNoAiText">Dieses Tool läuft vollständig im Browser. Es werden keine Daten an Server übertragen. Optional wird der aktuelle Stand lokal im Browser gespeichert (Autosave) und kann als JSON exportiert/importiert werden.</span></p>
-            <p style="margin-top:8px;"><strong data-i18n="privacyAiHead">Mit API/KI (Premium):</strong> <span data-i18n="privacyAiText">Nur wenn du den KI-Assistenten nutzt, werden deine Eingaben (Prozessschritt/Kontext) aus dem Browser direkt an die OpenAI API übertragen. API Key und Lizenz bleiben lokal im Browser und werden nicht serverseitig gespeichert.</span></p>
+            <p style="margin-top:8px;"><strong data-i18n="privacyAiHead">Mit API/KI (Premium):</strong> <span data-i18n="privacyAiText">Nur wenn du den KI‑Assistenten nutzt, werden deine Eingaben (Prozessschritt/Kontext) aus dem Browser direkt an die OpenAI API übertragen. API Key und Lizenz bleiben lokal im Browser und werden nicht serverseitig gespeichert.</span></p>
           </div>
         </div>
       </section>
@@ -906,7 +906,7 @@
           <p class="more-sub" data-i18n="aiSub">Erzeuge aus Prozessschritt & Kontext ein ausgefülltes Turtle Diagramm inklusive Maßnahmenliste – danach arbeitest du wie gewohnt weiter.</p>
 
           <p class="ai-note" data-i18n="aiPitch">
-            Nutze die volle Power des Tools: Der KI-Assistent erstellt dir in Sekunden ein vollständiges Turtle-Diagramm (Inputs/Outputs/Rollen/Methoden/Ressourcen/KPIs/Dokumente/Risiken) inkl. Maßnahmenliste – du bist damit <strong>bis zu 80% schneller</strong> und effizienter unterwegs. <strong>Kunden der Quality Services &amp; Wissen GmbH erhalten diese Funktion kostenlos.</strong>
+            Nutze die volle Power des Tools: Der KI‑Assistent erstellt dir in Sekunden ein vollständiges Turtle‑Diagramm (Inputs/Outputs/Rollen/Methoden/Ressourcen/KPIs/Dokumente/Risiken) inkl. Maßnahmenliste – du bist damit <strong>bis zu 80% schneller</strong> und effizienter unterwegs. <strong>Kunden der Quality Services &amp; Wissen GmbH erhalten diese Funktion kostenlos.</strong>
           </p>
 
           <div class="ai-grid" style="margin-top:12px;">
@@ -916,7 +916,7 @@
                 <span class="badge lic" data-i18n="aiLicBadge">Lizenz</span>
                 <input id="aiLicense" type="password" placeholder="••••" style="width:100%; padding:10px 12px; border:1px solid rgba(15,23,42,.14); border-radius:6px;">
               </div>
-              <div class="hint-mini" data-i18n="aiLicenseHint">Hinweis: erforderlich, um den KI-Assistenten zu aktivieren.</div>
+              <div class="hint-mini" data-i18n="aiLicenseHint">Hinweis: erforderlich, um den KI‑Assistenten zu aktivieren.</div>
             </div>
 
             <div>
@@ -1024,7 +1024,7 @@
         privacyNoAiHead: "Ohne API/KI:",
         privacyNoAiText: "Dieses Tool läuft vollständig im Browser. Es werden keine Daten an Server übertragen. Optional wird der aktuelle Stand lokal im Browser gespeichert (Autosave) und kann als JSON exportiert/importiert werden.",
         privacyAiHead: "Mit API/KI (Premium):",
-        privacyAiText: "Nur wenn du den KI-Assistenten nutzt, werden deine Eingaben (Prozessschritt/Kontext) aus dem Browser direkt an die OpenAI API übertragen. API Key und Lizenz bleiben lokal im Browser und werden nicht serverseitig gespeichert.",
+        privacyAiText: "Nur wenn du den KI‑Assistenten nutzt, werden deine Eingaben (Prozessschritt/Kontext) aus dem Browser direkt an die OpenAI API übertragen. API Key und Lizenz bleiben lokal im Browser und werden nicht serverseitig gespeichert.",
 
         stripLeftStrong: "Kern",
         stripLeftText: ": Prozess im Zentrum",
@@ -1111,10 +1111,10 @@
         aiTitle: "KI Assistent (Premium)",
         aiSub: "Erzeuge aus Prozessschritt & Kontext ein ausgefülltes Turtle Diagramm inklusive Maßnahmenliste – danach arbeitest du wie gewohnt weiter.",
         aiPremiumBadge: "Premium",
-        aiPitch: "Nutze die volle Power des Tools: Der KI-Assistent erstellt dir in Sekunden ein vollständiges Turtle-Diagramm (Inputs/Outputs/Rollen/Methoden/Ressourcen/KPIs/Dokumente/Risiken) inkl. Maßnahmenliste – du bist damit <strong>bis zu 80% schneller</strong> und effizienter unterwegs. <strong>Kunden der Quality Services &amp; Wissen GmbH erhalten diese Funktion kostenlos.</strong>",
+        aiPitch: "Nutze die volle Power des Tools: Der KI‑Assistent erstellt dir in Sekunden ein vollständiges Turtle‑Diagramm (Inputs/Outputs/Rollen/Methoden/Ressourcen/KPIs/Dokumente/Risiken) inkl. Maßnahmenliste – du bist damit <strong>bis zu 80% schneller</strong> und effizienter unterwegs. <strong>Kunden der Quality Services &amp; Wissen GmbH erhalten diese Funktion kostenlos.</strong>",
         aiLicenseLabel: "Lizenzschlüssel",
         aiLicBadge: "Lizenz",
-        aiLicenseHint: "Hinweis: erforderlich, um den KI-Assistenten zu aktivieren.",
+        aiLicenseHint: "Hinweis: erforderlich, um den KI‑Assistenten zu aktivieren.",
         aiApiLabel: "OpenAI API Key",
         aiApiBadge: "API",
         aiApiHint: "Der Key bleibt lokal in deinem Browser und wird nicht serverseitig gespeichert.",
@@ -1767,7 +1767,11 @@
         const contextText = ($("#aiContext").value || "").trim();
         if(!contextText) throw new Error(t("aiNeedContext"));
 
-        const system = `
+        const langRule = (currentLang==="de")
+  ? "Language: German. All text values MUST be German."
+  : "Language: English. All text values MUST be English.";
+
+const system = `
 You are a quality management assistant. Return ONLY valid JSON (no markdown).
 Create a filled Turtle diagram for the given process step and context.
 
@@ -1796,7 +1800,7 @@ Guidelines:
 - Provide 5–9 entries per box where meaningful; keep each entry concise.
 - Measures: 8–16 actions; include realistic due dates (next 2–12 weeks) where useful; else empty.
 - proof: suggested verification (audit, KPI, test, trial, short-term capability, checklists, etc.)
-- Use German if the user input is German, else English.
+- ${langRule}
 `.trim();
 
         const user = (currentLang==="de")
@@ -1825,17 +1829,41 @@ Guidelines:
           const txt = await res.text().catch(()=> "");
           throw new Error("OpenAI error: " + res.status + " " + txt);
         }
-
         const data = await res.json();
-        const text = (data && data.output_text) ? data.output_text : "";
 
-        if(!text) throw new Error("No output_text");
+        // Responses API: output_text is not guaranteed in raw REST responses.
+        // Robustly extract concatenated output text from the response shape.
+        function extractOutputText(resp){
+          try{
+            if(resp && typeof resp.output_text === "string" && resp.output_text.trim()){
+              return resp.output_text;
+            }
+            let out = "";
+            const arr = (resp && Array.isArray(resp.output)) ? resp.output : [];
+            for(const item of arr){
+              const content = item && Array.isArray(item.content) ? item.content : [];
+              for(const c of content){
+                if(c && c.type === "output_text" && typeof c.text === "string"){
+                  out += c.text;
+                }
+              }
+            }
+            return out.trim();
+          }catch(e){
+            return "";
+          }
+        }
+
+        const text = extractOutputText(data);
+
+        if(!text) throw new Error("No output text from API");
         let parsed = null;
         try{
           parsed = JSON.parse(text);
         }catch(e){
-          const m = text.match(/\{[\s\S]*\}/);
-          if(m) parsed = JSON.parse(m[0]);
+          // fallback: try to recover JSON block from surrounding text
+          const mm = text.match(/\{[\s\S]*\}/);
+          if(mm) parsed = JSON.parse(mm[0]);
           else throw e;
         }
 
