@@ -49,47 +49,7 @@
     .tool-box h3 { margin: 0 0 6px 0; font-size: 13px; color: var(--dark); text-transform: uppercase; font-weight: 900; letter-spacing:.25px; }
     .tool-box p, .tool-box ol { margin: 0; font-size: 13px; color:#334155; }
     .tool-box ol { padding-left: 18px; }
-    
-    /* Info box split headings */
-    .subhead {
-      margin: 12px 0 6px;
-      font-size: 12px;
-      letter-spacing: .10em;
-      text-transform: uppercase;
-      color: var(--muted);
-      font-weight: 900;
-    }
-    .divider-mini {
-      height: 1px;
-      background: var(--border);
-      margin: 12px 0;
-      opacity: .9;
-    }
-    .pill-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      border: 1px solid var(--border);
-      background: var(--light-bg);
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-weight: 900;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-    .how-split {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-      margin-top: 8px;
-    }
-    @media(min-width: 900px){
-      .how-split { grid-template-columns: 1fr 1fr; }
-    }
-.tool-privacy { border-left: 3px solid var(--blue); }
+    .tool-privacy { border-left: 3px solid var(--blue); }
     .tool-box a { color: var(--blue); text-decoration: none; font-weight: 800; }
     .tool-box a:hover { text-decoration: underline; }
 
@@ -424,93 +384,6 @@
 
     .muted{ color: var(--muted); }
 
-    /* AI Assistant (slim section below JSON save/load) */
-    .ai-assistant{
-      margin-top: 18px;
-      padding-top: 16px;
-      border-top: 2px solid var(--blue);
-    }
-    .ai-grid{
-      margin-top: 12px;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    @media (max-width: 900px){
-      .ai-grid{ grid-template-columns: 1fr; }
-    }
-    .ai-card{
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background:#fff;
-      overflow:hidden;
-    }
-    .ai-card-head{
-      padding: 10px 14px;
-      background: var(--light-bg);
-      border-bottom: 1px solid rgba(15,23,42,.08);
-      display:flex;
-      justify-content: space-between;
-      align-items:center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .ai-card-body{ padding: 12px 14px; }
-    .ai-actions{ display:flex; gap: 10px; flex-wrap: wrap; align-items:center; justify-content:flex-end; margin-top: 10px; }
-    .ai-status{ margin-top: 10px; font-size: 12px; color: var(--muted); white-space: pre-wrap; }
-    .ai-preview{
-      margin:0;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 12px;
-      background: rgba(248,250,252,.9);
-      border: 1px solid rgba(15,23,42,.12);
-      border-radius: 10px;
-      padding: 12px;
-      overflow: auto;
-      max-height: 420px;
-    }
-    .ai-mini-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
-    .ai-checkbox{ display:flex; gap:8px; align-items:center; font-size: 12px; color:#334155; font-weight: 900; text-transform: uppercase; letter-spacing:.2px; }
-
-
-    .type-pill{
-      display:inline-flex;
-      align-items:center;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing:.2px;
-      border: 1px solid rgba(15,23,42,.12);
-      background: rgba(248,250,252,.9);
-      color:#0f172a;
-      white-space:nowrap;
-    }
-    .type-pill.avoid{ border-color: rgba(17,85,178,.25); background: rgba(17,85,178,.06); color: var(--dark); }
-    .type-pill.validate{ border-color: rgba(245,158,11,.30); background: rgba(245,158,11,.10); }
-    .type-pill.secure{ border-color: rgba(22,163,74,.30); background: rgba(22,163,74,.10); }
-    .type-pill.lessons{ border-color: rgba(100,116,139,.28); background: rgba(100,116,139,.10); }
-
-    .subline{
-      margin-top: 6px;
-      font-size: 12px;
-      color: var(--muted);
-      white-space: pre-wrap;
-    }
-
-    .code-snippet{
-      margin: 10px 0 0;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 12px;
-      background: rgba(248,250,252,.9);
-      border: 1px solid rgba(15,23,42,.12);
-      border-radius: 10px;
-      padding: 12px;
-      overflow:auto;
-      max-height: 320px;
-    }
-
     /* More info + footer */
     .tool-more { margin-top: 22px; padding-top: 18px; border-top: 2px solid var(--blue); }
     .more-title { margin: 0 0 6px 0; font-size: 13px; color: var(--dark); text-transform: uppercase; font-weight: 900; }
@@ -543,7 +416,7 @@
 
     /* Print */
     @media print {
-      .lang-switch, .tool-intro-top .i-btn, .ishikawa-actions, .ai-assistant, .tool-more a, .note-delete,
+      .lang-switch, .tool-intro-top .i-btn, .ishikawa-actions, .tool-more a, .note-delete,
       .btn-add, .rate-chips, .row-actions, .chips, .mini-btn { display:none !important; }
       .ishikawa-card{ box-shadow:none; border:none; }
       .ishikawa-drawing-area{ border:none; }
@@ -551,41 +424,7 @@
       .tool-more{ border-top:none; }
       .ishikawa-footer{ background:#fff; }
     }
-  
-    /* --- AI assistant tweaks (v3) --- */
-    .ai-card.ai-wide{ grid-column: 1 / -1; }
-    .ai-assistant .ai-grid{ display:block; }
-    .ai-credentials{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-    @media (max-width: 860px){ .ai-credentials{ grid-template-columns: 1fr; } }
-    .api-field{ position:relative; }
-    .api-field:before{
-      content: "API";
-      position:absolute;
-      top:-10px;
-      right:10px;
-      font-size:10px;
-      padding:4px 8px;
-      border-radius:999px;
-      background: rgba(15,23,42,.08);
-      color: #3d3a35;
-      letter-spacing:.14em;
-    }
-    .api-field input{ letter-spacing: .2px; border-style:dashed; background: rgba(250,249,246,.6); }
-    .license-field{ position:relative; }
-    .license-field:before{
-      content: "LIZENZ";
-      position:absolute;
-      top:-10px;
-      right:10px;
-      font-size:10px;
-      padding:4px 8px;
-      border-radius:999px;
-      background: rgba(181,164,139,.18);
-      color: #3d3a35;
-      letter-spacing:.14em;
-    }
-
-</style>
+  </style>
 </head>
 
 <body>
@@ -637,21 +476,8 @@
 
           <div class="tool-box tool-privacy">
             <h3 data-i18n="boxPrivacyTitle">Datenschutz</h3>
-
-            <h4 class="subhead" data-i18n="privacyNoApiTitle">Datenschutz (ohne API/KI)</h4>
-            <p data-i18n="privacyNoApiText">
-              Dieses Tool arbeitet vollständig in deinem Browser. Inhalte werden nicht automatisch an unsere Server übertragen.
-              Der aktuelle Stand kann lokal im Browser gespeichert werden (Autosave) und zusätzlich als JSON exportiert/importiert werden.
-            </p>
-
-            <div class="divider-mini"></div>
-
-            <h4 class="subhead" data-i18n="privacyApiTitle">Datenschutz (mit API/KI – Premium)</h4>
-            <p data-i18n="privacyApiText">
-              Wenn du den KI-Assistenten nutzt, werden nur die von dir zur Anfrage ausgewählten Inhalte direkt aus deinem Browser an die OpenAI API übertragen,
-              um Vorschläge zu generieren (z. B. Problemtext, Kontext sowie ausgewählte Ursachen/Maßnahmen). Der API-Key wird dabei nicht serverseitig gespeichert.
-              Die Premium-Funktion ist ausschließlich für berechtigte Kunden der Quality Services &amp; Wissen GmbH vorgesehen; der Lizenzschlüssel dient als Freischaltung.
-              Bitte übermittle keine personenbezogenen oder vertraulichen Inhalte, die nicht in externe Systeme gehören.
+            <p data-i18n="boxPrivacyText">
+              Dieses Tool arbeitet vollständig im Browser. Es werden keine Daten auf einem Server gespeichert. Der Stand wird lokal im Browser gespeichert (Autosave) und kann zusätzlich als JSON exportiert/importiert werden.
             </p>
           </div>
         </div>
@@ -704,6 +530,33 @@
           </div>
         </div>
 
+
+        <!-- Assistent -->
+        <section class="section" aria-label="Assistent">
+          <h3 class="section-title" data-i18n="assistantTitle">Assistent</h3>
+          <p class="section-sub" data-i18n="assistantSub">Checkliste: sieh sofort, ob noch etwas fehlt – und wo du als nächstes weitermachen kannst.</p>
+          <div class="triage-box" style="border-left:3px solid var(--blue);">
+            <div class="triage-head" style="align-items:flex-start;">
+              <div>
+                <div class="section-title" style="margin:0">Status</div>
+                <div class="triage-meta" id="assistantMeta">—</div>
+              </div>
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button type="button" class="i-btn" id="btnAssistantSeed" data-i18n="btnSeedFromRY">Rote/Gelbe als Vorschläge anlegen</button>
+              </div>
+            </div>
+            <table class="triage-table" aria-label="Assistant table">
+              <thead>
+                <tr>
+                  <th style="width:260px">Item</th>
+                  <th>Wert</th>
+                </tr>
+              </thead>
+              <tbody id="assistantTbody"></tbody>
+            </table>
+          </div>
+        </section>
+
         <!-- NEW: Ursachen-Bewertung -->
         <section class="section" aria-label="Ursachen bewerten">
           <h3 class="section-title" data-i18n="triageTitle">Ursachen bewerten (Rot / Gelb / Grün)</h3>
@@ -754,27 +607,10 @@
                 <input id="draftCauseRef" type="text" readonly value="—" />
                 <div class="hint-mini" data-i18n="draftCauseHint">Wähle eine Ursache in der Ursachenliste (Aktion: „Als Maßnahme übernehmen“).</div>
               </div>
-            </div>
-
-            <div class="draft-grid2" style="margin-top:10px;">
-              <div class="field">
-                <label for="draftType" data-i18n="draftTypeLabel">Maßnahmenart</label>
-                <select id="draftType" style="width:100%; padding:10px 12px; border:1px solid rgba(15,23,42,.14); border-radius:6px; font-size:14px; font-family:inherit; outline:none; background:#fff;">
-                  <option value="avoid" data-i18n="typeAvoid">Fehlervermeidung</option>
-                  <option value="validate" data-i18n="typeValidate">Validierung / Wirksamkeitsnachweis</option>
-                  <option value="secure" data-i18n="typeSecure">Absicherungsmaßnahmen</option>
-                  <option value="lessons" data-i18n="typeLessons">Lessons Learned</option>
-                </select>
-              </div>
 
               <div class="field">
-                <label for="draftOwner" data-i18n="draftOwnerLabel">Owner (Bereich)</label>
+                <label for="draftOwner" data-i18n="draftOwnerLabel">Owner</label>
                 <input id="draftOwner" type="text" data-i18n-placeholder="draftOwnerPh" placeholder="z.B. Qualität / Produktion" />
-              </div>
-
-              <div class="field">
-                <label for="draftResp" data-i18n="draftRespLabel">Verantwortung</label>
-                <input id="draftResp" type="text" data-i18n-placeholder="draftRespPh" placeholder="z.B. Max Mustermann / Rolle" />
               </div>
 
               <div class="field">
@@ -786,11 +622,6 @@
             <div class="field" style="margin-top:10px;">
               <label for="draftMeasure" data-i18n="draftMeasureLabel">Maßnahme</label>
               <textarea id="draftMeasure" data-i18n-placeholder="draftMeasurePh" placeholder="Welche Maßnahme reduziert/prüft diese Ursache?"></textarea>
-            </div>
-
-            <div class="field" style="margin-top:10px;">
-              <label for="draftEvidence" data-i18n="draftEvidenceLabel">Nachweis / Wirksamkeit</label>
-              <textarea id="draftEvidence" data-i18n-placeholder="draftEvidencePh" placeholder="Dummy-Prüfung, Versuche, Kurzzeitfähigkeit, Kennzahlen, Audit, etc." style="min-height:72px;"></textarea>
             </div>
 
             <div class="draft-actions">
@@ -821,10 +652,8 @@
               <thead>
                 <tr>
                   <th style="width:220px" data-i18n="thRef">Bezug (Ursache)</th>
-                  <th style="width:170px" data-i18n="thType">Art</th>
                   <th data-i18n="thMeasure">Maßnahme</th>
-                  <th style="width:260px" data-i18n="thEvidence">Nachweis / Wirksamkeit</th>
-                  <th style="width:200px" data-i18n="thOwner">Owner / Verantwortung</th>
+                  <th style="width:180px" data-i18n="thOwner">Owner</th>
                   <th style="width:120px" data-i18n="thDue">Termin</th>
                   <th style="width:160px" data-i18n="thStatus">Status</th>
                   <th style="width:260px; text-align:right" data-i18n="thActions">Aktionen</th>
@@ -841,7 +670,6 @@
             <a class="i-btn" href="https://tools.quality.de/" data-i18n="backHome">Zurück zur Startseite</a>
             <button type="button" class="i-btn primary" id="btnPrint" data-i18n="btnPrint">Drucken</button>
             <button type="button" class="i-btn" id="btnExportPng" data-i18n="btnExportPng">PNG Export</button>
-            <button type="button" class="i-btn" id="btnExportSvg" data-i18n="btnExportSvg">SVG Export</button>
           </div>
 
           <div class="actions-right">
@@ -851,65 +679,6 @@
             <button type="button" class="i-btn danger" id="btnReset" data-i18n="btnReset">Reset</button>
           </div>
         </div>
-
-        <!-- NEW: KI Assistent (unterhalb Download/Upload) -->
-        <section class="ai-assistant" aria-label="KI Assistent">
-          <h3 class="section-title" data-i18n="aiTitle">KI Assistent</h3>
-          <p class="section-sub" data-i18n-html="aiSubHtml">Nutze die volle Power: Der KI‑Assistent erstellt in Sekunden 6M‑Fehlerursachen, schlägt passende Maßnahmen inkl. Nachweis vor und hilft beim Strukturieren – <strong>für Kunden der Quality Services &amp; Wissen GmbH kostenlos</strong>; damit bist du bis zu <strong>80% schneller und effizienter</strong>.</p>
-
-          <div class="ai-card ai-wide">
-            <div class="ai-card-head">
-              <div class="section-title" style="margin:0" data-i18n="aiInputTitle">Eingabe</div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; align-items:center;">
-                <button type="button" class="mini-btn" id="btnAiTakeProblem" data-i18n="aiTakeProblem">Fehlerbild übernehmen</button>
-                <button type="button" class="mini-btn" id="btnAiContextFromTool" data-i18n="aiContextFromTool">Kontext aus Tool</button>
-              </div>
-            </div>
-            <div class="ai-card-body">
-
-              <div class="ai-credentials">
-                <div class="field api-field">
-                  <label for="aiApiKey" data-i18n="aiApiKeyLabel">OpenAI API Key</label>
-                  <input id="aiApiKey" type="password" autocomplete="off" placeholder="sk-..." />
-                  <div class="hint-mini" data-i18n="aiPrivacyHint">Hinweis: Für Produktion besser Server-Proxy nutzen.</div>
-                </div>
-
-                <div class="field license-field">
-                  <label for="aiLicense" data-i18n="aiLicenseLabel">Lizenzschlüssel</label>
-                  <input id="aiLicense" type="password" autocomplete="off" data-i18n-placeholder="aiLicensePh" placeholder="••••" />
-                  <div class="hint-mini" data-i18n="aiLicenseHint">Kunden von Quality Services &amp; Wissen erhalten einen Lizenzschlüssel.</div>
-                </div>
-
-                <div class="ai-mini-row" style="margin-top:10px; justify-content:flex-start;">
-                  <label class="ai-checkbox">
-                    <input id="aiRemember" type="checkbox" />
-                    <span data-i18n="aiRemember">Key lokal speichern</span>
-                  </label>
-                </div>
-              </div>
-
-              <div class="field" style="margin-top:10px;">
-                <label for="aiProblem" data-i18n="aiProblemLabel">Fehlerbild (kurz)</label>
-                <input id="aiProblem" type="text" />
-              </div>
-
-              <div class="field" style="margin-top:10px;">
-                <label for="aiContext" style="margin:0" data-i18n="aiContextLabel">Kontext (Details)</label>
-                <textarea id="aiContext" placeholder="" style="min-height: 140px;"></textarea>
-                <div class="hint-mini" data-i18n="aiContextHint">Tipp: Prozess, Maschine/Anlage, Material, Messmittel, Schicht, Umgebungsbedingungen, Änderungen, Häufigkeit.</div>
-              </div>
-
-              <div class="ai-actions">
-                <button type="button" class="i-btn primary" id="btnAiGenerate" data-i18n="aiGenerate" disabled>Ursachen generieren</button>
-                <button type="button" class="i-btn" id="btnAiApply" data-i18n="aiApply" disabled>Ins Tool übernehmen</button>
-                <button type="button" class="i-btn" id="btnAiDownload" data-i18n="aiDownload" disabled>JSON Download</button>
-                <button type="button" class="i-btn" id="btnAiClear" data-i18n="aiClear">Zurücksetzen</button>
-              </div>
-
-              <div id="aiStatus" class="ai-status"></div>
-            </div>
-          </div>
-        </section>
 
         <!-- More -->
         <section class="tool-more">
@@ -934,33 +703,13 @@
                 <li><a href="https://www.quality.de/weiterbildung/qualitaetsmanagement/" target="_blank" rel="noopener" data-i18n="trainQm">Qualitätsmanagement</a></li>
               </ul>
             </div>
-
-
-            <div class="tool-box">
-              <h3 data-i18n="embedTitle">Tool auf der eigenen Homepage einbinden</h3>
-              <p data-i18n="embedText">Du kannst das Tool professionell per <strong>iframe</strong> auf deiner Website einbinden – auch wenn sie öffentlich im Internet erreichbar ist. Dabei wird immer die aktuelle Version von <strong>tools.quality.de</strong> geladen (inkl. automatischer Updates).</p>
-              <div style="margin-top:8px; display:flex; justify-content:flex-end;">
-                <button type="button" class="mini-btn" id="btnCopyIframe" data-i18n="embedCopy">Code kopieren</button>
-              </div>
-              <pre class="code-snippet" id="iframeSnippet">&lt;div style="position:relative; width:100%; height:2800px; border-radius:16px; overflow:hidden;"&gt;
-  &lt;iframe
-    src="https://tools.quality.de/d4-ishikawa-tool.html"
-    style="width:100%; height:100%; border:0;"
-    loading="lazy"&gt;
-  &lt;/iframe&gt;
-&lt;/div&gt;</pre>
-              <div class="hint-mini" id="embedStatus" aria-live="polite"></div>
-            </div>
           </div>
         </section>
       </div>
 
       <footer class="ishikawa-footer">
-        <div>Copyright 2026 Quality Services &amp; Wissen GmbH</div>
-        <div>
-          © 2026 <a href="https://www.quality.de/" target="_blank" rel="noopener">Quality Services &amp; Wissen GmbH</a> |
-          Made with Love (Her) in Germany – betreut durch <a href="https://webseitendoktor.de/" target="_blank" rel="noopener">Webseitendoktor.de</a>
-        </div>
+        <div>© <span id="copyrightYear"></span></div>
+        <div><a href="https://www.quality.de/" target="_blank" rel="noopener">Quality Services &amp; Wissen GmbH</a></div>
       </footer>
     </section>
   </div>
@@ -988,28 +737,16 @@
         boxGoalTitle: "Ziel",
         boxGoalText: "Ursachen strukturiert sammeln, bewerten (Rot/Gelb/Grün) und aus den relevanten Ursachen (Rot/Gelb) Maßnahmen ableiten.",
         boxHowTitle: "So benutzt du das Tool",
-
-        howWithoutTitle: "Ohne KI",
-        howWithTitle: "Mit KI (Premium)",
-        kiStep1: "Effekt / Problem eintragen (oder später).",
-        kiStep2: "OpenAI API-Key + Lizenz eingeben.",
-        kiStep3: "Fehlerursachen-Vorschläge (6M) generieren.",
-        kiStep4: "Vorschläge ins Ishikawa übernehmen.",
-        kiStep5: "Ursachen bewerten (Rot/Gelb/Grün).",
-        kiStep6: "Ursachen ergänzen, verändern oder löschen; bei Bedarf erneut generieren.",
-        kiStep7: "Danach wie ohne KI weiterarbeiten: Maßnahmen ableiten, Export/Print.",
-
         step1: "Effekt / Problem rechts im Kopf eintragen.",
         step2: "Pro 6M-Kategorie Ursachen hinzufügen.",
         step3: "Ursachen unten bewerten: Rot=wahrscheinliche Ursache, Gelb=schnell prüfbar, Grün=aktuell ausgeschlossen.",
         step4: "Aus Rot/Gelb Maßnahmen ableiten (mit Termin) → Maßnahmenliste.",
         step5: "Print oder JSON speichern/laden.",
         boxPrivacyTitle: "Datenschutz",
-        privacyNoApiTitle: "Datenschutz (ohne API/KI)",
-        privacyNoApiText: "Dieses Tool arbeitet vollständig in deinem Browser. Inhalte werden nicht automatisch an unsere Server übertragen. Der aktuelle Stand kann lokal im Browser gespeichert werden (Autosave) und zusätzlich als JSON exportiert/importiert werden.",
-        privacyApiTitle: "Datenschutz (mit API/KI – Premium)",
-        privacyApiText: "Wenn du den KI-Assistenten nutzt, werden nur die von dir zur Anfrage ausgewählten Inhalte direkt aus deinem Browser an die OpenAI API übertragen, um Vorschläge zu generieren (z. B. Problemtext, Kontext sowie ausgewählte Ursachen/Maßnahmen). Der API-Key wird dabei nicht serverseitig gespeichert. Die Premium-Funktion ist ausschließlich für berechtigte Kunden der Quality Services & Wissen GmbH vorgesehen; der Lizenzschlüssel dient als Freischaltung. Bitte übermittle keine personenbezogenen Daten oder vertraulichen Inhalte, die nicht in externe Systeme gehören.",
-        boxPrivacyText: "Dieses Tool arbeitet vollständig im Browser. Es werden keine Inhalte (Problembeschreibung, Ursachen, Maßnahmen) auf einem Server von Quality Services & Wissen GmbH gespeichert. Der aktuelle Stand wird lokal im Browser gespeichert (Autosave) und kann zusätzlich als JSON exportiert/importiert werden. Premium/KI-Funktion (für Kunden): Wenn du den KI-Assistenten nutzt, werden die von dir eingegebenen Inhalte (z. B. Problemtext, ausgewählte Ursachen/Maßnahmen und deine Anfrage) direkt aus deinem Browser an den von dir konfigurierten OpenAI‑API‑Endpunkt übertragen, um eine Antwort zu generieren. Der API‑Schlüssel wird nur in deinem Browser verwendet; wir speichern ihn nicht serverseitig. Bitte gib keine sensiblen personenbezogenen Daten oder vertrauliche Informationen ein, die nicht übertragen werden sollen. Die Verarbeitung bei OpenAI erfolgt gemäß deren Datenschutzbestimmungen und Nutzungsbedingungen. Der Lizenzschlüssel dient ausschließlich der Freischaltung für berechtigte Kunden und wird nicht an Dritte übermittelt.",
+        boxPrivacyText: "Dieses Tool arbeitet vollständig im Browser. Es werden keine Daten auf einem Server gespeichert. Der Stand wird lokal im Browser gespeichert (Autosave) und kann zusätzlich als JSON exportiert/importiert werden.",
+
+        assistantTitle:"Assistent",
+        assistantSub:"Schnellcheck: Vollständigkeit, Rot/Gelb und offene Maßnahmen.",
 
         catMensch:"Mensch", catMaschine:"Maschine", catMaterial:"Material", catMethode:"Methode", catMitwelt:"Mitwelt", catMessung:"Messung",
         addCause:"+ Ursache",
@@ -1038,18 +775,9 @@
         measuresSub:"Aus roten und gelben Ursachen werden Maßnahmen abgeleitet. Jede Maßnahme bleibt mit der Ursache verknüpft.",
         draftCauseRefLabel:"Bezug (Ursache)",
         draftCauseHint:"Wähle eine Ursache in der Ursachenliste (Aktion: „Als Maßnahme übernehmen“).",
-        draftOwnerLabel:"Owner (Bereich)",
+        draftOwnerLabel:"Owner",
         draftOwnerPh:"z.B. Qualität / Produktion",
         draftDueLabel:"Termin",
-        draftTypeLabel:"Maßnahmenart",
-        typeAvoid:"Fehlervermeidung",
-        typeValidate:"Validierung / Wirksamkeitsnachweis",
-        typeSecure:"Absicherungsmaßnahmen",
-        typeLessons:"Lessons Learned",
-        draftRespLabel:"Verantwortung",
-        draftRespPh:"z.B. Max Mustermann / Rolle",
-        draftEvidenceLabel:"Nachweis / Wirksamkeit",
-        draftEvidencePh:"Dummy-Prüfung, Versuche, Kurzzeitfähigkeit, Kennzahlen, Audit, etc.",
         draftMeasureLabel:"Maßnahme",
         draftMeasurePh:"Welche Maßnahme reduziert/prüft diese Ursache?",
         btnSaveDraft:"In Maßnahmenliste speichern",
@@ -1063,9 +791,7 @@
         mFilterDrop:"Verworfen",
         thRef:"Bezug (Ursache)",
         thMeasure:"Maßnahme",
-        thEvidence:"Nachweis / Wirksamkeit",
-        thOwner:"Owner / Verantwortung",
-        thType:"Art",
+        thOwner:"Owner",
         thDue:"Termin",
         thStatus:"Status",
         statusOpen:"Offen",
@@ -1081,55 +807,16 @@
 
         btnPrint:"Drucken",
         btnExportPng:"PNG Export",
-        btnExportSvg:"SVG Export",
         btnSaveJson:"JSON Speichern",
         btnLoadJson:"JSON Laden",
         btnReset:"Reset",
         confirmReset:"Alles löschen (inkl. Autosave)?",
         pngName:"Quality_Ishikawa.png",
-        svgName:"Quality_Ishikawa.svg",
         jsonName:"Ishikawa_Export.json",
         loadError:"Fehler beim Laden der Datei.",
 
-        aiTitle:"KI Assistent",
-        aiSub:"Nutze die volle Power: Der KI‑Assistent erstellt in Sekunden 6M‑Fehlerursachen, schlägt passende Maßnahmen inkl. Nachweis vor und hilft beim Strukturieren – für Kunden der Quality Services &amp; Wissen GmbH kostenlos; damit bist du bis zu 80% schneller und effizienter.",
-        aiSubHtml:"Nutze die volle Power: Der KI‑Assistent erstellt in Sekunden 6M‑Fehlerursachen, schlägt passende Maßnahmen inkl. Nachweis vor und hilft beim Strukturieren – <strong>für Kunden der Quality Services &amp; Wissen GmbH kostenlos</strong>; damit bist du bis zu <strong>80% schneller und effizienter</strong>.",
-        aiInputTitle:"Eingabe",
-        aiTakeProblem:"Fehlerbild übernehmen",
-        aiApiKeyLabel:"OpenAI API Key",
-        aiLicenseLabel:"Lizenzschlüssel",
-        aiLicensePh:"••••",
-        aiLicenseHint:"Kunden von Quality Services & Wissen erhalten einen Lizenzschlüssel.",
-        aiNeedLicense:"Bitte Lizenzschlüssel eingeben.",
-        aiBadLicense:"Lizenzschlüssel ist ungültig.",
-        aiRemember:"Key lokal speichern",
-        aiPrivacyHint:"Hinweis: Client-seitige Keys sind praktisch, aber nicht ideal für öffentliche Seiten. Für Produktion ist ein Server-Proxy sicherer.",
-        aiProblemLabel:"Fehlerbild (kurz)",
-        aiContextLabel:"Kontext (Details)",
-        aiContextFromTool:"Kontext aus Tool",
-        aiContextHint:"Tipp: Prozess, Maschine/Anlage, Material, Messmittel, Schicht, Umgebungsbedingungen, Änderungen, Häufigkeit.",
-        aiGenerate:"Ursachen generieren",
-        aiApply:"Ins Tool übernehmen",
-        aiDownload:"JSON Download",
-        aiPng:"Als Bild (PNG)",
-        aiClear:"Zurücksetzen",
-        aiPreviewTitle:"Vorschau (JSON)",
-        aiPreviewHint:"Schema kompatibel mit JSON Speichern/Laden (lang/problem/matrix/measures/draft/ts).",
-        aiConfirmApply:"Aktuelle Inhalte (Ursachen & Maßnahmen) werden überschrieben. Fortfahren?",
-        aiNeedKey:"Bitte API-Key eingeben.",
-        aiNeedProblem:"Bitte ein Fehlerbild eingeben.",
-        aiSending:"Sende Prompt an OpenAI ...",
-        aiDone:"Fertig. Du kannst den Entwurf übernehmen oder als JSON herunterladen.",
-        aiParseError:"Konnte kein JSON aus der Antwort parsen.",
-        aiPngHint:"Hinweis: Das PNG kommt aus dem aktuellen Diagramm (oben).",
-
         moreTitle:"Weiterführende Infos",
         moreSub:"Lexikonartikel & passende Weiterbildungen (öffnet in neuem Tab).",
-        embedTitle:"Einbindung des Tools in Ihre Umgebung",
-        embedText:"Das Tool kann per iframe in bestehende Web-Umgebungen integriert werden (z. B. Website, Intranet oder internes Wiki). Dabei wird stets die aktuelle Version von tools.quality.de geladen (automatische Updates).",
-        embedCopy:"Code kopieren",
-        embedCopied:"Code kopiert.",
-        embedCopyFail:"Kopieren nicht möglich – bitte manuell markieren.",
         lexTitle:"Lexikon",
         lexText:"Hintergrund, Nutzen & Anwendung des Ishikawa-Diagramms.",
         lexLink:"Zum Lexikonartikel: Ishikawa",
@@ -1156,12 +843,10 @@
         step4: "Derive actions from Red/Yellow (with due date) → action list.",
         step5: "Print or save/load JSON.",
         boxPrivacyTitle: "Privacy",
+        boxPrivacyText: "This tool runs entirely in your browser. No data is stored on any server. The state is saved locally (autosave) and can also be exported/imported as JSON.",
 
-        privacyNoApiTitle: "Privacy (without API/AI)",
-        privacyNoApiText: "This tool works entirely in your browser. Content is not automatically transmitted to our servers. The current state can be saved locally in your browser (autosave) and exported/imported as JSON.",
-        privacyApiTitle: "Privacy (with API/AI – Premium)",
-        privacyApiText: "If you use the AI assistant, only the content you select for the request is sent directly from your browser to the OpenAI API to generate suggestions (e.g., problem text, context, and selected causes/actions). Your API key is not stored server-side. The premium feature is intended only for eligible customers of Quality Services & Wissen GmbH; the license key is used solely to unlock access. Please do not submit personal data or confidential information that should not be sent to external systems.",
-        boxPrivacyText: "This tool runs entirely in your browser. No content (problem description, causes, actions) is stored on any Quality Services & Wissen GmbH server. The current state is saved locally in your browser (autosave) and can also be exported/imported as JSON. Premium/AI feature (for customers): If you use the AI assistant, the content you submit (e.g., problem text, selected causes/actions, and your request) is sent directly from your browser to your configured OpenAI API endpoint to generate a response. Your API key is used only in your browser; we do not store it server-side. Please avoid entering sensitive personal data or confidential information you do not want to transmit. Processing at OpenAI is governed by their privacy policy and terms. The license key is only used to unlock the feature for eligible customers and is not shared with third parties.",
+        assistantTitle:"Assistant",
+        assistantSub:"Quick check: completeness, Red/Yellow and open actions.",
 
         catMensch:"People", catMaschine:"Machine", catMaterial:"Material", catMethode:"Method", catMitwelt:"Environment", catMessung:"Measurement",
         addCause:"+ Cause",
@@ -1190,18 +875,9 @@
         measuresSub:"Actions are derived from red and yellow causes. Each action stays linked to its cause.",
         draftCauseRefLabel:"Reference (cause)",
         draftCauseHint:"Select a cause in the cause list (Action: “Use as action”).",
-        draftOwnerLabel:"Owner (area)",
+        draftOwnerLabel:"Owner",
         draftOwnerPh:"e.g., Quality / Production",
         draftDueLabel:"Due date",
-        draftTypeLabel:"Action type",
-        typeAvoid:"Cause elimination",
-        typeValidate:"Validation / effectiveness evidence",
-        typeSecure:"Sustain / control measures",
-        typeLessons:"Lessons learned",
-        draftRespLabel:"Responsible",
-        draftRespPh:"e.g., Name / role",
-        draftEvidenceLabel:"Evidence / effectiveness",
-        draftEvidencePh:"Trial runs, checks, capability, KPIs, audit, etc.",
         draftMeasureLabel:"Action",
         draftMeasurePh:"Which action reduces/checks this cause?",
         btnSaveDraft:"Save to action list",
@@ -1215,9 +891,7 @@
         mFilterDrop:"Discarded",
         thRef:"Reference (cause)",
         thMeasure:"Action",
-        thEvidence:"Evidence / Effectiveness",
-        thOwner:"Owner / Responsible",
-        thType:"Type",
+        thOwner:"Owner",
         thDue:"Due",
         thStatus:"Status",
         statusOpen:"Open",
@@ -1233,55 +907,16 @@
 
         btnPrint:"Print",
         btnExportPng:"PNG export",
-        btnExportSvg:"SVG export",
         btnSaveJson:"Save JSON",
         btnLoadJson:"Load JSON",
         btnReset:"Reset",
         confirmReset:"Delete everything (including autosave)?",
         pngName:"Quality_Ishikawa.png",
-        svgName:"Quality_Ishikawa.svg",
         jsonName:"Ishikawa_Export.json",
         loadError:"Error loading the file.",
 
-        aiTitle:"AI Assistant",
-        aiSub:"Unlock the full power: the AI assistant drafts 6M root causes in seconds, suggests actions incl. effectiveness evidence, and helps you structure the analysis — free of charge for customers of Quality Services &amp; Wissen GmbH; up to 80% faster and more efficient.",
-        aiSubHtml:"Unlock the full power: the AI assistant drafts 6M root causes in seconds, suggests actions incl. effectiveness evidence, and helps you structure the analysis — <strong>free of charge for customers of Quality Services &amp; Wissen GmbH</strong>; up to <strong>80% faster and more efficient</strong>.",
-        aiInputTitle:"Input",
-        aiTakeProblem:"Use tool problem",
-        aiApiKeyLabel:"OpenAI API Key",
-        aiLicenseLabel:"License key",
-        aiLicensePh:"••••",
-        aiLicenseHint:"Customers of Quality Services & Wissen receive a license key.",
-        aiNeedLicense:"Please enter the license key.",
-        aiBadLicense:"License key is invalid.",
-        aiRemember:"Remember key locally",
-        aiPrivacyHint:"Note: Client-side keys are convenient but not ideal for public pages. For production, use a server proxy.",
-        aiProblemLabel:"Problem (short)",
-        aiContextLabel:"Context (details)",
-        aiContextFromTool:"Use tool context",
-        aiContextHint:"Tip: process step, machine, material, gage, shift, environment, changes, frequency.",
-        aiGenerate:"Generate causes",
-        aiApply:"Apply to tool",
-        aiDownload:"Download JSON",
-        aiPng:"As image (PNG)",
-        aiClear:"Reset",
-        aiPreviewTitle:"Preview (JSON)",
-        aiPreviewHint:"Schema compatible with Save/Load JSON (lang/problem/matrix/measures/draft/ts).",
-        aiConfirmApply:"This will overwrite the current content (causes & actions). Continue?",
-        aiNeedKey:"Please enter an API key.",
-        aiNeedProblem:"Please enter a problem.",
-        aiSending:"Sending prompt to OpenAI ...",
-        aiDone:"Done. You can apply the draft or download it as JSON.",
-        aiParseError:"Could not parse JSON from the response.",
-        aiPngHint:"Note: The PNG is created from the current diagram (above).",
-
         moreTitle:"More information",
         moreSub:"Glossary article & relevant training (opens in a new tab).",
-        embedTitle:"Embed this tool via iframe",
-        embedText:"You can embed the tool professionally via an iframe on your website—even if it is publicly accessible. The iframe always loads the latest version from tools.quality.de (including automatic updates).",
-        embedCopy:"Copy code",
-        embedCopied:"Code copied.",
-        embedCopyFail:"Copy failed – please select manually.",
         lexTitle:"Glossary",
         lexText:"Background, benefits & how to use the Ishikawa diagram.",
         lexLink:"Open glossary article: Ishikawa",
@@ -1302,38 +937,26 @@
     }
 
     function applyI18n(){
+      // IMPORTANT: This must NOT call render functions to avoid recursion.
       document.documentElement.lang = currentLang;
 
-      $$("[data-i18n]").forEach(el => el.textContent = t(el.dataset.i18n));
-            $$("[data-i18n-html]").forEach(el => el.innerHTML = t(el.dataset.i18nHtml));
-$$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPlaceholder));
+      $$('[data-i18n]').forEach(el => el.textContent = t(el.dataset.i18n));
+      $$('[data-i18n-placeholder]').forEach(el => el.placeholder = t(el.dataset.i18nPlaceholder));
 
       // lang buttons active
-      const deBtn = $("#btnLangDE"), enBtn = $("#btnLangEN");
+      const deBtn = $('#btnLangDE'), enBtn = $('#btnLangEN');
       if(deBtn && enBtn){
-        deBtn.classList.toggle("primary", currentLang==="de");
-        enBtn.classList.toggle("primary", currentLang==="en");
+        deBtn.classList.toggle('primary', currentLang==='de');
+        enBtn.classList.toggle('primary', currentLang==='en');
       }
-
-      // placeholders for existing notes
-      $$(".note-item textarea").forEach(ta => {
-        if(ta.dataset.i18nPlaceholder) ta.placeholder = t(ta.dataset.i18nPlaceholder);
-      });
-      $$(".note-delete").forEach(btn => {
-        if(btn.dataset.i18nTitle) btn.title = t(btn.dataset.i18nTitle);
-        if(btn.dataset.i18nAria) btn.setAttribute("aria-label", t(btn.dataset.i18nAria));
-      });
-
-      updateTriageMeta();
-      updateMeasuresMeta();
-      renderTriageTable();
-      renderMeasures();
     }
 
     function setLanguage(lang){
       currentLang = (lang==="de"||lang==="en") ? lang : "de";
       localStorage.setItem(LANG_KEY, currentLang);
       applyI18n();
+      // dynamic UI needs re-render because labels are generated with t(...)
+      buildAll();
       persist();
     }
 
@@ -1346,9 +969,9 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
       lang: currentLang,
       problem: "",
       matrix: Object.fromEntries(CATS.map(c => [c, []])),
-      // measures: {id, causeId, causeSnapshot, cat, triageAtCreate, type, text, evidence, owner, responsible, due, status, ts}
+      // measures: {id, causeId, causeSnapshot, cat, triageAtCreate, text, owner, due, status, ts}
       measures: [],
-      draft: { causeId: null, causeSnapshot:"", cat:"", triage:"", type:"avoid", text:"", evidence:"", owner:"", responsible:"", due:"" },
+      draft: { causeId: null, causeSnapshot:"", cat:"", triage:"", text:"", owner:"", due:"" },
       ts: new Date().toISOString()
     });
 
@@ -1394,11 +1017,8 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
           causeSnapshot: String(x.causeSnapshot || ""),
           cat: String(x.cat || ""),
           triageAtCreate: (x.triageAtCreate==="red"||x.triageAtCreate==="yellow"||x.triageAtCreate==="green") ? x.triageAtCreate : "",
-          type: (x.type in {"avoid":1,"validate":1,"secure":1,"lessons":1}) ? x.type : "avoid",
           text: String(x.text || ""),
-          evidence: String(x.evidence || ""),
           owner: String(x.owner || ""),
-          responsible: String(x.responsible || ""),
           due: String(x.due || ""),
           status: (x.status==="open"||x.status==="done"||x.status==="drop") ? x.status : "open",
           ts: String(x.ts || new Date().toISOString())
@@ -1410,12 +1030,9 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
           causeSnapshot: String(d.causeSnapshot || ""),
           cat: String(d.cat || ""),
           triage: String(d.triage || ""),
-          type: (d.type in {"avoid":1,"validate":1,"secure":1,"lessons":1}) ? d.type : "avoid",
           text: String(d.text || ""),
-          evidence: String(d.evidence || ""),
           owner: String(d.owner || ""),
-          responsible: String(d.responsible || ""),
-          due: String(d.due || ""),
+          due: String(d.due || "")
         };
 
         state.ts = String(p.ts || new Date().toISOString());
@@ -1458,19 +1075,6 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
       return "";
     }
 
-
-    function measureTypeLabel(type){
-      if(type==="validate") return t("typeValidate");
-      if(type==="secure") return t("typeSecure");
-      if(type==="lessons") return t("typeLessons");
-      return t("typeAvoid");
-    }
-
-    function measureTypePill(type){
-      const cls = (type==="validate") ? "validate" : (type==="secure") ? "secure" : (type==="lessons") ? "lessons" : "avoid";
-      return `<span class="type-pill ${cls}">${esc(measureTypeLabel(type))}</span>`;
-    }
-
     function statusPill(status){
       if(status==="done") return `<span class="status-pill status-done">${esc(t("statusDone"))}</span>`;
       if(status==="drop") return `<span class="status-pill status-drop">${esc(t("statusDrop"))}</span>`;
@@ -1506,7 +1110,6 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
 
     // ---------- notes UI ----------
     function addNote(cat, val = "", triage = "yellow"){
-      if(!state.matrix[cat]) state.matrix[cat] = [];
       const item = { id: uid(), text: String(val || ""), triage: triage };
       state.matrix[cat].push(item);
       renderCat(cat);
@@ -1560,6 +1163,7 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
       });
 
       updateTriageMeta();
+      updateAssistant();
     }
 
     // ---------- triage ----------
@@ -1637,9 +1241,12 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
           }
           persist();
           updateTriageMeta();
+      updateAssistant();
           renderTriageTable();
         });
       });
+
+      updateAssistant();
 
       // wire "take as measure"
       tbody.querySelectorAll('[data-act="take"]').forEach(btn=>{
@@ -1682,38 +1289,72 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
         : `Total: ${total} · Open: ${open} · Done: ${done} · Discarded: ${drop}`;
     }
 
+    // ---------- assistant (live checklist) ----------
+    function updateAssistant(){
+      const tbody = document.getElementById('assistantTbody');
+      const meta = document.getElementById('assistantMeta');
+      if(!tbody || !meta) return;
+
+      const problem = (document.getElementById('problemInput')?.value || '').trim();
+
+      // causes per category
+      const perCat = {};
+      CATS.forEach(c=> perCat[c] = (state.matrix[c] || []).filter(x=>String(x.text||'').trim()).length);
+      const totalCauses = Object.values(perCat).reduce((a,b)=>a+b,0);
+      const missingCats = CATS.filter(c=>perCat[c]===0);
+
+      // red/yellow causes
+      const flat = allCausesFlat();
+      const ry = flat.filter(c=>c.triage==='red' || c.triage==='yellow');
+
+      // measures
+      const totalMeasures = state.measures.length;
+      const missingActions = ry.filter(c=>{
+        // at least one non-dropped measure linked to this cause
+        return !state.measures.some(m=>m.causeId===c.id && m.status!=='drop');
+      }).length;
+
+      const rows = [
+        { k: (problem ? t('assistantProblemOk') : t('assistantProblemMissing')), v: problem ? '✓' : '—' },
+        { k: t('assistantCauses'), v: String(totalCauses) },
+        { k: t('assistantCategoriesMissing'), v: missingCats.length ? missingCats.map(catLabel).join(', ') : '—' },
+        { k: t('assistantRY'), v: String(ry.length) },
+        { k: t('assistantActions'), v: String(totalMeasures) },
+        { k: t('assistantMissingActions'), v: String(missingActions) },
+      ];
+
+      tbody.innerHTML = rows.map(r=>`<tr><td><strong>${esc(r.k)}</strong></td><td>${esc(r.v)}</td></tr>`).join('');
+
+      meta.textContent = (currentLang==='de')
+        ? `Stand: ${new Date().toLocaleString('de-DE')}`
+        : `Updated: ${new Date().toLocaleString('en-GB')}`;
+    }
+
+
     function measuresFilterFn(m){
       if(measuresFilter==="all") return true;
       return m.status === measuresFilter;
     }
 
-    
     function syncDraftInputs(){
       const ref = $("#draftCauseRef");
       const cause = state.draft.causeId ? findCauseById(state.draft.causeId) : null;
       if(cause){
         ref.value = `${catLabel(cause.cat)}: ${cause.text || "—"} (${triageLabel(cause.triage)})`;
       }else if(state.draft.causeSnapshot){
-        ref.value = `${catLabel(state.draft.cat || "")} : ${state.draft.causeSnapshot || "—"} (${triageLabel(state.draft.triage)})`;
-        ref.value = ref.value.replace(/\s+:\s+/, ": ");
+        ref.value = `${catLabel(state.draft.cat || "")}: ${state.draft.causeSnapshot || "—"} (${triageLabel(state.draft.triage)})`;
       }else{
         ref.value = "—";
       }
 
-      $("#draftType").value = state.draft.type || "avoid";
       $("#draftMeasure").value = state.draft.text || "";
-      $("#draftEvidence").value = state.draft.evidence || "";
       $("#draftOwner").value = state.draft.owner || "";
-      $("#draftResp").value = state.draft.responsible || "";
       $("#draftDue").value = state.draft.due || "";
     }
 
     function saveDraftToMeasures(){
-      const type = ($("#draftType").value || "avoid").trim();
       const text = ($("#draftMeasure").value || "").trim();
-      const evidence = ($("#draftEvidence").value || "").trim();
       const owner = ($("#draftOwner").value || "").trim();
-      const responsible = ($("#draftResp").value || "").trim();
       const due = ($("#draftDue").value || "").trim();
 
       if(!state.draft.causeId && !state.draft.causeSnapshot){
@@ -1728,14 +1369,6 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
         return;
       }
 
-      // for type=validate, encourage evidence
-      if(type==="validate" && !evidence){
-        const ok = confirm(currentLang==="de"
-          ? "Für Validierung sollte ein Nachweis/Wirkungsnachweis ergänzt werden. Trotzdem speichern?"
-          : "For validation actions, evidence is recommended. Save anyway?");
-        if(!ok) return;
-      }
-
       const cause = state.draft.causeId ? findCauseById(state.draft.causeId) : null;
 
       state.measures.push({
@@ -1744,18 +1377,15 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
         causeSnapshot: cause ? (cause.text||"") : (state.draft.causeSnapshot||""),
         cat: cause ? cause.cat : (state.draft.cat||""),
         triageAtCreate: cause ? cause.triage : (state.draft.triage||""),
-        type: (type==="avoid"||type==="validate"||type==="secure"||type==="lessons") ? type : "avoid",
         text,
-        evidence,
         owner,
-        responsible,
         due,
         status: "open",
         ts: new Date().toISOString()
       });
 
       // clear draft for next action
-      state.draft = { causeId:null, causeSnapshot:"", cat:"", triage:"", type:"avoid", text:"", evidence:"", owner:"", responsible:"", due:"" };
+      state.draft = { causeId:null, causeSnapshot:"", cat:"", triage:"", text:"", owner:"", due:"" };
       syncDraftInputs();
       persist();
       renderMeasures();
@@ -1763,12 +1393,11 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
     }
 
     function clearDraft(){
-      state.draft = { causeId:null, causeSnapshot:"", cat:"", triage:"", type:"avoid", text:"", evidence:"", owner:"", responsible:"", due:"" };
+      state.draft = { causeId:null, causeSnapshot:"", cat:"", triage:"", text:"", owner:"", due:"" };
       syncDraftInputs();
       persist();
     }
 
-    
     function seedFromRedYellow(){
       // For each red/yellow cause: create an "open" measure if none exists yet for that causeId
       const causes = allCausesFlat().filter(c => c.triage==="red" || c.triage==="yellow");
@@ -1783,11 +1412,8 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
           causeSnapshot: c.text || "",
           cat: c.cat,
           triageAtCreate: c.triage,
-          type: "avoid",
           text: (currentLang==="de" ? `Maßnahme zu: ${c.text}` : `Action for: ${c.text}`),
-          evidence: "",
           owner: "",
-          responsible: "",
           due: "",
           status: "open",
           ts: new Date().toISOString()
@@ -1805,7 +1431,7 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
       }
     }
 
-        function renderMeasures(){
+    function renderMeasures(){
       updateMeasuresMeta();
 
       const tbody = $("#measuresTbody");
@@ -1824,10 +1450,12 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
 
       if(list.length === 0){
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td colspan="8" class="muted">${currentLang==="de" ? "Keine Maßnahmen im aktuellen Filter." : "No actions in the current filter."}</td>`;
+        tr.innerHTML = `<td colspan="6" class="muted">${t('emptyMeasures')}</td>`;
         tbody.appendChild(tr);
         return;
       }
+
+      updateAssistant();
 
       list.forEach(m=>{
         const isEdit = (editMeasureId === m.id);
@@ -1838,58 +1466,39 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
           <td>${esc(ref)}</td>
           <td>
             ${isEdit
-              ? `<select data-edit="type" style="width:100%; padding:10px 12px; border:1px solid rgba(15,23,42,.14); border-radius:6px; font-size:14px; font-family:inherit; outline:none; background:#fff;">
-                   <option value="avoid" ${m.type==="avoid"?"selected":""}>${esc(t("typeAvoid"))}</option>
-                   <option value="validate" ${m.type==="validate"?"selected":""}>${esc(t("typeValidate"))}</option>
-                   <option value="secure" ${m.type==="secure"?"selected":""}>${esc(t("typeSecure"))}</option>
-                   <option value="lessons" ${m.type==="lessons"?"selected":""}>${esc(t("typeLessons"))}</option>
-                 </select>`
-              : `${measureTypePill(m.type || "avoid")}`
-            }
-          </td>
-          <td>
-            ${isEdit
               ? `<div class="field" style="margin:0;">
                    <textarea data-edit="text" style="min-height:74px;">${esc(m.text)}</textarea>
                  </div>`
-              : `<div style="font-weight:900; color:#0f172a;">${esc(m.text || "—")}</div>`
+              : `<div style="font-weight:900; color:#0f172a;">${esc(m.text || '—')}</div>`
             }
           </td>
           <td>
             ${isEdit
               ? `<div class="field" style="margin:0;">
-                   <textarea data-edit="evidence" style="min-height:74px;">${esc(m.evidence || "")}</textarea>
+                   <input data-edit="owner" type="text" value="${esc(m.owner)}" placeholder="${esc(t('draftOwnerPh'))}" />
                  </div>`
-              : (m.evidence ? `<div class="subline">${esc(m.evidence)}</div>` : `<span class="muted">—</span>`)
+              : `<div>${esc(m.owner || '—')}</div>`
             }
           </td>
           <td>
             ${isEdit
-              ? `<div style="display:flex; flex-direction:column; gap:8px;">
-                   <input data-edit="owner" type="text" value="${esc(m.owner)}" style="width:100%; padding:10px 12px; border:1px solid rgba(15,23,42,.14); border-radius:6px; font-size:14px; font-family:inherit; outline:none;" />
-                   <input data-edit="responsible" type="text" value="${esc(m.responsible || "")}" style="width:100%; padding:10px 12px; border:1px solid rgba(15,23,42,.14); border-radius:6px; font-size:14px; font-family:inherit; outline:none;" />
+              ? `<div class="field" style="margin:0;">
+                   <input data-edit="due" type="date" value="${esc(m.due)}" />
                  </div>`
-              : `<div><span class="muted">${esc(m.owner || "—")}</span></div>
-                 ${m.responsible ? `<div class="subline">${esc(m.responsible)}</div>` : ``}`
-            }
-          </td>
-          <td>
-            ${isEdit
-              ? `<input data-edit="due" type="date" value="${esc(m.due)}" style="width:100%; padding:10px 12px; border:1px solid rgba(15,23,42,.14); border-radius:6px; font-size:14px; font-family:inherit; outline:none;" />`
-              : `${esc(m.due || "—")}`
+              : `${esc(m.due || '—')}`
             }
           </td>
           <td>${statusPill(m.status)}</td>
           <td style="text-align:right;">
             <div class="row-actions">
               ${isEdit
-                ? `<button type="button" class="mini-btn" data-act="save" data-id="${esc(m.id)}">${esc(t("btnSaveRow"))}</button>
-                   <button type="button" class="mini-btn" data-act="cancel" data-id="${esc(m.id)}">${esc(t("cancel"))}</button>`
-                : `<button type="button" class="mini-btn" data-act="edit" data-id="${esc(m.id)}">${esc(t("btnEdit"))}</button>
-                   <button type="button" class="mini-btn" data-act="open" data-id="${esc(m.id)}">${esc(t("btnOpen"))}</button>
-                   <button type="button" class="mini-btn" data-act="done" data-id="${esc(m.id)}">${esc(t("btnDone"))}</button>
-                   <button type="button" class="mini-btn" data-act="drop" data-id="${esc(m.id)}">${esc(t("btnDrop"))}</button>
-                   <button type="button" class="mini-btn danger" data-act="del" data-id="${esc(m.id)}">${esc(t("btnDelete"))}</button>`
+                ? `<button type="button" class="mini-btn" data-act="save" data-id="${esc(m.id)}">${esc(t('btnSaveRow'))}</button>
+                   <button type="button" class="mini-btn" data-act="cancel" data-id="${esc(m.id)}">${esc(t('cancel'))}</button>`
+                : `<button type="button" class="mini-btn" data-act="edit" data-id="${esc(m.id)}">${esc(t('btnEdit'))}</button>
+                   <button type="button" class="mini-btn" data-act="open" data-id="${esc(m.id)}">${esc(t('btnOpen'))}</button>
+                   <button type="button" class="mini-btn" data-act="done" data-id="${esc(m.id)}">${esc(t('btnDone'))}</button>
+                   <button type="button" class="mini-btn" data-act="drop" data-id="${esc(m.id)}">${esc(t('btnDrop'))}</button>
+                   <button type="button" class="mini-btn danger" data-act="del" data-id="${esc(m.id)}">${esc(t('btnDelete'))}</button>`
               }
             </div>
           </td>
@@ -1897,15 +1506,15 @@ $$("[data-i18n-placeholder]").forEach(el => el.placeholder = t(el.dataset.i18nPl
 
         tbody.appendChild(tr);
 
-        tr.querySelectorAll("[data-act]").forEach(btn=>{
-          btn.addEventListener("click", ()=>{
-            onMeasureAction(btn.getAttribute("data-act"), btn.getAttribute("data-id"), tr);
+        tr.querySelectorAll('[data-act]').forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            onMeasureAction(btn.getAttribute('data-act'), btn.getAttribute('data-id'), tr);
           });
         });
       });
     }
 
-function onMeasureAction(act, id, rowEl){
+    function onMeasureAction(act, id, rowEl){
       const m = state.measures.find(x=>x.id===id);
       if(!m) return;
 
@@ -1913,19 +1522,13 @@ function onMeasureAction(act, id, rowEl){
       if(act==="cancel"){ editMeasureId = null; renderMeasures(); return; }
 
       if(act==="save"){
-        const type = rowEl.querySelector('[data-edit="type"]')?.value ?? m.type;
         const text = rowEl.querySelector('[data-edit="text"]')?.value ?? m.text;
-        const evidence = rowEl.querySelector('[data-edit="evidence"]')?.value ?? m.evidence;
         const owner = rowEl.querySelector('[data-edit="owner"]')?.value ?? m.owner;
-        const responsible = rowEl.querySelector('[data-edit="responsible"]')?.value ?? m.responsible;
         const due = rowEl.querySelector('[data-edit="due"]')?.value ?? m.due;
 
-        m.type = (type==="avoid"||type==="validate"||type==="secure"||type==="lessons") ? type : "avoid";
         m.text = String(text).trim();
-        m.evidence = String(evidence||"").trim();
-        m.owner = String(owner||"").trim();
-        m.responsible = String(responsible||"").trim();
-        m.due = String(due||"").trim();
+        m.owner = String(owner).trim();
+        m.due = String(due).trim();
 
         editMeasureId = null;
         persist();
@@ -1945,7 +1548,6 @@ function onMeasureAction(act, id, rowEl){
       persist();
       renderMeasures();
     }
-
 
     // ---------- JSON ----------
     function downloadJson(){
@@ -1990,336 +1592,6 @@ function onMeasureAction(act, id, rowEl){
       });
     }
 
-    // ---------- Export SVG (PNG embedded) (optional) ----------
-    function exportSvg(){
-      const area = document.getElementById("capture-area");
-      html2canvas(area, { scale: 2, backgroundColor:"#ffffff" }).then(canvas=>{
-        const w = canvas.width;
-        const h = canvas.height;
-        const pngData = canvas.toDataURL("image/png");
-        const svg = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
-  <image href="${pngData}" width="${w}" height="${h}"/>
-</svg>`;
-        const blob = new Blob([svg], {type: "image/svg+xml"});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = t("svgName");
-        a.click();
-        URL.revokeObjectURL(url);
-      }).catch(()=>{
-        alert(currentLang==="de" ? "SVG Export fehlgeschlagen." : "SVG export failed.");
-      });
-    }
-
-    // ---------- AI assistant (client-side, optional) ----------
-    const AI_MODEL = "gpt-4.1";
-    const AI_KEY_LS = "qm_ishikawa_openai_key_v1";
-    const AI_LICENSE_HASH = "07aa2015d482734372d4a9a1c07c8290198526b9ce1fd2e2dcff4d05f6792a29"; // sha256(LICENSE)
-    let aiLicenseOk = false;
-
-    let aiLastJson = null;
-
-    function aiNowIso(){ return new Date().toISOString(); }
-
-    function aiSetStatus(msg){
-      const el = $("#aiStatus");
-      if(el) el.textContent = msg || "";
-    }
-
-
-    async function sha256Hex(str){
-      const data = new TextEncoder().encode(String(str||""));
-      const hash = await crypto.subtle.digest("SHA-256", data);
-      return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,"0")).join("");
-    }
-
-    async function aiCheckLicense(){
-      const licEl = $("#aiLicense");
-      if(!licEl){ aiLicenseOk = true; return true; }
-      const val = (licEl.value || "").trim();
-      if(!val){ aiLicenseOk = false; return false; }
-      const hex = await sha256Hex(val);
-      aiLicenseOk = (hex === AI_LICENSE_HASH);
-      return aiLicenseOk;
-    }
-
-    function aiUpdateRunState(){
-      const gen = $("#btnAiGenerate");
-      if(!gen) return;
-      // API key is still required, but license gates the action
-      gen.disabled = !aiLicenseOk;
-      gen.style.opacity = aiLicenseOk ? "1" : ".65";
-    }
-
-    function aiSetPreview(obj){
-      const pre = $("#aiPreview");
-      if(!pre) return;
-      if(!obj){
-        const msg = (currentLang==="de") ? "Noch nichts generiert." : "Nothing generated yet.";
-        pre.textContent = `{\n  "info": "${msg}"\n}`;
-        return;
-      }
-      pre.textContent = JSON.stringify(obj, null, 2);
-    }
-
-    function aiSetMeta(text){
-      const el = $("#aiPreviewMeta");
-      if(el) el.textContent = text || "—";
-    }
-
-    function aiExtractJsonObject(text){
-      try{ return JSON.parse(text); }catch(e){}
-      const start = String(text||"").indexOf("{");
-      const end = String(text||"").lastIndexOf("}");
-      if(start >= 0 && end > start){
-        const maybe = String(text).slice(start, end+1);
-        return JSON.parse(maybe);
-      }
-      throw new Error("parse");
-    }
-
-    function aiNormalizeAndComplete(obj, problemFallback){
-      const out = {
-        lang: currentLang,
-        problem: (obj && typeof obj.problem === "string" && obj.problem.trim()) ? obj.problem.trim() : (problemFallback || ""),
-        matrix: {},
-        measures: [],
-        draft: { causeId:null, causeSnapshot:"", cat:"", triage:"", type:"avoid", text:"", evidence:"", owner:"", responsible:"", due:"" },
-        ts: (obj && typeof obj.ts === "string" && obj.ts) ? obj.ts : aiNowIso()
-      };
-
-      const m = (obj && obj.matrix && typeof obj.matrix === "object") ? obj.matrix : {};
-      for(const cat of CATS){
-        const arr = Array.isArray(m[cat]) ? m[cat] : [];
-        const normalized = [];
-        for(const item of arr.slice(0, 5)){
-          const text = (item && typeof item.text === "string") ? item.text.trim() : "";
-          const triage = (item && (item.triage === "red" || item.triage === "yellow" || item.triage === "green")) ? item.triage : "yellow";
-          if(text) normalized.push({ id: uid(), text, triage });
-        }
-        while(normalized.length < 5){
-          normalized.push({
-            id: uid(),
-            text: (currentLang==="de" ? `(Ursache ergänzen: ${cat})` : `(Add cause: ${cat})`),
-            triage: "green"
-          });
-        }
-        out.matrix[cat] = normalized;
-      }
-      return out;
-    }
-
-    function aiBuildPrompt(problem, context){
-      const isEN = currentLang === "en";
-      const header = isEN
-        ? [
-            "You are a quality & process expert. Create a complete Ishikawa JSON file in the schema below.",
-            "Return JSON ONLY (no explanations, no Markdown).",
-            "Schema: {lang, problem, matrix, measures, draft, ts}",
-            `- lang: always "${currentLang}"`,
-            "- problem: from INPUT",
-            "- matrix: object with EXACT keys: Mensch, Maschine, Material, Methode, Mitwelt, Messung.",
-            "  Each key contains an array with EXACTLY 5 objects.",
-            "  Each object: { text, triage }.",
-            "  triage is one of: red | yellow | green.",
-            "  text is a short, concrete cause matching the context.",
-            "- measures: always []",
-            "- draft: { causeId:null, causeSnapshot:string, cat:string, triage:string, type:avoid|validate|secure|lessons, text:string, evidence:string, owner:string, responsible:string, due:YYYY-MM-DD }",
-            "- ts: ISO-8601 timestamp string",
-            "IMPORTANT:",
-            "- No placeholders like 'Cause 1'.",
-            "- Distribute triage sensibly (not all red).",
-            "- Write causes in English.",
-          ]
-        : [
-            "Du bist ein Qualitäts- und Prozess-Experte. Erzeuge eine vollständige Ishikawa-JSON Datei im folgenden Schema.",
-            "Gib NUR JSON zurück (keine Erklärungen, kein Markdown).",
-            "Schema: {lang, problem, matrix, measures, draft, ts}",
-            `- lang: immer "${currentLang}"`,
-            "- problem: Fehlerbild aus INPUT",
-            "- matrix: Objekt mit GENAU diesen Keys: Mensch, Maschine, Material, Methode, Mitwelt, Messung.",
-            "  Jeder Key enthält ein Array mit GENAU 5 Objekten.",
-            "  Jedes Objekt: { text, triage }.",
-            "  triage ist eines von: red | yellow | green.",
-            "  text ist eine kurze, konkrete Fehlerursache passend zum Kontext.",
-            "- measures: immer [] (leer)",
-            "- draft: { causeId:null, causeSnapshot:string, cat:string, triage:string, type:avoid|validate|secure|lessons, text:string, evidence:string, owner:string, responsible:string, due:YYYY-MM-DD }",
-            "- ts: ISO-8601 Zeitstempel als String",
-            "WICHTIG:",
-            "- Keine Platzhalter wie 'Fehlerursache 1', sondern realistische Ursachen.",
-            "- Verteile triage sinnvoll (nicht alles rot).",
-            "- Schreibe Ursachen auf Deutsch.",
-          ];
-
-      return header.concat([
-        "\nINPUT:",
-        `Fehlerbild: ${problem}`,
-        `Kontext: ${context || (isEN ? "(no additional context)" : "(kein weiterer Kontext)")}`
-      ]).join("\n");
-    }
-
-    function aiGetOutputText(data){
-      if(data && typeof data.output_text === "string") return data.output_text;
-      if(data && Array.isArray(data.output)){
-        const parts = [];
-        for(const item of data.output){
-          if(item && item.type === "message" && Array.isArray(item.content)){
-            for(const c of item.content){
-              if(c && (c.type === "output_text" || c.type === "text") && typeof c.text === "string") parts.push(c.text);
-            }
-          }
-          if(item && typeof item.text === "string") parts.push(item.text);
-        }
-        if(parts.length) return parts.join("\n");
-      }
-      return JSON.stringify(data);
-    }
-
-    function aiBuildContextFromTool(){
-      const lines = [];
-      const p = $("#problemInput")?.value || "";
-      if(p) lines.push((currentLang==="de" ? "Aktuelles Problem:" : "Current problem:") + " " + p);
-
-      for(const cat of CATS){
-        const arr = state.matrix[cat] || [];
-        const items = arr
-          .map(x=>({triage:x.triage, text:(x.text||"").trim()}))
-          .filter(x=>x.text);
-        if(items.length){
-          lines.push("\n" + cat + ":");
-          items.slice(0, 12).forEach(x=> lines.push(`- (${x.triage}) ${x.text}`));
-          if(items.length > 12) lines.push("- ...");
-        }
-      }
-
-      const meas = state.measures || [];
-      if(meas.length){
-        lines.push("\n" + (currentLang==="de" ? `Maßnahmen (${meas.length}):` : `Actions (${meas.length}):`));
-        meas.slice(0, 8).forEach(m=>{
-          const t1 = (m.text||"").trim();
-          if(!t1) return;
-          lines.push(`- [${m.status}] ${t1} (Owner: ${m.owner||"-"}, Due: ${m.due||"-"})`);
-        });
-        if(meas.length > 8) lines.push("- ...");
-      }
-      return lines.join("\n").trim();
-    }
-
-    async function aiGenerate(){
-      const keyEl = $("#aiApiKey");
-      const problemEl = $("#aiProblem");
-      const contextEl = $("#aiContext");
-      const btn = $("#btnAiGenerate");
-      const btnApply = $("#btnAiApply");
-      const btnDownload = $("#btnAiDownload");
-
-      const apiKey = (keyEl?.value || "").trim();
-      const problem = (problemEl?.value || "").trim();
-      const context = (contextEl?.value || "").trim();
-
-      if(!apiKey){ aiSetStatus(t("aiNeedKey")); return; }
-      if(!problem){ aiSetStatus(t("aiNeedProblem")); return; }
-
-      aiSetStatus(t("aiSending"));
-      if(btn) btn.disabled = true;
-      if(btnApply) btnApply.disabled = true;
-      if(btnDownload) btnDownload.disabled = true;
-
-      try{
-        const prompt = aiBuildPrompt(problem, context);
-        const res = await fetch("https://api.openai.com/v1/responses", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + apiKey
-          },
-          body: JSON.stringify({ model: AI_MODEL, input: prompt })
-        });
-
-        if(!res.ok){
-          const msg = await res.text().catch(()=>"");
-          throw new Error(`${res.status} ${res.statusText}${msg ? `\n${msg}` : ""}`);
-        }
-
-        const data = await res.json();
-        const outText = aiGetOutputText(data);
-        const obj = aiExtractJsonObject(outText);
-        aiLastJson = aiNormalizeAndComplete(obj, problem);
-
-        aiSetPreview(aiLastJson);
-        aiSetMeta(`${AI_MODEL} · ${new Date().toLocaleString()}`);
-        aiSetStatus(t("aiDone"));
-
-        if(btnApply) btnApply.disabled = false;
-        if(btnDownload) btnDownload.disabled = false;
-      }catch(e){
-        aiLastJson = null;
-        aiSetMeta("—");
-        aiSetStatus((e && String(e.message||e)) ? String(e.message||e) : t("aiParseError"));
-        if(String(e && e.message||"").toLowerCase().includes("parse")) aiSetStatus(t("aiParseError"));
-      }finally{
-        if(btn) btn.disabled = false;
-      }
-    }
-
-    function aiDownload(){
-      if(!aiLastJson) return;
-      const blob = new Blob([JSON.stringify(aiLastJson, null, 2)], { type:"application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = t("jsonName");
-      a.click();
-      setTimeout(()=>URL.revokeObjectURL(url), 1500);
-    }
-
-    function aiApplyToTool(){
-      if(!aiLastJson) return;
-      const ok = confirm(t("aiConfirmApply"));
-      if(!ok) return;
-
-      // overwrite full state (keeps current UI language)
-      state = {
-        lang: currentLang,
-        problem: aiLastJson.problem || "",
-        matrix: aiLastJson.matrix || Object.fromEntries(CATS.map(c=>[c,[]])),
-        measures: [],
-        draft: { causeId:null, causeSnapshot:"", cat:"", triage:"", type:"avoid", text:"", evidence:"", owner:"", responsible:"", due:"" },
-        ts: aiNowIso()
-      };
-      $("#problemInput").value = state.problem;
-      triageFilter = "all";
-      measuresFilter = "all";
-      editMeasureId = null;
-      buildAll();
-    }
-
-    function aiClear(){
-      aiLastJson = null;
-      const p = $("#aiProblem");
-      const c = $("#aiContext");
-      if(p) p.value = "";
-      if(c) c.value = "";
-      const btnApply = $("#btnAiApply");
-      const btnDownload = $("#btnAiDownload");
-      if(btnApply) btnApply.disabled = true;
-      if(btnDownload) btnDownload.disabled = true;
-      aiSetMeta("—");
-      aiSetStatus("");
-      aiSetPreview(null);
-
-      // require license before running
-      (async ()=>{
-        if(licEl && !licEl.value){
-          aiSetStatus(t("aiNeedLicense"));
-        }
-        await aiCheckLicense();
-        aiUpdateRunState();
-      })();
-    }
-
     // ---------- init/build ----------
     function buildAll(){
       // render categories
@@ -2328,8 +1600,19 @@ function onMeasureAction(act, id, rowEl){
       // draft
       syncDraftInputs();
 
-      // i18n (also re-renders tables with translated labels)
+      // tables
+      renderTriageTable();
+      renderMeasures();
+
+      // i18n
       applyI18n();
+      updateAssistant();
+
+      // year
+      const y = new Date().getFullYear();
+      const yEl = document.getElementById("copyrightYear");
+      if(yEl) yEl.textContent = String(y);
+
       persist();
     }
 
@@ -2343,6 +1626,7 @@ function onMeasureAction(act, id, rowEl){
         const cat = btn.getAttribute("data-cat");
         addNote(cat, "", "yellow"); // default gelb = "prüfbar / unklar"
         updateTriageMeta();
+      updateAssistant();
         renderTriageTable();
       });
     });
@@ -2369,60 +1653,19 @@ function onMeasureAction(act, id, rowEl){
     });
 
     // draft inputs
-    $("#draftType").addEventListener("change", (e)=>{ state.draft.type = e.target.value; persist(); });
     $("#draftMeasure").addEventListener("input", (e)=>{ state.draft.text = e.target.value; persist(); });
-    $("#draftEvidence").addEventListener("input", (e)=>{ state.draft.evidence = e.target.value; persist(); });
     $("#draftOwner").addEventListener("input", (e)=>{ state.draft.owner = e.target.value; persist(); });
-    $("#draftResp").addEventListener("input", (e)=>{ state.draft.responsible = e.target.value; persist(); });
     $("#draftDue").addEventListener("input", (e)=>{ state.draft.due = e.target.value; persist(); });
 
     $("#btnSaveDraft").addEventListener("click", saveDraftToMeasures);
     $("#btnClearDraft").addEventListener("click", clearDraft);
     $("#btnSeedFromRY").addEventListener("click", seedFromRedYellow);
-
-    // iframe snippet copy
-    const btnCopy = $("#btnCopyIframe");
-    if(btnCopy){
-      btnCopy.addEventListener("click", async ()=>{
-        const pre = $("#iframeSnippet");
-        const status = $("#embedStatus");
-        if(!pre) return;
-        const text = pre.textContent || "";
-        const okMsg = t("embedCopied");
-        const failMsg = t("embedCopyFail");
-
-        // preferred: Clipboard API
-        try{
-          if(navigator.clipboard && window.isSecureContext){
-            await navigator.clipboard.writeText(text);
-            if(status) status.textContent = okMsg;
-            return;
-          }
-        }catch(e){}
-
-        // fallback: hidden textarea + execCommand
-        try{
-          const ta = document.createElement("textarea");
-          ta.value = text;
-          ta.style.position = "fixed";
-          ta.style.left = "-9999px";
-          ta.style.top = "0";
-          document.body.appendChild(ta);
-          ta.focus();
-          ta.select();
-          const ok = document.execCommand("copy");
-          document.body.removeChild(ta);
-          if(status) status.textContent = ok ? okMsg : failMsg;
-        }catch(e){
-          if(status) status.textContent = failMsg;
-        }
-      });
-    }
+    const seedBtn = document.getElementById("btnAssistantSeed");
+    if(seedBtn) seedBtn.addEventListener("click", seedFromRedYellow);
 
     // print / png / json / reset
     $("#btnPrint").addEventListener("click", ()=> window.print());
     $("#btnExportPng").addEventListener("click", exportPng);
-    $("#btnExportSvg").addEventListener("click", exportSvg);
 
     $("#btnSaveJson").addEventListener("click", downloadJson);
     $("#btnLoadJson").addEventListener("click", ()=> $("#jsonFile").click());
@@ -2443,81 +1686,6 @@ function onMeasureAction(act, id, rowEl){
       editMeasureId = null;
       buildAll();
     });
-
-    // ---------- AI assistant wire (optional) ----------
-    (function initAi(){
-      const keyEl = $("#aiApiKey");
-      if(!keyEl) return;
-
-      const rememberEl = $("#aiRemember");
-      const problemEl = $("#aiProblem");
-      const contextEl = $("#aiContext");
-
-      const licEl = $("#aiLicense");
-
-      // license gate
-      if(licEl){
-        licEl.addEventListener("input", async ()=>{
-          await aiCheckLicense();
-          aiUpdateRunState();
-          if(licEl.value && !aiLicenseOk){
-            aiSetStatus(t("aiBadLicense"));
-          }else if(!licEl.value){
-            aiSetStatus(t("aiNeedLicense"));
-          }else{
-            aiSetStatus("");
-          }
-        });
-      }
-
-
-      // prefill from tool
-      if(problemEl) problemEl.value = $("#problemInput")?.value || "";
-
-      // load remembered key
-      try{
-        const saved = localStorage.getItem(AI_KEY_LS);
-        if(saved){
-          keyEl.value = saved;
-          if(rememberEl) rememberEl.checked = true;
-        }
-      }catch(e){}
-
-      if(rememberEl){
-        rememberEl.addEventListener("change", ()=>{
-          try{
-            if(rememberEl.checked) localStorage.setItem(AI_KEY_LS, keyEl.value || "");
-            else localStorage.removeItem(AI_KEY_LS);
-          }catch(e){}
-        });
-      }
-
-      keyEl.addEventListener("input", ()=>{
-        try{
-          if(rememberEl && rememberEl.checked) localStorage.setItem(AI_KEY_LS, keyEl.value || "");
-        }catch(e){}
-      });
-
-      // buttons
-      const btnTake = $("#btnAiTakeProblem");
-      if(btnTake){
-        btnTake.addEventListener("click", ()=>{
-          if(problemEl) problemEl.value = $("#problemInput")?.value || "";
-          if(problemEl) problemEl.focus();
-        });
-      }
-
-      const btnCtx = $("#btnAiContextFromTool");
-      if(btnCtx){
-        btnCtx.addEventListener("click", ()=>{
-          if(contextEl) contextEl.value = aiBuildContextFromTool();
-        });
-      }
-      $("#btnAiGenerate")?.addEventListener("click", aiGenerate);
-      $("#btnAiApply")?.addEventListener("click", aiApplyToTool);
-      $("#btnAiDownload")?.addEventListener("click", aiDownload);
-      $("#btnAiClear")?.addEventListener("click", aiClear);
-    })();
 
     // ---------- start ----------
     const ok = restore();
