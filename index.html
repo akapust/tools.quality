@@ -1,9 +1,747 @@
-<!-- Elfsight Announcement Bar | Untitled Announcement Bar -->
-<script src="https://elfsightcdn.com/platform.js" async></script>
-<div class="elfsight-app-3cbb9140-af25-4d98-a504-2af9aed4d892" data-elfsight-app-lazy></div>
-<!-- Elfsight Portfolio | tools.quality -->
-<script src="https://elfsightcdn.com/platform.js" async></script>
-<div class="elfsight-app-7e9155e3-7c87-4a3c-a261-044447f6d3e5" data-elfsight-app-lazy></div>
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quality Tools – Kostenlose Tools für Ideen & QM</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Tailwind Config (Blue Style) -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Arial', 'sans-serif']
+          },
+          colors: {
+            primary: '#1155b2',
+            dark: '#09387a',
+            lightbg: '#f8fafc',
+            borderc: '#d1d9e6',
+            textc: '#27304d',
+            muted: '#64748b'
+          },
+          borderRadius: { tool: '6px' },
+          boxShadow: {
+            tool: '0 4px 12px rgba(0,0,0,0.10)',
+            lift: '0 10px 28px rgba(0,0,0,0.12)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    a:focus-visible, button:focus-visible { outline: 3px solid rgba(17,85,178,.35); outline-offset: 2px; }
+  </style>
+</head>
+
+<body class="bg-white text-textc font-sans">
+  <!-- Announcement Bar -->
+  <div class="bg-lightbg border-b-[3px] border-primary">
+    <div class="mx-auto max-w-[1180px] px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="inline-flex items-center justify-center rounded-full border border-borderc bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[.32px] text-textc">
+          Datenschutz
+        </span>
+        <p class="m-0 text-[12px] text-muted">
+          Unsere Tools laufen lokal im Browser. Optionales KI/API-Feature: nur ausgewählte Inhalte gehen direkt an die konfigurierte OpenAI-API.
+        </p>
+      </div>
+      <a class="inline-flex items-center gap-2 rounded-tool border border-borderc bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[.32px] text-dark hover:bg-slate-100 hover:border-primary/35"
+         href="https://tools.quality.de/faq-digitale-tools.html">
+        Datenschutz-FAQ →
+      </a>
+    </div>
+  </div>
+
+  <!-- Top Nav -->
+  <header class="mx-auto max-w-[1180px] px-3 pt-6">
+    <nav class="rounded-tool border border-borderc shadow-tool bg-white overflow-hidden">
+      <div class="px-5 py-4 bg-lightbg border-b border-borderc flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 rounded-tool bg-primary grid place-items-center text-white font-black">
+            Q
+          </div>
+          <div>
+            <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">Quality Tools</p>
+            <p class="m-0 mt-0.5 text-[12px] text-muted">Kostenlose Browser-Tools für Ideen & QM – ohne Installation</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <a href="#highlight"
+             class="inline-flex items-center justify-center rounded-tool border border-borderc bg-white px-4 py-2 text-[12px] font-black uppercase tracking-[.3px] text-dark hover:bg-slate-100 hover:border-primary/35">
+            Highlight
+          </a>
+          <a href="#tools"
+             class="inline-flex items-center justify-center rounded-tool border border-borderc bg-white px-4 py-2 text-[12px] font-black uppercase tracking-[.3px] text-dark hover:bg-slate-100 hover:border-primary/35">
+            Tools
+          </a>
+          <a href="#privacy"
+             class="inline-flex items-center justify-center rounded-tool border border-borderc bg-white px-4 py-2 text-[12px] font-black uppercase tracking-[.3px] text-dark hover:bg-slate-100 hover:border-primary/35">
+            Datenschutz
+          </a>
+          <a href="https://tools.quality.de/faq-digitale-tools.html"
+             class="inline-flex items-center justify-center rounded-tool border border-primary bg-primary px-4 py-2 text-[12px] font-black uppercase tracking-[.3px] text-white hover:bg-dark hover:border-dark">
+            FAQ öffnen →
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-[1180px] px-3 py-6">
+    <!-- HERO / BIG HIGHLIGHT -->
+    <section id="highlight" class="rounded-tool border border-borderc shadow-tool bg-white overflow-hidden">
+      <div class="bg-lightbg border-b border-borderc px-6 py-8">
+        <div class="grid gap-6 lg:grid-cols-2 lg:items-center">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="inline-flex items-center gap-2 rounded-full border border-borderc bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[.32px] text-textc">
+                <span class="h-2 w-2 rounded-full bg-primary"></span>
+                Alle Tools kostenlos
+              </span>
+              <span class="inline-flex items-center gap-2 rounded-full border border-borderc bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[.32px] text-textc">
+                <span class="h-2 w-2 rounded-full bg-primary/60"></span>
+                Lokal im Browser
+              </span>
+              <span class="inline-flex items-center gap-2 rounded-full border border-borderc bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[.32px] text-textc">
+                <span class="h-2 w-2 rounded-full bg-primary/35"></span>
+                Schnell testen
+              </span>
+            </div>
+
+            <h1 class="mt-4 text-dark font-black tracking-[.2px] leading-tight text-[34px] sm:text-[44px]">
+              Von „Wir brauchen Ideen“ zu<br>
+              <span class="text-primary">„Wir haben einen Plan“</span> – in Minuten.
+            </h1>
+
+            <p class="mt-4 text-[14px] sm:text-[15px] leading-relaxed text-muted max-w-[80ch]">
+              Hier findest du eine Sammlung handlicher Tools, die du sofort im Browser nutzen kannst:
+              Brainstorming, Mindmaps, Ursachenanalyse und Prozess-Methoden aus dem QM.
+              Kein Account, keine Installation, kein Umweg – du klickst, schreibst, strukturierst und exportierst.
+              Genau dafür sind diese Tools gemacht: weniger Reibung, mehr Klarheit, schneller ins Handeln kommen.
+            </p>
+
+            <div class="mt-6 flex flex-wrap gap-2">
+              <a href="#tools"
+                 class="inline-flex items-center justify-center rounded-tool border border-primary bg-primary px-6 py-3 text-[12px] font-black uppercase tracking-[.3px] text-white hover:bg-dark hover:border-dark">
+                Tools jetzt öffnen
+              </a>
+              <a href="https://tools.quality.de/faq-digitale-tools.html"
+                 class="inline-flex items-center justify-center rounded-tool border border-borderc bg-white px-6 py-3 text-[12px] font-black uppercase tracking-[.3px] text-dark hover:bg-slate-100 hover:border-primary/35">
+                Datenschutz verstehen
+              </a>
+            </div>
+
+            <div class="mt-6 grid gap-3 sm:grid-cols-3">
+              <div class="rounded-tool border border-borderc bg-white p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">1) Öffnen</p>
+                <p class="mt-2 text-[13px] text-muted leading-relaxed">
+                  Tool anklicken, direkt starten. Ideal für Workshops, Meetings, Einzelarbeit.
+                </p>
+              </div>
+              <div class="rounded-tool border border-borderc bg-white p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">2) Struktur</p>
+                <p class="mt-2 text-[13px] text-muted leading-relaxed">
+                  Ideen clustern, Ursachen sichtbar machen, Maßnahmen ableiten – sauber und nachvollziehbar.
+                </p>
+              </div>
+              <div class="rounded-tool border border-borderc bg-white p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">3) Ergebnis</p>
+                <p class="mt-2 text-[13px] text-muted leading-relaxed">
+                  Export/Print je nach Tool: du nimmst das Ergebnis direkt mit in die Umsetzung.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- BIG Highlight Card (extra groß & “hingucker”) -->
+          <div>
+            <div class="rounded-tool border border-primary/35 shadow-lift bg-white overflow-hidden">
+              <div class="px-6 py-6 bg-white border-b border-borderc">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">Highlight Tool</p>
+                    <h2 class="mt-1 text-[22px] sm:text-[26px] font-black text-textc leading-tight">
+                      Mindmap Tool – Ideen → Maßnahmen
+                    </h2>
+                    <p class="mt-3 text-[13px] sm:text-[14px] text-muted leading-relaxed">
+                      Wenn du nur ein Tool heute testen willst: nimm dieses.
+                      Du startest mit einer Idee, bringst Ordnung rein, und endest mit konkreten Maßnahmen,
+                      die man wirklich abarbeiten kann. Das Tool ist gemacht für “vom Kopf auf Papier” – ohne
+                      dass es sich nach Software anfühlt.
+                    </p>
+                  </div>
+
+                  <div class="flex flex-wrap items-center gap-2 justify-end">
+                    <span class="inline-flex items-center justify-center rounded-full border border-borderc bg-lightbg px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">
+                      Kostenlos
+                    </span>
+                    <span class="inline-flex items-center justify-center rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">
+                      Optional KI/API
+                    </span>
+                  </div>
+                </div>
+
+                <div class="mt-5 grid gap-3 sm:grid-cols-2">
+                  <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                    <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Wofür ideal?</p>
+                    <ul class="mt-2 text-[13px] text-muted leading-relaxed list-disc pl-5 space-y-1">
+                      <li>Workshop-Outputs in Maßnahmen übersetzen</li>
+                      <li>Projektplanung & Entscheidungs-Logik</li>
+                      <li>Ideenflut sortieren, Prioritäten klären</li>
+                    </ul>
+                  </div>
+                  <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                    <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">So testest du’s schnell</p>
+                    <ol class="mt-2 text-[13px] text-muted leading-relaxed list-decimal pl-5 space-y-1">
+                      <li>1–2 Oberthemen anlegen</li>
+                      <li>3–5 Unterpunkte ergänzen</li>
+                      <li>Für jeden Punkt: Maßnahme formulieren</li>
+                      <li>Ergebnis speichern/exportieren</li>
+                    </ol>
+                  </div>
+                </div>
+
+                <div class="mt-5 flex flex-wrap gap-2">
+                  <a href="https://tools.quality.de/mindmap_tool.html"
+                     class="inline-flex items-center justify-center rounded-tool border border-primary bg-primary px-6 py-3 text-[12px] font-black uppercase tracking-[.32px] text-white hover:bg-dark hover:border-dark">
+                    Mindmap Tool öffnen →
+                  </a>
+                  <a href="#tools"
+                     class="inline-flex items-center justify-center rounded-tool border border-borderc bg-white px-6 py-3 text-[12px] font-black uppercase tracking-[.32px] text-dark hover:bg-slate-100 hover:border-primary/35">
+                    Weitere Tools ansehen
+                  </a>
+                </div>
+
+                <p class="mt-4 text-[12px] text-muted leading-relaxed">
+                  Hinweis: KI/API ist optional und nur für Bestandskunden (Seminar/Inhouse-Seminar, Beratung oder Coaching).
+                  Ohne KI/API bleibt alles lokal im Browser.
+                </p>
+              </div>
+
+              <div class="px-6 py-5 bg-lightbg">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">Pro-Tipp</p>
+                <p class="mt-2 text-[13px] text-muted leading-relaxed">
+                  Wenn du Teams im Raum hast: starte mit Brainstorming → überführe die Cluster in die Mindmap → leite Maßnahmen ab.
+                  Das fühlt sich an wie ein sauberer Prozess – und spart am Ende das „Wer macht was bis wann?“-Chaos.
+                </p>
+                <div class="mt-4 flex flex-wrap gap-2">
+                  <a href="https://tools.quality.de/brainstorming-tool.html"
+                     class="inline-flex items-center justify-center rounded-tool border border-borderc bg-white px-5 py-2.5 text-[12px] font-black uppercase tracking-[.3px] text-dark hover:bg-slate-100 hover:border-primary/35">
+                    Brainstorming Tool →
+                  </a>
+                  <a href="https://whiteboard.quality.de/"
+                     class="inline-flex items-center justify-center rounded-tool border border-borderc bg-white px-5 py-2.5 text-[12px] font-black uppercase tracking-[.3px] text-dark hover:bg-slate-100 hover:border-primary/35">
+                    Digitales Whiteboard →
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mini trust line -->
+      <div class="px-6 py-5">
+        <div class="grid gap-3 md:grid-cols-3">
+          <div class="rounded-tool border border-borderc bg-white p-4">
+            <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Für Menschen gemacht</p>
+            <p class="mt-2 text-[13px] text-muted leading-relaxed">
+              Kurze Wege, klare Schritte, wenig Overhead. Du bleibst im Denken – nicht im Klicken.
+            </p>
+          </div>
+          <div class="rounded-tool border border-borderc bg-white p-4">
+            <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Workshop-tauglich</p>
+            <p class="mt-2 text-[13px] text-muted leading-relaxed">
+              Perfekt für Meetings: sichtbar machen, sortieren, entscheiden, festhalten.
+            </p>
+          </div>
+          <div class="rounded-tool border border-borderc bg-white p-4">
+            <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">QM ohne Hürde</p>
+            <p class="mt-2 text-[13px] text-muted leading-relaxed">
+              Bewährte Methoden – so verpackt, dass man sie wirklich nutzt (statt nur darüber zu reden).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOOLS GRID (alle als “Highlight-Karten” dargestellt) -->
+    <section id="tools" class="mt-8">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">Tools</p>
+          <h2 class="mt-1 text-[22px] font-black text-textc">Öffnen. Testen. Dranbleiben.</h2>
+          <p class="mt-2 text-[13px] text-muted max-w-[90ch]">
+            Hier ist die komplette Sammlung. Jedes Tool ist so gebaut, dass du in 30 Sekunden drin bist:
+            kurze Einleitung, klarer Ablauf, und ein Ergebnis, das sich weiterverwenden lässt.
+            Und ja: <b>alle Tools sind kostenlos</b>.
+          </p>
+        </div>
+        <a href="https://tools.quality.de/faq-digitale-tools.html"
+           class="inline-flex items-center justify-center rounded-tool border border-borderc bg-white px-4 py-2 text-[12px] font-black uppercase tracking-[.3px] text-dark hover:bg-slate-100 hover:border-primary/35">
+          Datenschutz-FAQ →
+        </a>
+      </div>
+
+      <div class="mt-4 grid gap-4 md:grid-cols-2">
+        <!-- Card component: big, long copy, bullets, tags -->
+        <!-- 1 Whiteboard -->
+        <a href="https://whiteboard.quality.de/"
+           class="group rounded-tool border border-borderc bg-white shadow-tool overflow-hidden hover:border-primary/35 hover:shadow-lift transition">
+          <div class="px-6 py-5 bg-lightbg border-b border-borderc">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">Kreativität</p>
+                <h3 class="mt-1 text-[18px] font-black text-textc">Digitales Whiteboard</h3>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center justify-center rounded-full border border-borderc bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">
+                  Kostenlos
+                </span>
+                <span class="inline-flex items-center justify-center rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">
+                  Schnell skizzieren
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="px-6 py-5">
+            <p class="m-0 text-[13px] text-muted leading-relaxed">
+              Für den Moment, in dem Gedanken noch „roh“ sind: zeichnen, anordnen, erklären.
+              Ideal, wenn du mit dem Team live etwas sichtbar machen willst – ohne dass jemand erst ein Tool lernen muss.
+            </p>
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Perfekt für</p>
+                <ul class="mt-2 text-[13px] text-muted leading-relaxed list-disc pl-5 space-y-1">
+                  <li>Kickoff-Meetings</li>
+                  <li>Ideen-Skizzen & Prozesse</li>
+                  <li>Remote- und Vor-Ort-Workshops</li>
+                </ul>
+              </div>
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Mini-Test</p>
+                <ol class="mt-2 text-[13px] text-muted leading-relaxed list-decimal pl-5 space-y-1">
+                  <li>Ein Thema oben notieren</li>
+                  <li>3 Kästen darunter skizzieren</li>
+                  <li>Beziehungen als Pfeile</li>
+                </ol>
+              </div>
+            </div>
+            <p class="mt-4 text-[12px] font-black uppercase tracking-[.3px] text-primary">
+              Öffnen →
+            </p>
+          </div>
+        </a>
+
+        <!-- 2 Brainstorming -->
+        <a href="https://tools.quality.de/brainstorming-tool.html"
+           class="group rounded-tool border border-borderc bg-white shadow-tool overflow-hidden hover:border-primary/35 hover:shadow-lift transition">
+          <div class="px-6 py-5 bg-lightbg border-b border-borderc">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">Ideen</p>
+                <h3 class="mt-1 text-[18px] font-black text-textc">Brainstorming – Notizen & Ideen</h3>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center justify-center rounded-full border border-borderc bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">Kostenlos</span>
+                <span class="inline-flex items-center justify-center rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">Von Chaos zu Clustern</span>
+              </div>
+            </div>
+          </div>
+          <div class="px-6 py-5">
+            <p class="m-0 text-[13px] text-muted leading-relaxed">
+              Das Tool für den klassischen „Ideenregen“ – aber mit Struktur.
+              Du sammelst erst frei, clustert dann, und bringst die wichtigen Punkte so in Form,
+              dass daraus echte nächste Schritte werden.
+            </p>
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Perfekt für</p>
+                <ul class="mt-2 text-[13px] text-muted leading-relaxed list-disc pl-5 space-y-1">
+                  <li>Team-Workshops & Retros</li>
+                  <li>Probleme sammeln & sortieren</li>
+                  <li>Ideen bewerten & priorisieren</li>
+                </ul>
+              </div>
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Mini-Test</p>
+                <ol class="mt-2 text-[13px] text-muted leading-relaxed list-decimal pl-5 space-y-1">
+                  <li>10 Ideen in 2 Minuten</li>
+                  <li>Cluster benennen</li>
+                  <li>Top 3 auswählen</li>
+                </ol>
+              </div>
+            </div>
+            <p class="mt-4 text-[12px] font-black uppercase tracking-[.3px] text-primary">Öffnen →</p>
+          </div>
+        </a>
+
+        <!-- 3 Mindmap Tool -->
+        <a href="https://tools.quality.de/mindmap_tool.html"
+           class="group rounded-tool border border-borderc bg-white shadow-tool overflow-hidden hover:border-primary/35 hover:shadow-lift transition">
+          <div class="px-6 py-5 bg-lightbg border-b border-borderc">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">Planung</p>
+                <h3 class="mt-1 text-[18px] font-black text-textc">Mindmap Tool – Ideen → Maßnahmen (optional KI/API)</h3>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center justify-center rounded-full border border-borderc bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">Kostenlos</span>
+                <span class="inline-flex items-center justify-center rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">Optional KI/API</span>
+              </div>
+            </div>
+          </div>
+          <div class="px-6 py-5">
+            <p class="m-0 text-[13px] text-muted leading-relaxed">
+              Das strukturierte Gegenstück zum Brainstorming: aus Ideen werden Bausteine – und aus Bausteinen werden Maßnahmen.
+              Wenn du gern „sichtbar denkst“, aber am Ende etwas brauchst, das man abarbeiten kann, passt dieses Tool perfekt.
+            </p>
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Perfekt für</p>
+                <ul class="mt-2 text-[13px] text-muted leading-relaxed list-disc pl-5 space-y-1">
+                  <li>Projekt- und Maßnahmenplanung</li>
+                  <li>Strategie-Workshops</li>
+                  <li>Scope klären & Schritte definieren</li>
+                </ul>
+              </div>
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Wichtiger Hinweis</p>
+                <p class="mt-2 text-[13px] text-muted leading-relaxed">
+                  KI/API ist optional und nur für Bestandskunden (Seminar/Inhouse-Seminar, Beratung oder Coaching).
+                  Ohne KI/API bleibt alles lokal.
+                </p>
+              </div>
+            </div>
+            <p class="mt-4 text-[12px] font-black uppercase tracking-[.3px] text-primary">Öffnen →</p>
+          </div>
+        </a>
+
+        <!-- 4 Ishikawa -->
+        <a href="https://tools.quality.de/d4-ishikawa-tool.html"
+           class="group rounded-tool border border-borderc bg-white shadow-tool overflow-hidden hover:border-primary/35 hover:shadow-lift transition">
+          <div class="px-6 py-5 bg-lightbg border-b border-borderc">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">QM</p>
+                <h3 class="mt-1 text-[18px] font-black text-textc">Ishikawa Tool (6M) – Ursachenanalyse (optional KI/API)</h3>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center justify-center rounded-full border border-borderc bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">Kostenlos</span>
+                <span class="inline-flex items-center justify-center rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">Optional KI/API</span>
+              </div>
+            </div>
+          </div>
+          <div class="px-6 py-5">
+            <p class="m-0 text-[13px] text-muted leading-relaxed">
+              Das „Fischgräten“-Werkzeug, das in Workshops wirklich funktioniert:
+              Du bekommst Struktur (6M), du sammelst Ursachen sauber, und du siehst schnell,
+              wo es sich lohnt tiefer zu bohren.
+            </p>
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Perfekt für</p>
+                <ul class="mt-2 text-[13px] text-muted leading-relaxed list-disc pl-5 space-y-1">
+                  <li>Reklamationen & Abweichungen</li>
+                  <li>Fehlerbilder im Prozess</li>
+                  <li>Team-Analyse mit Methode</li>
+                </ul>
+              </div>
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Mini-Test</p>
+                <ol class="mt-2 text-[13px] text-muted leading-relaxed list-decimal pl-5 space-y-1">
+                  <li>Problem in 1 Satz</li>
+                  <li>Je 2 Ursachen pro M</li>
+                  <li>Top 3 prüfen</li>
+                </ol>
+              </div>
+            </div>
+            <p class="mt-4 text-[12px] font-black uppercase tracking-[.3px] text-primary">Öffnen →</p>
+          </div>
+        </a>
+
+        <!-- 5 5xWarum -->
+        <a href="https://tools.quality.de/5xwarum-tool.html"
+           class="group rounded-tool border border-borderc bg-white shadow-tool overflow-hidden hover:border-primary/35 hover:shadow-lift transition">
+          <div class="px-6 py-5 bg-lightbg border-b border-borderc">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">QM</p>
+                <h3 class="mt-1 text-[18px] font-black text-textc">5xWarum Tool – Ursachenanalyse</h3>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center justify-center rounded-full border border-borderc bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">Kostenlos</span>
+                <span class="inline-flex items-center justify-center rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">Kernursache finden</span>
+              </div>
+            </div>
+          </div>
+          <div class="px-6 py-5">
+            <p class="m-0 text-[13px] text-muted leading-relaxed">
+              Einfach, aber stark: du gehst Schritt für Schritt tiefer – bis du nicht mehr nur Symptome behandelst,
+              sondern an der eigentlichen Ursache ansetzt. Perfekt, wenn du Klarheit willst, ohne große Methode-Show.
+            </p>
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Perfekt für</p>
+                <ul class="mt-2 text-[13px] text-muted leading-relaxed list-disc pl-5 space-y-1">
+                  <li>Störungen & Wiederholfehler</li>
+                  <li>Lessons Learned</li>
+                  <li>Pragmatische Problemlösung</li>
+                </ul>
+              </div>
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Mini-Test</p>
+                <ol class="mt-2 text-[13px] text-muted leading-relaxed list-decimal pl-5 space-y-1">
+                  <li>Problem sauber formulieren</li>
+                  <li>Warum? – 5 Ebenen</li>
+                  <li>Maßnahme definieren</li>
+                </ol>
+              </div>
+            </div>
+            <p class="mt-4 text-[12px] font-black uppercase tracking-[.3px] text-primary">Öffnen →</p>
+          </div>
+        </a>
+
+        <!-- 6 Turtle -->
+        <a href="https://tools.quality.de/turtle_diagram.html"
+           class="group rounded-tool border border-borderc bg-white shadow-tool overflow-hidden hover:border-primary/35 hover:shadow-lift transition">
+          <div class="px-6 py-5 bg-lightbg border-b border-borderc">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">QM</p>
+                <h3 class="mt-1 text-[18px] font-black text-textc">Turtle Diagramm – Prozessanalyse (optional KI/API)</h3>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center justify-center rounded-full border border-borderc bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">Kostenlos</span>
+                <span class="inline-flex items-center justify-center rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">Optional KI/API</span>
+              </div>
+            </div>
+          </div>
+          <div class="px-6 py-5">
+            <p class="m-0 text-[13px] text-muted leading-relaxed">
+              Du willst Prozesse so darstellen, dass jeder sofort versteht, was reingeht, was rauskommt,
+              wer beteiligt ist, welche Ressourcen nötig sind und woran man Qualität misst?
+              Genau dafür ist das Turtle Diagramm da – schnell, sauber, audit-tauglich.
+            </p>
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Perfekt für</p>
+                <ul class="mt-2 text-[13px] text-muted leading-relaxed list-disc pl-5 space-y-1">
+                  <li>Prozess-Transparenz</li>
+                  <li>Audits & QM-Dokumentation</li>
+                  <li>Rollen, KPIs, Risiken</li>
+                </ul>
+              </div>
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Mini-Test</p>
+                <ol class="mt-2 text-[13px] text-muted leading-relaxed list-decimal pl-5 space-y-1">
+                  <li>Prozessname + Ziel</li>
+                  <li>Input/Output</li>
+                  <li>KPIs + Risiken</li>
+                </ol>
+              </div>
+            </div>
+            <p class="mt-4 text-[12px] font-black uppercase tracking-[.3px] text-primary">Öffnen →</p>
+          </div>
+        </a>
+
+        <!-- 7 SWOT -->
+        <a href="https://tools.quality.de/Quality_SWOT_Tool.html"
+           class="group rounded-tool border border-borderc bg-white shadow-tool overflow-hidden hover:border-primary/35 hover:shadow-lift transition">
+          <div class="px-6 py-5 bg-lightbg border-b border-borderc">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">Strategie</p>
+                <h3 class="mt-1 text-[18px] font-black text-textc">SWOT Tool – Analyse & Maßnahmen</h3>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center justify-center rounded-full border border-borderc bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">Kostenlos</span>
+                <span class="inline-flex items-center justify-center rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">Klar entscheiden</span>
+              </div>
+            </div>
+          </div>
+          <div class="px-6 py-5">
+            <p class="m-0 text-[13px] text-muted leading-relaxed">
+              SWOT ist dann gut, wenn man nicht nur Felder füllt, sondern daraus Entscheidungen macht.
+              Dieses Tool hilft dir, die Analyse sauber zu formulieren – und die logische Brücke zu Maßnahmen zu schlagen.
+              Damit aus „wir sollten mal“ endlich „wir machen jetzt“ wird.
+            </p>
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Perfekt für</p>
+                <ul class="mt-2 text-[13px] text-muted leading-relaxed list-disc pl-5 space-y-1">
+                  <li>Strategie-Workshops</li>
+                  <li>Produkt-/Team-Reflexion</li>
+                  <li>Prioritäten & Roadmaps</li>
+                </ul>
+              </div>
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Mini-Test</p>
+                <ol class="mt-2 text-[13px] text-muted leading-relaxed list-decimal pl-5 space-y-1">
+                  <li>3 Stärken, 3 Schwächen</li>
+                  <li>3 Chancen, 3 Risiken</li>
+                  <li>2 Maßnahmen ableiten</li>
+                </ol>
+              </div>
+            </div>
+            <p class="mt-4 text-[12px] font-black uppercase tracking-[.3px] text-primary">Öffnen →</p>
+          </div>
+        </a>
+
+        <!-- 8 Mindmapping “Kurzlink” nochmal, falls du explizit “Mindmapping mit Maßnahmenableitung” als eigenen Punkt willst -->
+        <a href="https://tools.quality.de/mindmap_tool.html"
+           class="group rounded-tool border border-borderc bg-white shadow-tool overflow-hidden hover:border-primary/35 hover:shadow-lift transition">
+          <div class="px-6 py-5 bg-lightbg border-b border-borderc">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">Mindmapping</p>
+                <h3 class="mt-1 text-[18px] font-black text-textc">Mindmapping mit Maßnahmenableitung</h3>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center justify-center rounded-full border border-borderc bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">Kostenlos</span>
+                <span class="inline-flex items-center justify-center rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[11px] font-black uppercase tracking-[.3px] text-dark">Direkt umsetzen</span>
+              </div>
+            </div>
+          </div>
+          <div class="px-6 py-5">
+            <p class="m-0 text-[13px] text-muted leading-relaxed">
+              Du willst nicht nur „Mindmap“, sondern das, was danach passiert?
+              Dann ist genau dieses Tool passend: Gedanken ordnen, Verantwortlichkeiten und nächste Schritte festhalten,
+              und am Ende eine klare Liste haben, die man abarbeiten kann – ohne Interpretationsspielraum.
+            </p>
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Perfekt für</p>
+                <ul class="mt-2 text-[13px] text-muted leading-relaxed list-disc pl-5 space-y-1">
+                  <li>Umsetzung aus Workshops</li>
+                  <li>Team-Absprachen</li>
+                  <li>„Wer macht was bis wann?“</li>
+                </ul>
+              </div>
+              <div class="rounded-tool border border-borderc bg-lightbg p-4">
+                <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Hinweis</p>
+                <p class="mt-2 text-[13px] text-muted leading-relaxed">
+                  Optional KI/API nur für Bestandskunden. Ohne KI/API bleibt alles lokal.
+                </p>
+              </div>
+            </div>
+            <p class="mt-4 text-[12px] font-black uppercase tracking-[.3px] text-primary">Öffnen →</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Soft CTA -->
+      <div class="mt-6 rounded-tool border border-borderc shadow-tool bg-white overflow-hidden">
+        <div class="px-6 py-5 bg-lightbg border-b border-borderc">
+          <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">Start-Idee</p>
+          <h3 class="mt-1 text-[18px] font-black text-textc">Wenn du nicht weißt, womit du anfangen sollst</h3>
+        </div>
+        <div class="px-6 py-5 grid gap-3 md:grid-cols-3">
+          <div class="rounded-tool border border-borderc bg-white p-4">
+            <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Freies Denken</p>
+            <p class="mt-2 text-[13px] text-muted leading-relaxed">
+              Starte mit Brainstorming: erst sammeln, dann ordnen. Das ist der schnellste Einstieg.
+            </p>
+            <a class="mt-3 inline-flex items-center justify-center rounded-tool border border-primary bg-primary px-4 py-2 text-[12px] font-black uppercase tracking-[.3px] text-white hover:bg-dark hover:border-dark"
+               href="https://tools.quality.de/brainstorming-tool.html">Brainstorming →</a>
+          </div>
+          <div class="rounded-tool border border-borderc bg-white p-4">
+            <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">Klarer Plan</p>
+            <p class="mt-2 text-[13px] text-muted leading-relaxed">
+              Überführe es in die Mindmap: hier werden aus Ideen Maßnahmen, die man wirklich umsetzt.
+            </p>
+            <a class="mt-3 inline-flex items-center justify-center rounded-tool border border-primary bg-primary px-4 py-2 text-[12px] font-black uppercase tracking-[.3px] text-white hover:bg-dark hover:border-dark"
+               href="https://tools.quality.de/mindmap_tool.html">Mindmap →</a>
+          </div>
+          <div class="rounded-tool border border-borderc bg-white p-4">
+            <p class="m-0 text-[12px] font-black uppercase tracking-[.3px] text-dark">QM-Problemfall</p>
+            <p class="mt-2 text-[13px] text-muted leading-relaxed">
+              Wenn’s „weh tut“: 5xWarum für schnell, Ishikawa für breit, Turtle für Prozessklarheit.
+            </p>
+            <a class="mt-3 inline-flex items-center justify-center rounded-tool border border-borderc bg-white px-4 py-2 text-[12px] font-black uppercase tracking-[.3px] text-dark hover:bg-slate-100 hover:border-primary/35"
+               href="#tools">Zur QM-Auswahl ↑</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRIVACY / TRUST (ausführlicher) -->
+    <section id="privacy" class="mt-8 rounded-tool border border-borderc shadow-tool bg-white overflow-hidden">
+      <div class="px-6 py-5 bg-lightbg border-b border-borderc">
+        <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">Datenschutz</p>
+        <h2 class="mt-1 text-[22px] font-black text-textc">Transparenz, die man versteht.</h2>
+        <p class="mt-2 text-[13px] text-muted leading-relaxed max-w-[95ch]">
+          Datenschutz ist kein „Fußnoten-Thema“ – gerade dann nicht, wenn man in Workshops echte Inhalte sammelt.
+          Darum ist die Grundlogik simpel: Standardmäßig läuft alles lokal im Browser.
+          Nur wenn du eine optionale KI/API-Funktion nutzt, werden ausgewählte Inhalte direkt an die konfigurierte API gesendet.
+          Die Details findest du in der FAQ – hier ist die Kurzfassung in Klartext.
+        </p>
+      </div>
+
+      <div class="px-6 py-6 grid gap-4 lg:grid-cols-3">
+        <div class="rounded-tool border border-borderc bg-white p-5">
+          <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">Ohne KI/API</p>
+          <p class="mt-2 text-[13px] text-muted leading-relaxed">
+            Keine Übertragung an unsere Server. Der Arbeitsstand bleibt im Browser (Autosave/Browser-Speicher).
+            Du arbeitest so, wie du es von „lokalen“ Tools erwartest – nur eben im Web.
+          </p>
+        </div>
+
+        <div class="rounded-tool border border-borderc bg-white p-5">
+          <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">Mit KI/API (optional)</p>
+          <p class="mt-2 text-[13px] text-muted leading-relaxed">
+            Nur die Inhalte, die du bewusst für eine Anfrage auswählst, werden aus dem Browser an die konfigurierte OpenAI-API übertragen,
+            um Vorschläge zu erzeugen. Bitte gib keine sensiblen personenbezogenen oder vertraulichen Daten ein.
+          </p>
+        </div>
+
+        <div class="rounded-tool border border-borderc bg-white p-5 border-l-[3px] border-l-primary">
+          <p class="m-0 text-[12px] font-black uppercase tracking-[.35px] text-dark">Bestandskunden-Regel</p>
+          <p class="mt-2 text-[13px] text-muted leading-relaxed">
+            Die KI/API-Funktion ist optional und nur für Bestandskunden:
+            Seminar (z. B. Inhouse-Seminar), Beratung oder Coaching.
+            Wenn du dazu Fragen hast, melde dich – wir erklären es kurz und pragmatisch.
+          </p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <a href="https://tools.quality.de/faq-digitale-tools.html"
+               class="inline-flex items-center justify-center rounded-tool border border-primary bg-primary px-4 py-2 text-[12px] font-black uppercase tracking-[.3px] text-white hover:bg-dark hover:border-dark">
+              Datenschutz-FAQ →
+            </a>
+            <a href="mailto:info@quality.de?subject=Frage%20zum%20Datenschutz%20%E2%80%93%20Quality%20Tools"
+               class="inline-flex items-center justify-center rounded-tool border border-borderc bg-white px-4 py-2 text-[12px] font-black uppercase tracking-[.3px] text-dark hover:bg-slate-100 hover:border-primary/35">
+              info@quality.de
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-8 rounded-tool border border-borderc bg-lightbg px-6 py-4 text-[12px] text-muted flex flex-wrap justify-between gap-2">
+      <span>© <span id="y"></span> Quality Tools · Alle Tools sind kostenlos.</span>
+      <span class="flex flex-wrap gap-2">
+        <a class="text-dark font-black hover:underline" href="https://tools.quality.de/faq-digitale-tools.html">Datenschutz</a>
+        <span class="opacity-50">·</span>
+        <a class="text-dark font-black hover:underline" href="mailto:info@quality.de">info@quality.de</a>
+        <span class="opacity-50">·</span>
+        <a class="text-dark font-black hover:underline" href="tel:+49693487225900">+49 (0) 69-34872259-0</a>
+      </span>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+
 <!-- Elfsight AI Chatbot | Untitled AI Chatbot -->
 <script src="https://elfsightcdn.com/platform.js" async></script>
 <div class="elfsight-app-a0da6044-aca7-45b1-b50a-fc55387cb0ef" data-elfsight-app-lazy></div>
