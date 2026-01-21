@@ -1,4 +1,6 @@
-<!doctype html>
+from pathlib import Path
+
+updated_html = r"""<!doctype html>
 <html lang="de">
 <head>
   <meta charset="utf-8" />
@@ -37,7 +39,7 @@
     }
   </script>
 
-  <!-- Optional: Font (wenn du es extern laden willst) -->
+  <!-- Optional: Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -67,6 +69,25 @@
         <span class="font-bold text-ink">ohne KI/API</span> und mit der optionalen
         <span class="font-bold text-ink">Premium-KI/API-Funktion</span>.
       </p>
+
+      <!-- Quick Navigation Buttons -->
+      <div class="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a
+          class="inline-flex w-full items-center justify-center rounded-xl2 bg-ink px-5 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-sand-50 shadow-soft transition hover:-translate-y-0.5 hover:shadow-lift sm:w-auto"
+          href="https://quality.de"
+          target="_blank" rel="noopener noreferrer"
+        >
+          Zur Homepage (quality.de)
+        </a>
+
+        <a
+          class="inline-flex w-full items-center justify-center rounded-xl2 border border-ink/15 bg-white px-5 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-ink shadow-soft transition hover:-translate-y-0.5 hover:shadow-lift sm:w-auto"
+          href="https://tools.quality.de"
+          target="_blank" rel="noopener noreferrer"
+        >
+          Zurück zur Toolübersicht
+        </a>
+      </div>
     </section>
 
     <!-- Content grid -->
@@ -139,9 +160,17 @@
                 <span class="font-bold">5) Was ist „Premium mit API/KI“?</span>
                 <span class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-ink/10 bg-sand-50 text-xl font-bold transition group-open:rotate-45">+</span>
               </summary>
-              <div class="mt-3 text-ink/80 leading-relaxed">
-                Die KI/API-Funktion ist eine Premium-Funktion und wird nur mit zusätzlichem Lizenzschlüssel freigeschaltet
-                (jeder Kunde erhält einen individuellen Schlüssel).
+              <div class="mt-3 text-ink/80 leading-relaxed space-y-2">
+                <p>
+                  Die KI/API-Funktion ist eine Premium-Funktion und wird nur für <span class="font-bold text-ink">Kunden</span> freigeschaltet.
+                </p>
+                <p class="rounded-xl2 border border-ink/10 bg-sand-50 p-3 text-sm">
+                  <span class="font-extrabold uppercase tracking-[0.12em] text-ink/60">Definition</span><br />
+                  <span class="font-bold text-ink">Kunde</span> ist derjenige, der eine Rechnung bezahlt hat.
+                </p>
+                <p>
+                  Jeder Kunde erhält einen individuellen Lizenzschlüssel zur Freischaltung.
+                </p>
               </div>
             </details>
 
@@ -180,98 +209,4 @@
             </details>
 
             <!-- Item: Premium erwerben -->
-            <details class="group rounded-xl2 border border-gold/30 bg-white p-4 shadow-[0_1px_0_rgba(61,58,53,.06)] open:shadow-lift transition">
-              <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
-                <span class="font-bold">9) Wie kann ich Premium erwerben?</span>
-                <span class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gold/30 bg-gold/10 text-xl font-bold transition group-open:rotate-45">+</span>
-              </summary>
-              <div class="mt-3 text-ink/80 leading-relaxed">
-                <ol class="list-decimal pl-5 space-y-2">
-                  <li>Schreibe uns eine kurze Anfrage per E-Mail oder rufe an.</li>
-                  <li>Du erhältst Infos zu Lizenz/Abwicklung.</li>
-                  <li>Nach Freischaltung bekommst du deinen individuellen Lizenzschlüssel.</li>
-                  <li>Lizenzschlüssel im Tool eintragen → Premium-KI/API-Funktion nutzen.</li>
-                </ol>
-              </div>
-            </details>
-
-            <!-- Item: Kontakt -->
-            <details class="group rounded-xl2 border border-ink/10 bg-white p-4 shadow-[0_1px_0_rgba(61,58,53,.06)] open:shadow-lift transition">
-              <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
-                <span class="font-bold">10) Kontakt</span>
-                <span class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-ink/10 bg-sand-50 text-xl font-bold transition group-open:rotate-45">+</span>
-              </summary>
-              <div class="mt-3 text-ink/80 leading-relaxed">
-                <p>
-                  E-Mail:
-                  <a class="font-bold text-ink underline decoration-gold/60 underline-offset-4 hover:decoration-gold" href="mailto:info@quality.de">info@quality.de</a><br />
-                  Telefon:
-                  <a class="font-bold text-ink underline decoration-gold/60 underline-offset-4 hover:decoration-gold" href="tel:+49693487225900">+49 (0) 69-34872259-0</a>
-                </p>
-              </div>
-            </details>
-          </div>
-
-          <p class="mt-6 text-sm text-ink/60">
-            Hinweis: Die konkrete Übertragung bei Premium erfolgt nur, wenn du die Funktion aktiv nutzt und Inhalte für die Anfrage auswählst.
-          </p>
-        </div>
-      </div>
-
-      <!-- Right: CTA / Premium -->
-      <aside class="lg:col-span-1">
-        <div class="rounded-xl2 border border-gold/30 bg-white/85 p-5 shadow-soft sm:p-6 sticky top-6">
-          <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-ink/60">Premium</p>
-          <h3 class="mt-2 text-lg font-extrabold">KI/API freischalten</h3>
-          <p class="mt-2 text-sm leading-relaxed text-ink/80">
-            Die KI/API-Funktion ist optional und wird über einen individuellen Lizenzschlüssel freigeschaltet.
-          </p>
-
-          <div class="mt-4 rounded-xl2 border border-ink/10 bg-sand-50 p-4">
-            <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-ink/60">So geht’s</p>
-            <ul class="mt-2 space-y-2 text-sm text-ink/80">
-              <li class="flex gap-2"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-gold"></span><span>Anfrage senden</span></li>
-              <li class="flex gap-2"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-gold"></span><span>Lizenzschlüssel erhalten</span></li>
-              <li class="flex gap-2"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-gold"></span><span>Im Tool eintragen</span></li>
-            </ul>
-          </div>
-
-          <div class="mt-5 grid gap-3">
-            <a
-              class="inline-flex items-center justify-center rounded-xl2 bg-ink px-4 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-sand-50 shadow-soft transition hover:-translate-y-0.5 hover:shadow-lift"
-              href="mailto:info@quality.de?subject=Premium%20anfragen%20%E2%80%93%20Digitale%20Tools"
-            >
-              Premium per E-Mail anfragen
-            </a>
-            <a
-              class="inline-flex items-center justify-center rounded-xl2 border border-ink/15 bg-white px-4 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-ink shadow-soft transition hover:-translate-y-0.5 hover:shadow-lift"
-              href="tel:+49693487225900"
-            >
-              Telefonisch kontaktieren
-            </a>
-          </div>
-
-          <div class="mt-5 text-xs text-ink/60 leading-relaxed">
-            <span class="font-bold text-ink">Wichtig:</span> Bitte übermittle keine sensiblen personenbezogenen oder vertraulichen Daten in Anfragen oder KI-Prompts.
-          </div>
-        </div>
-      </aside>
-    </section>
-
-    <!-- Footer -->
-    <footer class="mt-10 flex flex-col gap-2 rounded-xl2 border border-ink/10 bg-white/70 px-5 py-4 text-sm text-ink/70 shadow-soft sm:flex-row sm:items-center sm:justify-between">
-      <span>© <span id="y"></span> Digitale Tools</span>
-      <span>
-        Kontakt:
-        <a class="font-bold text-ink underline decoration-gold/60 underline-offset-4 hover:decoration-gold" href="mailto:info@quality.de">info@quality.de</a>
-        ·
-        <a class="font-bold text-ink underline decoration-gold/60 underline-offset-4 hover:decoration-gold" href="tel:+49693487225900">+49 (0) 69-34872259-0</a>
-      </span>
-    </footer>
-  </main>
-
-  <script>
-    document.getElementById('y').textContent = new Date().getFullYear();
-  </script>
-</body>
-</html>
+            <details class="group rounded-xl2 border border-gold/30 bg-white p-4 shadow-[0_1px_0_rgba(61,58,53,.06)] open:shadow-lift
