@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>D4 Ishikawa Tool - KVP Institut GmbH</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --blue: #00A7B5;
+            --dark: #006B74;
+            --light-bg: #f8fafc;
+            --note: #fff9c4;
+        }
+
+        .ishikawa-app { max-width: 1100px; margin: 20px auto; font-family: 'Segoe UI', Roboto, sans-serif; color: #27304d; }
+        .ishikawa-card { background: #fff; border: 1px solid #d1d9e6; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        .ishikawa-header { background: var(--light-bg); padding: 20px; border-bottom: 3px solid var(--blue); display: flex; justify-content: space-between; align-items: center; }
+        .ishikawa-header h2 { margin: 0; color: var(--dark); font-size: 20px; text-transform: uppercase; }
+        .ishikawa-sub { margin: 5px 0 0; font-size: 13px; color: #64748b; }
+        .ishikawa-badge { background: var(--blue); color: white; padding: 4px 10px; font-size: 11px; font-weight: bold; border-radius: 2px; }
+
+        .ishikawa-body { padding: 25px; }
+        .ishikawa-drawing-area { padding: 50px 20px; background: white; border: 1px solid #edf2f7; position: relative; }
+
+        /* Struktur */
+        .ishikawa-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-right: 200px; }
+        .graete { border-left: 3px solid var(--blue); padding-left: 15px; min-height: 120px; display: flex; flex-direction: column; }
+        .bottom .graete { margin-top: 30px; }
+
+        .m-label { font-weight: 800; color: var(--dark); text-transform: uppercase; font-size: 13px; margin-bottom: 10px; border-bottom: 1px solid #eee; }
+        .notes-container { display: flex; flex-direction: column; gap: 6px; flex-grow: 1; }
+        .note-item { background: var(--note); padding: 6px; font-size: 12px; border-left: 3px solid #fbc02d; box-shadow: 2px 2px 4px rgba(0,0,0,0.05); }
+        .note-item textarea { width: 100%; border: none; background: transparent; resize: none; font-family: inherit; outline: none; }
+
+        .btn-add { background: none; border: 1px dashed #cbd5e1; color: #94a3b8; cursor: pointer; font-size: 11px; margin-top: 10px; padding: 4px; }
+        .btn-add:hover { background: #f1f5f9; color: var(--blue); }
+
+        /* Rückgrat & Kopf */
+        .ishikawa-spine { height: 4px; background: var(--blue); margin: 15px 0; position: relative; display: flex; align-items: center; justify-content: flex-end; }
+        .fish-head {
+            width: 220px; height: 120px; background: var(--blue);
+            clip-path: polygon(0% 50%, 20% 0%, 100% 0%, 100% 100%, 20% 100%);
+            display: flex; align-items: center; justify-content: center; padding: 15px; margin-right: -20px;
+        }
+        .fish-head textarea {
+            width: 85%; height: 75%; background: white; border: none; border-radius: 4px;
+            padding: 10px; font-weight: bold; font-size: 14px; text-align: center; color: var(--dark);
+        }
+
+        /* Actions */
+        .ishikawa-actions { margin-top: 30px; padding-top: 20px; border-top: 2px solid var(--blue); display: flex; gap: 10px; flex-wrap: wrap; }
+        .i-btn { padding: 10px 18px; font-size: 13px; font-weight: bold; border-radius: 4px; cursor: pointer; border: 1px solid #d1d9e6; background: #fff; text-transform: uppercase; }
+        .i-btn.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+        .i-btn.danger { color: #e53e3e; }
+
+        /* Footer */
+        .ishikawa-footer { padding: 30px 25px 15px; background: #f1f5f9; border-top: 1px solid #d1d9e6; color: #475569; }
+        .footer-content { display: flex; justify-content: space-between; text-align: left; margin-bottom: 20px; gap: 40px; flex-wrap: wrap; }
+        .footer-content h4 { margin: 0 0 10px 0; font-size: 14px; color: var(--dark); text-transform: uppercase; border-bottom: 2px solid #cbd5e1; display: inline-block; padding-bottom: 2px; }
+        .footer-info a, .training-links a { display: block; color: var(--blue); text-decoration: none; font-size: 13px; margin-bottom: 5px; transition: color 0.2s; }
+        .footer-info a:hover, .training-links a:hover { color: var(--dark); text-decoration: underline; }
+        .training-links { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 30px; }
+        .footer-bottom { text-align: center; font-size: 12px; border-top: 1px solid #cbd5e1; padding-top: 15px; margin-top: 10px; }
+
+        @media (max-width: 900px) {
+          .ishikawa-row { margin-right: 0; grid-template-columns: 1fr; }
+          .fish-head { width: 100%; margin: 20px 0; clip-path: none; border-radius: 4px; }
+          .ishikawa-spine { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="qm-ishikawa-app" class="ishikawa-app">
+  <section class="ishikawa-card">
+    <header class="ishikawa-header">
+      <div class="ishikawa-head-col">
+        <h2>D4: Ursachenanalyse (Ishikawa)</h2>
+        <p class="ishikawa-sub">Systematische 6M-Analyse nach KVP Institut GmbH Standards.</p>
+      </div>
+      <div class="ishikawa-badge">D4 ANALYSE</div>
+    </header>
+
+    <div class="ishikawa-body">
+      <div id="capture-area" class="ishikawa-drawing-area">
+
+        <div class="ishikawa-skeleton">
+          <div class="ishikawa-row top">
+            <div class="graete" data-m="Mensch">
+              <div class="m-label">Mensch</div>
+              <div class="notes-container" id="notes-Mensch"></div>
+              <button class="btn-add" onclick="addNote('Mensch')">+ Ursache</button>
+            </div>
+            <div class="graete" data-m="Maschine">
+              <div class="m-label">Maschine</div>
+              <div class="notes-container" id="notes-Maschine"></div>
+              <button class="btn-add" onclick="addNote('Maschine')">+ Ursache</button>
+            </div>
+            <div class="graete" data-m="Material">
+              <div class="m-label">Material</div>
+              <div class="notes-container" id="notes-Material"></div>
+              <button class="btn-add" onclick="addNote('Material')">+ Ursache</button>
+            </div>
+          </div>
+
+          <div class="ishikawa-spine">
+            <div class="fish-head">
+              <textarea id="problemInput" placeholder="HAUPTPROBLEM / EFFEKT HIER EINTRAGEN..."></textarea>
+            </div>
+          </div>
+
+          <div class="ishikawa-row bottom">
+            <div class="graete" data-m="Methode">
+              <div class="m-label">Methode</div>
+              <div class="notes-container" id="notes-Methode"></div>
+              <button class="btn-add" onclick="addNote('Methode')">+ Ursache</button>
+            </div>
+            <div class="graete" data-m="Mitwelt">
+              <div class="m-label">Mitwelt</div>
+              <div class="notes-container" id="notes-Mitwelt"></div>
+              <button class="btn-add" onclick="addNote('Mitwelt')">+ Ursache</button>
+            </div>
+            <div class="graete" data-m="Messung">
+              <div class="m-label">Messung</div>
+              <div class="notes-container" id="notes-Messung"></div>
+              <button class="btn-add" onclick="addNote('Messung')">+ Ursache</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="ishikawa-actions">
+        <button type="button" class="i-btn primary" id="btnExport">Bild exportieren (PNG)</button>
+        <button type="button" class="i-btn" id="btnSave">JSON Speichern</button>
+        <label class="i-btn" style="cursor:pointer">Upload <input type="file" id="btnLoad" hidden></label>
+        <button type="button" class="i-btn danger" onclick="confirm('Alles löschen?') && location.reload()">Reset</button>
+      </div>
+    </div>
+
+    <footer class="ishikawa-footer">
+      <div class="footer-content">
+        <div class="footer-info">
+          <h4>Weitere Informationen</h4>
+          <a href="https://www.kvp.de/lexikon/ishikawa/" target="_blank" rel="noopener noreferrer">Lexikon: Ishikawa-Diagramm</a>
+        </div>
+
+        <div class="footer-training">
+          <h4>Lerne es in unseren Kursen (Ausbildungen & Seminare):</h4>
+          <div class="training-links">
+            <a href="https://www.kvp.de/weiterbildung/8d-seminare-8d-schulungen/" target="_blank" rel="noopener noreferrer">8D Schulung</a>
+            <a href="https://www.kvp.de/weiterbildung/fmea-schulung/" target="_blank" rel="noopener noreferrer">FMEA Schulungen</a>
+            <a href="https://www.kvp.de/weiterbildung/kvp/" target="_blank" rel="noopener noreferrer">KVP Schulungen</a>
+            <a href="https://www.kvp.de/weiterbildung/qualitaetsmanagement/" target="_blank" rel="noopener noreferrer">QM Schulungen</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <strong>KVP Institut GmbH</strong> | Expertise in Qualitätsmanagement | <span id="current-year"></span>
+      </div>
+    </footer>
+  </section>
+</div>
+
+<script>
+/* Notizen hinzufügen */
+function addNote(cat, val = '') {
+  const container = document.getElementById(`notes-${cat}`);
+  const div = document.createElement('div');
+  div.className = 'note-item';
+  div.innerHTML = `<textarea rows="2" placeholder="Ursache eingeben...">${val}</textarea>`;
+  container.appendChild(div);
+}
+
+/* Export als Bild */
+document.getElementById('btnExport').onclick = () => {
+  const area = document.getElementById('capture-area');
+  html2canvas(area, { scale: 2 }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'KVP_Ishikawa_D4.png';
+    link.href = canvas.toDataURL();
+    link.click();
+  });
+};
+
+/* Speichern als JSON */
+document.getElementById('btnSave').onclick = () => {
+  const data = { problem: document.getElementById('problemInput').value, matrix: {} };
+  ['Mensch','Maschine','Material','Methode','Mitwelt','Messung'].forEach(m => {
+    data.matrix[m] = Array.from(document.querySelectorAll(`#notes-${m} textarea`)).map(t => t.value);
+  });
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'Ishikawa_Export.json';
+  a.click();
+};
+
+/* Laden von JSON */
+document.getElementById('btnLoad').onchange = (e) => {
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      document.getElementById('problemInput').value = data.problem || '';
+      Object.keys(data.matrix || {}).forEach(m => {
+        const container = document.getElementById(`notes-${m}`);
+        if (!container) return;
+        container.innerHTML = '';
+        (data.matrix[m] || []).forEach(txt => addNote(m, txt));
+      });
+    } catch(err) {
+      alert('Fehler beim Laden der Datei.');
+    }
+  };
+  reader.readAsText(e.target.files[0]);
+};
+
+/* Automatisches Datum im Footer */
+document.getElementById('current-year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
